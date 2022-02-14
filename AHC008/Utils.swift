@@ -1,5 +1,4 @@
 import Foundation
-
 func readInt() -> Int {
     guard let str = readLine(),
           let val = Int(str) else {
