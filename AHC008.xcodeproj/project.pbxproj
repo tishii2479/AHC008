@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		49258AB727BA8308006C8BEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AB627BA8308006C8BEA /* main.swift */; };
-		49258AC627BA8B59006C8BEA /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC327BA8B59006C8BEA /* Utils.swift */; };
 		49258AC727BA8B59006C8BEA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC427BA8B59006C8BEA /* Models.swift */; };
 		49258AC827BA8B59006C8BEA /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC527BA8B59006C8BEA /* GameManager.swift */; };
+		49258ACA27BAA7B5006C8BEA /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC927BAA7B5006C8BEA /* IO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,9 +28,9 @@
 /* Begin PBXFileReference section */
 		49258AB327BA8308006C8BEA /* AHC008 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AHC008; sourceTree = BUILT_PRODUCTS_DIR; };
 		49258AB627BA8308006C8BEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		49258AC327BA8B59006C8BEA /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		49258AC427BA8B59006C8BEA /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		49258AC527BA8B59006C8BEA /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		49258AC927BAA7B5006C8BEA /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 				49258AB627BA8308006C8BEA /* main.swift */,
 				49258AC527BA8B59006C8BEA /* GameManager.swift */,
 				49258AC427BA8B59006C8BEA /* Models.swift */,
-				49258AC327BA8B59006C8BEA /* Utils.swift */,
+				49258AC927BAA7B5006C8BEA /* IO.swift */,
 			);
 			path = AHC008;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 				49258AC727BA8B59006C8BEA /* Models.swift in Sources */,
 				49258AC827BA8B59006C8BEA /* GameManager.swift in Sources */,
 				49258AB727BA8308006C8BEA /* main.swift in Sources */,
-				49258AC627BA8B59006C8BEA /* Utils.swift in Sources */,
+				49258ACA27BAA7B5006C8BEA /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

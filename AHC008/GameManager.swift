@@ -1,11 +1,32 @@
 class GameManager {
+    private let turnLimit = 300
+    private var petCount: Int { pets.count }
+    private var humanCount: Int { humans.count }
     private var pets = [Pet]()
     private var humans = [Human]()
     
-    func initGame() {
-        let N = readInt()
+    func startGame() {
+        initGame()
+        
+        for turn in 0 ..< turnLimit {
+            IO.log("Turn: " + String(turn))
+            outputHumanMove()
+            inputPetMove()
+        }
+    }
+    
+    private func inputPetMove() {
+        let _ = readLine()
+    }
+    
+    private func outputHumanMove() {
+        IO.output(String(repeating: ".", count: humanCount))
+    }
+    
+    private func initGame() {
+        let N = IO.readInt()
         for _ in 0 ..< N {
-            let arr = readIntArray()
+            let arr = IO.readIntArray()
             guard arr.count == 3,
                   let kind = Pet.Kind(rawValue: arr[2] - 1) else { fatalError("Input format error") }
             pets.append(
@@ -15,9 +36,9 @@ class GameManager {
                 )
             )
         }
-        let M = readInt()
+        let M = IO.readInt()
         for _ in 0 ..< M {
-            let arr = readIntArray()
+            let arr = IO.readIntArray()
             guard arr.count == 2 else { fatalError("Input format error") }
             humans.append(
                 Human(
