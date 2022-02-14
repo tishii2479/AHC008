@@ -1,11 +1,6 @@
-//
-//  main.swift
-//  AHC008
-//
-//  Created by Tatsuya Ishii on 2022/02/14.
-//
+func main() {
+    let manager = GameManager()
+    manager.initGame()
+}
 
-import Foundation
-
-print("Hello, World!")
-
+main()
