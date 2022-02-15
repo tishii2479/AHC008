@@ -36,12 +36,20 @@ class Human: Player {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
     
+    // TODO: make this logic injectable from outside
     // Call to perform a move
-    // Returns the command character
-    func step() -> Character {
-        guard let jobUnit = schedule.nextUnit else { return "." }
+    // Return performed move
+    func step() -> Move {
+        guard let jobUnit = schedule.nextUnit else { return .none }
         
-        return "."
+        switch jobUnit.kind {
+        case .move:
+            break
+        case .block:
+            break
+        }
+        
+        return .none
     }
     
     func assign(job: Schedule.Job) {
