@@ -95,41 +95,44 @@ struct Schedule {
         cost += job.cost
         
         // Add cost of the dist from the previous job if exists
-        if let from = jobs.tail?.blocks.tail,
-           let to = job.blocks.front {
+        if let from = jobs.tail?.units.tail?.pos,
+           let to = job.units.front?.pos {
             cost += from.dist(to: to)
         }
 
         jobs.push(job)
     }
 
-    // There should be two types of human job
-    // 1. Place block
-    // 2. Move to space
-    // Type 2 should be performed only at the end of the game
+    // Schedule is composed of multiple jobs
     struct Job {
-        enum Kind {
-            case move
-            case block
+        // There should be two types of human job
+        // 1. move  := Move to space
+        // 2. block := Place a block
+        // Type 2 should be performed only at the end of the game
+        struct Unit {
+            enum Kind {
+                case move
+                case block
+            }
+            var kind: Kind
+            var pos: Position
         }
 
-        // Positions to place blocks
-        var blocks: Queue<Position>
+        var units = Queue<Unit>()
         // Estimated time to end this job
-        var cost: Int
-        init(blocks: [Position]) {
-            self.blocks = Queue<Position>()
+        var cost: Int = 0
 
-            for block in blocks {
-                self.blocks.push(block)
+        init(units: [Unit]) {
+            for unit in units {
+                self.units.push(unit)
+                if unit.kind == .block { cost += 1 }
             }
 
+            // Cacluate distance of adjacent job units
             // ISSUE: Does not consider current block, if there is a block
             // between the path, the cost will be bigger.
-            cost = 0
-            for i in 0 ..< blocks.count - 1 {
-                // Add 1 to place block
-                cost += blocks[i].dist(to: blocks[i + 1]) + 1
+            for i in 0 ..< units.count - 1 {
+                cost += units[i].pos.dist(to: units[i + 1].pos)
             }
         }
     }
