@@ -87,8 +87,10 @@ struct Schedule {
     // Job to place block to position
     private(set) var jobs = Queue<Job>()
     // Current job length
+    // The value will be the sum of the dist of each jobs
     // In addition to this cost, the true cost will be the sum of the distance
     // from the human position to the first job unit position
+    // This true cost can be accessed by `human.jobCost`
     private(set) var cost: Int = 0
     
     var nextUnit: Job.Unit? {
@@ -109,8 +111,10 @@ struct Schedule {
     mutating func consume() -> Job.Unit? {
         guard var job = jobs.front else { return nil }
         guard let unit = job.consume() else { return nil }
-        // Reduce cost
+
+        // End job unit, so reduce cost
         cost -= unit.pos.dist(to: nextUnit?.pos)
+        if unit.kind == .block { cost -= 1 }
         return unit
     }
     

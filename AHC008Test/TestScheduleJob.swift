@@ -62,12 +62,14 @@ class TestScheduleJob: XCTestCase {
         schedule.consume()
         XCTAssertEqual(schedule.cost, 20 - 2)
         schedule.consume()
-        XCTAssertEqual(schedule.cost, 6)
+        XCTAssertEqual(schedule.cost, 18 - 12)
         schedule.consume()
+        XCTAssertEqual(schedule.cost, 6 - 2)
         schedule.consume()
+        XCTAssertEqual(schedule.cost, 4 - 2)
         schedule.consume()
+        XCTAssertEqual(schedule.cost, 2 - 2)
         schedule.consume()
-        XCTAssertEqual(schedule.cost, 0)
         XCTAssertNil(schedule.consume())
     }
     
