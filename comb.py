@@ -1,9 +1,12 @@
+import sys
+
 files = [
     "Values.swift",
     "main.swift",
     "GameManager.swift",
     "Models.swift",
     "Field.swift",
+    "Util.swift",
     "IO.swift",
 ]
 
