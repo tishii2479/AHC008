@@ -1,16 +1,16 @@
 class Field {
     private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
-    private var walls = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
+    private var blocks = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
     
-    init(players: [Player] = [], walls: [Position] = []) {
+    init(players: [Player] = [], blocks: [Position] = []) {
         addPlayers(players: players)
-        addWalls(walls: walls)
+        addBlocks(blocks: blocks)
     }
-    init(players: [Player] = [], walls: [[Bool]]) {
+    init(players: [Player] = [], blocks: [[Bool]]) {
         addPlayers(players: players)
-        guard walls.count == fieldSize,
-              walls[0].count == fieldSize else { fatalError("Invalid walls array size: \(walls)") }
-        self.walls = walls
+        guard blocks.count == fieldSize,
+              blocks[0].count == fieldSize else { fatalError("Invalid blocks array size: \(blocks)") }
+        self.blocks = blocks
     }
     
     func updateField(players updatedPlayers: [Player]) {
@@ -18,11 +18,11 @@ class Field {
         addPlayers(players: updatedPlayers)
     }
     
-    // Return true if there is no wall at `nextPosition`, and the position is valid
+    // Return true if there is no block at `nextPosition`, and the position is valid
     func isValidMove(player: Player, move: Move) -> Bool {
         let nextPosition = player.pos + move.delta
         if !nextPosition.isValid { return false }
-        return !checkWall(at: nextPosition)
+        return !checkBlock(at: nextPosition)
     }
     
     // Return true if it satisfies below conditions
@@ -56,12 +56,12 @@ extension Field {
         players[position.y][position.x]
     }
 
-    func checkWall(x: Int, y: Int) -> Bool {
-        checkWall(at: Position(x: x, y: y))
+    func checkBlock(x: Int, y: Int) -> Bool {
+        checkBlock(at: Position(x: x, y: y))
     }
     
-    func checkWall(at position: Position) -> Bool {
-        walls[position.y][position.x]
+    func checkBlock(at position: Position) -> Bool {
+        blocks[position.y][position.x]
     }
 
     func addPlayer(player: Player) {
@@ -72,11 +72,11 @@ extension Field {
         for player in players { addPlayer(player: player) }
     }
     
-    func addWall(wall: Position) {
-        walls[wall.y][wall.x] = true
+    func addBlock(block: Position) {
+        blocks[block.y][block.x] = true
     }
     
-    func addWalls(walls: [Position]) {
-        for wall in walls { addWall(wall: wall) }
+    func addBlocks(blocks: [Position]) {
+        for block in blocks { addBlock(block: block) }
     }
 }

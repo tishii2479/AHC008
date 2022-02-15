@@ -10,7 +10,7 @@ import XCTest
 class TestScheduleJob: XCTestCase {
 
     func testSimpleJob() throws {
-        let job = Job(walls: [
+        let job = Schedule.Job(blocks: [
             Position(x: 2, y: 3),
             Position(x: 3, y: 3),
             Position(x: 4, y: 3),
@@ -18,7 +18,7 @@ class TestScheduleJob: XCTestCase {
         ])
         XCTAssertEqual(job.cost, 3 + 3)
         
-        let job2 = Job(walls: [
+        let job2 = Schedule.Job(blocks: [
             Position(x: 10, y: 10),
             Position(x: 11, y: 11),
             Position(x: 12, y: 12),

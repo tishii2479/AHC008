@@ -80,7 +80,7 @@ struct Position: Equatable {
 
 // Schedule of human moves
 struct Schedule {
-    // Job to place wall to position
+    // Job to place block to position
     private(set) var jobs = Queue<Job>()
     // Current job length
     private(set) var cost: Int = 0
@@ -94,38 +94,43 @@ struct Schedule {
     mutating func assign(job: Job) {
         cost += job.cost
         
-        // Add cost to go from previous job
-        if let from = jobs.tail?.walls.tail,
-           let to = job.walls.front {
+        // Add cost of the dist from the previous job if exists
+        if let from = jobs.tail?.blocks.tail,
+           let to = job.blocks.front {
             cost += from.dist(to: to)
         }
 
         jobs.push(job)
     }
-}
 
-// There should be two types of human job
-// 1. Place wall
-// 2. Move to space
-// Type 2 should be performed only at the end of the game
-struct Job {
-    // Positions to place walls
-    var walls: Queue<Position>
-    // Estimated time to end this job
-    var cost: Int
-    init(walls: [Position]) {
-        self.walls = Queue<Position>()
-
-        for wall in walls {
-            self.walls.push(wall)
+    // There should be two types of human job
+    // 1. Place block
+    // 2. Move to space
+    // Type 2 should be performed only at the end of the game
+    struct Job {
+        enum Kind {
+            case move
+            case block
         }
 
-        // ISSUE: Does not consider current wall, if there is a wall
-        // between the path, the cost will be bigger.
-        cost = 0
-        for i in 0 ..< walls.count - 1 {
-            // Add 1 to place wall
-            cost += walls[i].dist(to: walls[i + 1]) + 1
+        // Positions to place blocks
+        var blocks: Queue<Position>
+        // Estimated time to end this job
+        var cost: Int
+        init(blocks: [Position]) {
+            self.blocks = Queue<Position>()
+
+            for block in blocks {
+                self.blocks.push(block)
+            }
+
+            // ISSUE: Does not consider current block, if there is a block
+            // between the path, the cost will be bigger.
+            cost = 0
+            for i in 0 ..< blocks.count - 1 {
+                // Add 1 to place block
+                cost += blocks[i].dist(to: blocks[i + 1]) + 1
+            }
         }
     }
 }

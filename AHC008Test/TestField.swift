@@ -29,9 +29,9 @@ class FieldTest: XCTestCase {
         field.addPlayer(player: human2)
         XCTAssertEqual(field.getPlayers(x: 3, y: 0).count, 1)
         
-        let wall = Position(x: 0, y: 1)
-        field.addWall(wall: wall)
-        XCTAssertTrue(field.checkWall(x: 0, y: 1))
+        let block = Position(x: 0, y: 1)
+        field.addBlock(block: block)
+        XCTAssertTrue(field.checkBlock(x: 0, y: 1))
         
         XCTAssertEqual(field.getPlayers(x: 0, y: 2).count, 0)
         let pet = Pet(kind: .cat, pos: Position(x: 0, y: 2), id: 2)

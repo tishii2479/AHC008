@@ -20,7 +20,7 @@ struct Solver {
         for (i, human) in humans.enumerated() {
             if moves[i] != "." { continue }
             if field.isValidBlockMove(player: human, blockMove: .right) {
-                field.addWall(wall: human.pos + .right)
+                field.addBlock(block: human.pos + .right)
                 moves[i] = BlockMove.right.rawValue
             }
         }
