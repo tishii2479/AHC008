@@ -23,7 +23,7 @@ class FieldTest: XCTestCase {
         XCTAssertEqual(field.getPlayers(x: 3, y: 0).count, 1)
         
         let block = Position(x: 0, y: 1)
-        field.addBlock(block: block)
+        field.addBlock(position: block)
         XCTAssertTrue(field.checkBlock(x: 0, y: 1))
         
         XCTAssertEqual(field.getPlayers(x: 0, y: 2).count, 0)
@@ -31,27 +31,27 @@ class FieldTest: XCTestCase {
         field.addPlayer(player: pet)
         XCTAssertEqual(field.getPlayers(x: 0, y: 2).count, 1)
         
-        XCTAssertFalse(field.isValidMove(player: human, delta: .left))
-        XCTAssertTrue(field.isValidMove(player: human, delta: .up))
-        XCTAssertTrue(field.isValidMove(player: human, delta: .right))
-        XCTAssertTrue(field.isValidMove(player: human, delta: .down))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .moveLeft))
+        XCTAssertTrue(field.isValidCommand(player: human, command: .moveUp))
+        XCTAssertTrue(field.isValidCommand(player: human, command: .moveRight))
+        XCTAssertTrue(field.isValidCommand(player: human, command: .moveDown))
         
-        XCTAssertFalse(field.isValidMove(player: pet, delta: .up))
-        XCTAssertFalse(field.isValidMove(player: pet, delta: .left))
-        XCTAssertTrue(field.isValidMove(player: pet, delta: .down))
-        XCTAssertTrue(field.isValidMove(player: pet, delta: .right))
+        XCTAssertFalse(field.isValidCommand(player: pet, command: .moveUp))
+        XCTAssertFalse(field.isValidCommand(player: pet, command: .moveLeft))
+        XCTAssertTrue(field.isValidCommand(player: pet, command: .moveDown))
+        XCTAssertTrue(field.isValidCommand(player: pet, command: .moveRight))
         
-        XCTAssertTrue(field.isValidMove(player: human2, delta: .left))
-        XCTAssertFalse(field.isValidMove(player: human2, delta: .up))
-        XCTAssertTrue(field.isValidMove(player: human2, delta: .right))
-        XCTAssertTrue(field.isValidMove(player: human2, delta: .down))
+        XCTAssertTrue(field.isValidCommand(player: human2, command: .moveLeft))
+        XCTAssertFalse(field.isValidCommand(player: human2, command: .moveUp))
+        XCTAssertTrue(field.isValidCommand(player: human2, command: .moveRight))
+        XCTAssertTrue(field.isValidCommand(player: human2, command: .moveDown))
     }
     
     // .H.
     // HP.
     // P..
     // ...
-    func testBlockMove() throws {
+    func testBlockCommand() throws {
         let field = Field()
         let human = Human(pos: Position(x: 0, y: 1), id: 0)
         let human2 = Human(pos: Position(x: 1, y: 0), id: 0)
@@ -59,36 +59,36 @@ class FieldTest: XCTestCase {
         let pet2 = Pet(kind: .cat, pos: Position(x: 0, y: 2), id: 2)
         field.addPlayers(players: [human, human2, pet, pet2])
         
-        XCTAssertTrue(field.isValidBlockMove(player: human, delta: .up))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .down))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .right))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .left))
+        XCTAssertTrue(field.isValidCommand(player: human, command: .blockUp))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockDown))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockRight))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockLeft))
         
-        pet.applyMove(move: .moveRight)
+        pet.applyCommand(command: .moveRight)
         field.updateField(players: [human, human2, pet, pet2])
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .right))
-        pet.applyMove(move: .moveRight)
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockRight))
+        pet.applyCommand(command: .moveRight)
         field.updateField(players: [human, human2, pet, pet2])
-        XCTAssertTrue(field.isValidBlockMove(player: human, delta: .right))
-        human2.applyMove(move: .moveDown)
+        XCTAssertTrue(field.isValidCommand(player: human, command: .blockRight))
+        human2.applyCommand(command: .moveDown)
         field.updateField(players: [human, human2, pet, pet2])
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .right))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockRight))
         
-        human.applyMove(move: .moveDown)
+        human.applyCommand(command: .moveDown)
         field.updateField(players: [human, human2, pet, pet2])
         
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .up))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .down))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .right))
-        XCTAssertFalse(field.isValidBlockMove(player: human, delta: .left))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockUp))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockDown))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockRight))
+        XCTAssertFalse(field.isValidCommand(player: human, command: .blockLeft))
     }
     
-    func testMovePlayer() throws {
+    func testCommandPlayer() throws {
         let field = Field()
         let human = Human(pos: Position(x: 1, y: 1), id: 0)
         field.addPlayer(player: human)
         XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 1)
-        human.applyMove(move: .moveUp)
+        human.applyCommand(command: .moveUp)
         field.updateField(players: [human])
         XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)
         XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)

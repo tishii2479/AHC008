@@ -3,28 +3,28 @@ struct Solver {
         field: inout Field,
         humans: inout [Human],
         pets: inout [Pet]
-    ) -> [Move] {
-        var moves = [Move](repeating: .none, count: humans.count)
+    ) -> [Command] {
+        var commands = [Command](repeating: .none, count: humans.count)
 
         // 1. Perform move
         field.updateField(players: humans + pets)
         for (i, human) in humans.enumerated() {
-            if field.isValidMove(player: human, delta: .up) {
-                human.applyMove(move: .moveUp)
-                moves[i] = Move.moveUp
+            if field.isValidCommand(player: human, command: .moveUp) {
+                human.applyCommand(command: .moveUp)
+                commands[i] = Command.moveUp
             }
         }
 
         // 2. Perform block if possible
         field.updateField(players: humans + pets)
         for (i, human) in humans.enumerated() {
-            if moves[i] != .none { continue }
-            if field.isValidBlockMove(player: human, delta: .right) {
+            if commands[i] != .none { continue }
+            if field.isValidCommand(player: human, command: .blockRight) {
                 field.addBlock(position: human.pos + .right)
-                moves[i] = Move.blockRight
+                commands[i] = Command.blockRight
             }
         }
         
-        return moves
+        return commands
     }
 }

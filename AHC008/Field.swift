@@ -18,8 +18,20 @@ class Field {
         addPlayers(players: updatedPlayers)
     }
     
+    func isValidCommand(player: Player, command: Command) -> Bool {
+        if command.isMove {
+            return isValidMove(player: player, delta: command.delta)
+        }
+        else if command.isBlock {
+            return isValidBlock(player: player, delta: command.delta)
+        }
+        
+        // command is .none
+        return true
+    }
+    
     // Return true if there is no block at `nextPosition`, and the position is valid
-    func isValidMove(player: Player, delta: Position) -> Bool {
+    private func isValidMove(player: Player, delta: Position) -> Bool {
         let nextPosition = player.pos + delta
         if !nextPosition.isValid { return false }
         return !checkBlock(at: nextPosition)
@@ -29,7 +41,7 @@ class Field {
     // 1. There is no player at `target`
     // 2. There is no *pet* around one block near `target`
     // 3. The target position is valid
-    func isValidBlockMove(player: Player, delta: Position) -> Bool {
+    private func isValidBlock(player: Player, delta: Position) -> Bool {
         let target = player.pos + delta
         if !target.isValid { return false }
         if getPlayers(at: target).count > 0 { return false }

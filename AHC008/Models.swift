@@ -9,8 +9,8 @@ class Player: Equatable {
         self.id = id
     }
 
-    func applyMove(move: Move) {
-        switch move {
+    func applyCommand(command: Command) {
+        switch command {
         case .moveUp:
             pos.y -= 1
         case .moveDown:
@@ -37,9 +37,9 @@ class Human: Player {
     }
     
     // TODO: make this logic injectable from outside
-    // Call to perform a move
-    // Return performed move
-    func step() -> Move {
+    // Call to perform a command
+    // Return performed command
+    func step() -> Command {
         guard let jobUnit = schedule.nextUnit else { return .none }
         
         switch jobUnit.kind {
@@ -112,7 +112,7 @@ struct Position: Equatable {
     }
 }
 
-// Schedule of human moves
+// Schedule of human commands
 struct Schedule {
     // Job to place block to position
     private(set) var jobs = Queue<Job>()
@@ -163,7 +163,7 @@ struct Schedule {
     // Schedule is composed of multiple jobs
     struct Job {
         // There should be two types of human job
-        // 1. move  := Move to space
+        // 1. move  := Mommand to space
         // 2. block := Place a block
         struct Unit: Equatable {
             enum Kind {
@@ -202,7 +202,7 @@ struct Schedule {
     }
 }
 
-enum Move: Character {
+enum Command: Character {
     case none = "."
 
     case moveUp = "U"
@@ -214,10 +214,21 @@ enum Move: Character {
     case blockDown = "d"
     case blockLeft = "l"
     case blockRight = "r"
+    
+    static let moves = [moveUp, moveRight, moveDown, moveLeft]
+    static let blocks = [blockUp, blockRight, blockDown, blockLeft]
+    
+    var isMove: Bool {
+        Command.moves.contains(self)
+    }
+    
+    var isBlock: Bool {
+        Command.blocks.contains(self)
+    }
 
-    static func toEnum(_ c: Character) -> Move {
-        guard let m = Move(rawValue: c) else {
-            fatalError("Failed to convert move: \(c)")
+    static func toEnum(_ c: Character) -> Command {
+        guard let m = Command(rawValue: c) else {
+            fatalError("Failed to convert command: \(c)")
         }
         return m
     }

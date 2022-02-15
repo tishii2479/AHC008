@@ -9,26 +9,26 @@ class Manager {
         initialize()
         
         for _ in 0 ..< turnLimit {
-            outputHumanMove()
-            inputPetMove()
+            outputHumanCommand()
+            inputPetCommand()
         }
     }
     
-    private func inputPetMove() {
-        let petMoves = IO.readStringArray()
-        guard petMoves.count == petCount else {
+    private func inputPetCommand() {
+        let petCommands = IO.readStringArray()
+        guard petCommands.count == petCount else {
             fatalError("Input format error")
         }
         for i in 0 ..< petCount {
-            for e in petMoves[i] {
-                pets[i].applyMove(move: Move.toEnum(e))
+            for e in petCommands[i] {
+                pets[i].applyCommand(command: Command.toEnum(e))
             }
         }
     }
     
-    private func outputHumanMove() {
-        let moves: [Move] = Solver.solve(field: &field, humans: &humans, pets: &pets)
-        IO.output(String(moves.map { $0.rawValue }))
+    private func outputHumanCommand() {
+        let commands: [Command] = Solver.solve(field: &field, humans: &humans, pets: &pets)
+        IO.output(String(commands.map { $0.rawValue }))
     }
     
     private func initialize() {
