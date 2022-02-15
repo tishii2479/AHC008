@@ -8,9 +8,7 @@ class GameManager {
     func startGame() {
         initGame()
         
-        for turn in 0 ..< turnLimit {
-            IO.log("Turn: " + String(turn))
-            field = Field(players: pets + humans, walls: field.walls)
+        for _ in 0 ..< turnLimit {
             outputHumanMove()
             inputPetMove()
         }
@@ -29,13 +27,8 @@ class GameManager {
     }
     
     private func outputHumanMove() {
-        var moves = [String](repeating: ".", count: humanCount)
-        
-        // 1. Perform move
-        
-        // 2. Perform block if possible
-        
-        IO.output(moves.joined(separator: ""))
+        let moves: String = Solver.solve(field: &field, humans: &humans, pets: &pets)
+        IO.output(moves)
     }
     
     private func initGame() {

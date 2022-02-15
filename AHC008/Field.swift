@@ -14,6 +14,11 @@ class Field {
         self.walls = walls
     }
     
+    func updateField(players updatedPlayers: [Player]) {
+        players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+        addPlayers(players: updatedPlayers)
+    }
+    
     // Return true if there is no wall at `nextPosition`, and the position is valid
     func isValidMove(player: Player, move: Move) -> Bool {
         let nextPosition = player.pos + move.delta

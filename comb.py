@@ -4,6 +4,7 @@ files = [
     "Values.swift",
     "main.swift",
     "GameManager.swift",
+    "Solver.swift",
     "Models.swift",
     "Field.swift",
     "Util.swift",
