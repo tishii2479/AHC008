@@ -14,19 +14,24 @@
 		49FE05ED27BB4F0900E3A5FE /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EC27BB4F0900E3A5FE /* Field.swift */; };
 		49FE05EF27BB4FDC00E3A5FE /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EE27BB4FDC00E3A5FE /* Values.swift */; };
 		49FE05F127BB57B900E3A5FE /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05F027BB57B900E3A5FE /* Util.swift */; };
-		49FE05FE27BB63A900E3A5FE /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC527BA8B59006C8BEA /* Manager.swift */; };
-		49FE05FF27BB63A900E3A5FE /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EE27BB4FDC00E3A5FE /* Values.swift */; };
-		49FE060027BB63A900E3A5FE /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05F027BB57B900E3A5FE /* Util.swift */; };
-		49FE060127BB63A900E3A5FE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AB627BA8308006C8BEA /* main.swift */; };
-		49FE060227BB63A900E3A5FE /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC427BA8B59006C8BEA /* Models.swift */; };
-		49FE060327BB63A900E3A5FE /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC927BAA7B5006C8BEA /* IO.swift */; };
-		49FE060427BB63A900E3A5FE /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EC27BB4F0900E3A5FE /* Field.swift */; };
 		49FE060827BB642500E3A5FE /* TestField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060727BB642500E3A5FE /* TestField.swift */; };
 		49FE060A27BB76E200E3A5FE /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060927BB76E200E3A5FE /* Solver.swift */; };
-		49FE060B27BB7A5A00E3A5FE /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060927BB76E200E3A5FE /* Solver.swift */; };
 		49FE060D27BB7D5600E3A5FE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060C27BB7D5600E3A5FE /* Extensions.swift */; };
 		49FE060F27BB818600E3A5FE /* TestHuman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060E27BB818600E3A5FE /* TestHuman.swift */; };
 		49FE061127BB879300E3A5FE /* TestScheduleJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061027BB879300E3A5FE /* TestScheduleJob.swift */; };
+		49FE061327BBE03A00E3A5FE /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061227BBE03A00E3A5FE /* Players.swift */; };
+		49FE061627BBE2CA00E3A5FE /* HumanLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061527BBE2CA00E3A5FE /* HumanLogic.swift */; };
+		49FE061927BBE8D500E3A5FE /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EE27BB4FDC00E3A5FE /* Values.swift */; };
+		49FE061A27BBE8D500E3A5FE /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05F027BB57B900E3A5FE /* Util.swift */; };
+		49FE061B27BBE8D500E3A5FE /* HumanLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061527BBE2CA00E3A5FE /* HumanLogic.swift */; };
+		49FE061C27BBE8D500E3A5FE /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC427BA8B59006C8BEA /* Models.swift */; };
+		49FE061D27BBE8D500E3A5FE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060C27BB7D5600E3A5FE /* Extensions.swift */; };
+		49FE061E27BBE8D500E3A5FE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AB627BA8308006C8BEA /* main.swift */; };
+		49FE061F27BBE8D500E3A5FE /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061227BBE03A00E3A5FE /* Players.swift */; };
+		49FE062027BBE8D500E3A5FE /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC527BA8B59006C8BEA /* Manager.swift */; };
+		49FE062127BBE8D500E3A5FE /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC927BAA7B5006C8BEA /* IO.swift */; };
+		49FE062227BBE8D500E3A5FE /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060927BB76E200E3A5FE /* Solver.swift */; };
+		49FE062327BBE8D500E3A5FE /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EC27BB4F0900E3A5FE /* Field.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +62,8 @@
 		49FE060C27BB7D5600E3A5FE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		49FE060E27BB818600E3A5FE /* TestHuman.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHuman.swift; sourceTree = "<group>"; };
 		49FE061027BB879300E3A5FE /* TestScheduleJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScheduleJob.swift; sourceTree = "<group>"; };
+		49FE061227BBE03A00E3A5FE /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
+		49FE061527BBE2CA00E3A5FE /* HumanLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumanLogic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +114,8 @@
 				49258AC927BAA7B5006C8BEA /* IO.swift */,
 				49FE05F027BB57B900E3A5FE /* Util.swift */,
 				49FE060C27BB7D5600E3A5FE /* Extensions.swift */,
+				49FE061227BBE03A00E3A5FE /* Players.swift */,
+				49FE061527BBE2CA00E3A5FE /* HumanLogic.swift */,
 			);
 			path = AHC008;
 			sourceTree = "<group>";
@@ -216,8 +225,10 @@
 				49FE060A27BB76E200E3A5FE /* Solver.swift in Sources */,
 				49258AC727BA8B59006C8BEA /* Models.swift in Sources */,
 				49FE05F127BB57B900E3A5FE /* Util.swift in Sources */,
+				49FE061627BBE2CA00E3A5FE /* HumanLogic.swift in Sources */,
 				49258AC827BA8B59006C8BEA /* Manager.swift in Sources */,
 				49258AB727BA8308006C8BEA /* main.swift in Sources */,
+				49FE061327BBE03A00E3A5FE /* Players.swift in Sources */,
 				49258ACA27BAA7B5006C8BEA /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,15 +239,18 @@
 			files = (
 				49FE060F27BB818600E3A5FE /* TestHuman.swift in Sources */,
 				49FE061127BB879300E3A5FE /* TestScheduleJob.swift in Sources */,
-				49FE060127BB63A900E3A5FE /* main.swift in Sources */,
-				49FE060427BB63A900E3A5FE /* Field.swift in Sources */,
-				49FE060B27BB7A5A00E3A5FE /* Solver.swift in Sources */,
-				49FE05FF27BB63A900E3A5FE /* Values.swift in Sources */,
-				49FE060227BB63A900E3A5FE /* Models.swift in Sources */,
-				49FE05FE27BB63A900E3A5FE /* Manager.swift in Sources */,
-				49FE060327BB63A900E3A5FE /* IO.swift in Sources */,
-				49FE060027BB63A900E3A5FE /* Util.swift in Sources */,
+				49FE061E27BBE8D500E3A5FE /* main.swift in Sources */,
+				49FE061B27BBE8D500E3A5FE /* HumanLogic.swift in Sources */,
+				49FE061D27BBE8D500E3A5FE /* Extensions.swift in Sources */,
+				49FE061A27BBE8D500E3A5FE /* Util.swift in Sources */,
+				49FE061F27BBE8D500E3A5FE /* Players.swift in Sources */,
 				49FE060827BB642500E3A5FE /* TestField.swift in Sources */,
+				49FE062027BBE8D500E3A5FE /* Manager.swift in Sources */,
+				49FE061927BBE8D500E3A5FE /* Values.swift in Sources */,
+				49FE062227BBE8D500E3A5FE /* Solver.swift in Sources */,
+				49FE061C27BBE8D500E3A5FE /* Models.swift in Sources */,
+				49FE062327BBE8D500E3A5FE /* Field.swift in Sources */,
+				49FE062127BBE8D500E3A5FE /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

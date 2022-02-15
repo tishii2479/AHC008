@@ -11,7 +11,7 @@ class TestHuman: XCTestCase {
 
     func testAssignJob() throws {
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0)
+        let human = Human(pos: startPosition, id: 0, logic: Logic())
         let job = Schedule.Job(units: [
             .init(kind: .move, pos: Position(x: 5, y: 7)),
         ])
@@ -30,7 +30,7 @@ class TestHuman: XCTestCase {
     func testPerformJob() throws {
         let field = Field()
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0)
+        let human = Human(pos: startPosition, id: 0, logic: Logic())
         
         field.addPlayer(player: human)
         let job = Schedule.Job(units: [
@@ -41,6 +41,43 @@ class TestHuman: XCTestCase {
         ])
         human.assign(job: job)
         
+        for _ in 0 ..< 20 {
+            let command = human.step(field: field)
+            human.applyCommand(command: command)
+            if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+            field.updateField(players: [human])
+        }
+
+        XCTAssertTrue(field.checkBlock(x: 2, y: 2))
+        XCTAssertTrue(field.checkBlock(x: 4, y: 4))
+        XCTAssertTrue(field.checkBlock(x: 5, y: 5))
+    }
+    
+    func testPerformBlockLine() throws {
+        let field = Field()
+        let startPosition = Position(x: 3, y: 3)
+        let human = Human(pos: startPosition, id: 0, logic: Logic())
+        
+        field.addPlayer(player: human)
+        var units = [Schedule.Job.Unit]()
+        for y in 0 ..< fieldSize {
+            units.append(.init(kind: .block, pos: Position(x: human.x, y: y)))
+        }
+        let job = Schedule.Job(units: units)
+        human.assign(job: job)
+        
+        for _ in 0 ..< 80 {
+            let command = human.step(field: field)
+            human.applyCommand(command: command)
+            if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+            field.updateField(players: [human])
+            IO.log(human.schedule.nextUnit, command)
+        }
+        
+        field.dumpBlock()
+        for y in 0 ..< fieldSize {
+            XCTAssertTrue(field.checkBlock(x: 3, y: y))
+        }
     }
     
 }

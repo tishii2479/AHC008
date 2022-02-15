@@ -92,4 +92,20 @@ extension Field {
     func addBlocks(positions: [Position]) {
         for pos in positions { addBlock(position: pos) }
     }
+    
+    func dump() {
+        var str = "\n"
+        for y in 0 ..< fieldSize {
+            for x in 0 ..< fieldSize {
+                if blocks[y][x] { str += "#" }
+                else if players[y][x].count > 0 {
+                    if players[y][x][0] is Pet { str += "P" }
+                    else { str += "H" }
+                }
+                else { str += "." }
+            }
+            str += "\n"
+        }
+        IO.log(str)
+    }
 }

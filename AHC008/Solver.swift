@@ -6,22 +6,34 @@ struct Solver {
     ) -> [Command] {
         var commands = [Command](repeating: .none, count: humans.count)
 
-        // 1. Perform move
         field.updateField(players: humans + pets)
+        
         for (i, human) in humans.enumerated() {
-            if field.isValidCommand(player: human, command: .moveUp) {
-                human.applyCommand(command: .moveUp)
-                commands[i] = Command.moveUp
+            commands[i] = human.step(field: field)
+        }
+
+        // 1. Apply block
+        for (i, human) in humans.enumerated() {
+            if !commands[i].isBlock { continue }
+            if field.isValidCommand(player: human, command: commands[i]) {
+                human.applyCommand(command: commands[i])
+                field.addBlock(position: human.pos + commands[i].delta)
+            }
+            else {
+                commands[i] = .none
             }
         }
 
-        // 2. Perform block if possible
         field.updateField(players: humans + pets)
+        
+        // 2. Apply move
         for (i, human) in humans.enumerated() {
-            if commands[i] != .none { continue }
-            if field.isValidCommand(player: human, command: .blockRight) {
-                field.addBlock(position: human.pos + .right)
-                commands[i] = Command.blockRight
+            if !commands[i].isMove { continue }
+            if field.isValidCommand(player: human, command: commands[i]) {
+                human.applyCommand(command: commands[i])
+            }
+            else {
+                commands[i] = .none
             }
         }
         

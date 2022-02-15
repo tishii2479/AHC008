@@ -1,79 +1,3 @@
-class Player: Equatable {
-    var pos: Position
-    var id: Int
-    var x: Int { pos.x }
-    var y: Int { pos.y }
-
-    init(pos: Position, id: Int) {
-        self.pos = pos
-        self.id = id
-    }
-
-    func applyCommand(command: Command) {
-        switch command {
-        case .moveUp:
-            pos.y -= 1
-        case .moveDown:
-            pos.y += 1
-        case .moveLeft:
-            pos.x -= 1
-        case .moveRight:
-            pos.x += 1
-        default:
-            break
-        }
-    }
-    
-    static func ==(lhs: Player, rhs: Player) -> Bool {
-        lhs.id == rhs.id
-    }
-}
-
-
-class Human: Player {
-    var schedule: Schedule = Schedule()
-    var jobCost: Int {
-        schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
-    }
-    
-    // TODO: make this logic injectable from outside
-    // Call to perform a command
-    // Return performed command
-    func step() -> Command {
-        guard let jobUnit = schedule.nextUnit else { return .none }
-        
-        switch jobUnit.kind {
-        case .move:
-            break
-        case .block:
-            break
-        }
-        
-        return .none
-    }
-    
-    func assign(job: Schedule.Job) {
-        schedule.assign(job: job)
-    }
-}
-
-class Pet: Player {
-    enum Kind: Int {
-        case cow
-        case pig
-        case rabbit
-        case dog
-        case cat
-    }
-    
-    var kind: Kind
-    
-    init(kind: Kind, pos: Position, id: Int) {
-        self.kind = kind
-        super.init(pos: pos, id: id)
-    }
-}
-
 struct Position: Equatable {
     var x: Int
     var y: Int
@@ -89,6 +13,10 @@ struct Position: Equatable {
     
     static func +(lhs: Position, rhs: Position) -> Position {
         Position(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+    }
+
+    static func -(lhs: Position, rhs: Position) -> Position {
+        Position(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
     
     static func ==(lhs: Position, rhs: Position) -> Bool {
@@ -136,6 +64,7 @@ struct Schedule {
         }
     }
     
+    // Call if finished `nextUnit`
     // Return jobs[0].units[0] if exists
     @discardableResult
     mutating func consume() -> Job.Unit? {

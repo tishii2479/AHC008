@@ -8,10 +8,21 @@ class Manager {
     func start() {
         initialize()
         
+        for human in humans {
+            var units = [Schedule.Job.Unit]()
+            for y in 0 ..< fieldSize {
+                units.append(.init(kind: .block, pos: Position(x: human.x, y: y)))
+            }
+            let job = Schedule.Job(units: units)
+            human.assign(job: job)
+        }
+        
         for _ in 0 ..< turnLimit {
             outputHumanCommand()
             inputPetCommand()
         }
+        
+        field.dump()
     }
     
     private func inputPetCommand() {
@@ -52,7 +63,8 @@ class Manager {
             humans.append(
                 Human(
                     pos: Position(x: arr[1] - 1, y: arr[0] - 1),
-                    id: i + N
+                    id: i + N,
+                    logic: Logic()
                 )
             )
         }

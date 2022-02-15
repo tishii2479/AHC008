@@ -46,6 +46,7 @@ class IO {
     
     static func output(_ str: String) {
         print(str)
+        log("[OUT]", str)
         flush()
     }
     
