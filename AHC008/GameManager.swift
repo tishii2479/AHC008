@@ -1,5 +1,4 @@
 class GameManager {
-    private let turnLimit = 300
     private var petCount: Int { pets.count }
     private var humanCount: Int { humans.count }
     private var pets = [Pet]()
@@ -9,14 +8,17 @@ class GameManager {
         initGame()
         
         for turn in 0 ..< turnLimit {
-            IO.log("Turn: " + String(turn))
+//            IO.log("Turn: " + String(turn))
             outputHumanMove()
             inputPetMove()
         }
     }
     
     private func inputPetMove() {
-        let _ = readLine()
+        let petMoves = IO.readStringArray()
+        guard petMoves.count == petCount else {
+            fatalError("Input format error")
+        }
     }
     
     private func outputHumanMove() {

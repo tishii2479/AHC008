@@ -6,19 +6,18 @@ import Darwin.C
 import Foundation
 
 class IO {
-    static func readInt() -> Int {
-        guard let str = readLine(),
-              let val = Int(str) else {
-            fatalError("Failed to read integer")
-        }
-        return val
-    }
 
-    static func readIntArray() -> [Int] {
+    // MARK: Input
+
+    static func readStringArray() -> [String] {
         guard let str = readLine() else {
             fatalError("Failed to read integer array")
         }
-        let val: [Int] = str.components(separatedBy: " ").map {
+        return str.components(separatedBy: " ")
+    }
+
+    static func readIntArray() -> [Int] {
+        let val: [Int] = readStringArray().map {
             guard let i = Int($0) else {
                 fatalError("Failed to parse integer array")
             }
@@ -27,13 +26,35 @@ class IO {
         return val
     }
 
+    static func readInt() -> Int {
+        let arr = readIntArray()
+        guard arr.count == 1 else {
+            fatalError("Failed to read integer")
+        }
+        return arr[0]
+    }
+    
+    static func readString() -> String {
+        let arr = readStringArray()
+        guard arr.count == 1 else {
+            fatalError("Failed to read string")
+        }
+        return arr[0]
+    }
+
+    // MARK: Output
+    
     static func output(_ str: String) {
         print(str)
         flush()
     }
-
-    static func log(_ str: String) {
-        fputs(str + "\n", stderr)
+    
+    static func log(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        let output =
+            "[LOG] "
+            + items.map { "\($0)" }.joined(separator: separator)
+            + terminator
+        fputs(output, stderr)
     }
 
     static func flush() {

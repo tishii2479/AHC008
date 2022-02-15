@@ -1,8 +1,10 @@
 files = [
+    "Values.swift",
     "main.swift",
     "GameManager.swift",
     "Models.swift",
-    "IO.swift"
+    "Field.swift",
+    "IO.swift",
 ]
 
 out_file = "out/main.swift"

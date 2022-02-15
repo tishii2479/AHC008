@@ -1,4 +1,8 @@
-protocol Player {
+class Player {
+    var pos: Position
+    init(pos: Position) {
+        self.pos = pos
+    }
 }
 
 struct Position {
@@ -6,15 +10,10 @@ struct Position {
     var y: Int
 }
 
-struct Human: Player {
-    var pos: Position
-    
-    init(pos: Position) {
-        self.pos = pos
-    }
+class Human: Player {
 }
 
-struct Pet: Player {
+class Pet: Player {
     enum Kind: Int {
         case Cow
         case Pig
@@ -24,10 +23,9 @@ struct Pet: Player {
     }
     
     var kind: Kind
-    var pos: Position
     
     init(kind: Kind, pos: Position) {
         self.kind = kind
-        self.pos = pos
+        super.init(pos: pos)
     }
 }
