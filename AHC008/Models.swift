@@ -11,13 +11,13 @@ class Player: Equatable {
 
     func applyMove(move: Move) {
         switch move {
-        case .up:
+        case .moveUp:
             pos.y -= 1
-        case .down:
+        case .moveDown:
             pos.y += 1
-        case .left:
+        case .moveLeft:
             pos.x -= 1
-        case .right:
+        case .moveRight:
             pos.x += 1
         default:
             break
@@ -197,11 +197,16 @@ struct Schedule {
 enum Move: Character {
     case none = "."
 
-    case up = "U"
-    case down = "D"
-    case left = "L"
-    case right = "R"
+    case moveUp = "U"
+    case moveDown = "D"
+    case moveLeft = "L"
+    case moveRight = "R"
     
+    case blockUp = "u"
+    case blockDown = "d"
+    case blockLeft = "l"
+    case blockRight = "r"
+
     static func toEnum(_ c: Character) -> Move {
         guard let m = Move(rawValue: c) else {
             fatalError("Failed to convert move: \(c)")
@@ -211,44 +216,13 @@ enum Move: Character {
     
     var delta: Position {
         switch self {
-        case .up:
+        case .moveUp, .blockUp:
             return .up
-        case .down:
+        case .moveDown, .blockDown:
             return .down
-        case .left:
+        case .moveLeft, .blockLeft:
             return .left
-        case .right:
-            return .right
-        default:
-            return .zero
-        }
-    }
-}
-
-enum BlockMove: Character {
-    case none = "."
-    
-    case up = "u"
-    case down = "d"
-    case left = "l"
-    case right = "r"
-    
-    static func toEnum(_ c: Character) -> BlockMove {
-        guard let m = BlockMove(rawValue: c) else {
-            fatalError("Failed to convert block move: \(c)")
-        }
-        return m
-    }
-    
-    var delta: Position {
-        switch self {
-        case .up:
-            return .up
-        case .down:
-            return .down
-        case .left:
-            return .left
-        case .right:
+        case .moveRight, .blockRight:
             return .right
         default:
             return .zero

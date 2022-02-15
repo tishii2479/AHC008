@@ -9,9 +9,9 @@ struct Solver {
         // 1. Perform move
         field.updateField(players: humans + pets)
         for (i, human) in humans.enumerated() {
-            if field.isValidMove(player: human, move: .up) {
-                human.applyMove(move: .up)
-                moves[i] = Move.up.rawValue
+            if field.isValidMove(player: human, delta: .up) {
+                human.applyMove(move: .moveUp)
+                moves[i] = Move.moveUp.rawValue
             }
         }
 
@@ -19,9 +19,9 @@ struct Solver {
         field.updateField(players: humans + pets)
         for (i, human) in humans.enumerated() {
             if moves[i] != "." { continue }
-            if field.isValidBlockMove(player: human, blockMove: .right) {
+            if field.isValidBlockMove(player: human, delta: .right) {
                 field.addBlock(position: human.pos + .right)
-                moves[i] = BlockMove.right.rawValue
+                moves[i] = Move.blockRight.rawValue
             }
         }
         
