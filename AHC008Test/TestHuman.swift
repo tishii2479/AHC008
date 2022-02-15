@@ -42,9 +42,13 @@ class TestHuman: XCTestCase {
         human.assign(job: job)
         
         for _ in 0 ..< 20 {
-            let command = human.step(field: field)
-            human.applyCommand(command: command)
-            if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+            for command in human.command(field: field) {
+                if field.isValidCommand(player: human, command: command) {
+                    human.applyCommand(command: command)
+                    if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+                    break
+                }
+            }
             field.updateField(players: [human])
         }
 
@@ -55,7 +59,7 @@ class TestHuman: XCTestCase {
     
     func testPerformBlockLine() throws {
         let field = Field()
-        let startPosition = Position(x: 3, y: 3)
+        let startPosition = Position(x: 3, y: 1)
         let human = Human(pos: startPosition, id: 0, logic: Logic())
         
         field.addPlayer(player: human)
@@ -66,15 +70,17 @@ class TestHuman: XCTestCase {
         let job = Schedule.Job(units: units)
         human.assign(job: job)
         
-        for _ in 0 ..< 80 {
-            let command = human.step(field: field)
-            human.applyCommand(command: command)
-            if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+        for _ in 0 ..< fieldSize * 2 - 1 {
+            for command in human.command(field: field) {
+                if field.isValidCommand(player: human, command: command) {
+                    human.applyCommand(command: command)
+                    if command.isBlock { field.addBlock(position: human.pos + command.delta) }
+                    break
+                }
+            }
             field.updateField(players: [human])
-            IO.log(human.schedule.nextUnit, command)
         }
-        
-        field.dumpBlock()
+
         for y in 0 ..< fieldSize {
             XCTAssertTrue(field.checkBlock(x: 3, y: y))
         }

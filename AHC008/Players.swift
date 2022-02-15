@@ -44,9 +44,8 @@ class Human: Player {
     // TODO: make this logic injectable from outside
     // Call to perform a command
     // Return performed command
-    func step(field: Field) -> Command {
-        guard let jobUnit = schedule.nextUnit else { return .none }
-        return logic.step(field: field, pos: pos, jobUnit: jobUnit)
+    func command(field: Field) -> [Command] {
+        return logic.command(field: field, pos: pos, jobUnit: schedule.nextUnit)
     }
     
     func assign(job: Schedule.Job) {
