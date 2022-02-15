@@ -27,8 +27,8 @@ class Manager {
     }
     
     private func outputHumanMove() {
-        let moves: String = Solver.solve(field: &field, humans: &humans, pets: &pets)
-        IO.output(moves)
+        let moves: [Move] = Solver.solve(field: &field, humans: &humans, pets: &pets)
+        IO.output(String(moves.map { $0.rawValue }))
     }
     
     private func initialize() {
