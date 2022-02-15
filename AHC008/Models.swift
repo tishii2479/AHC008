@@ -81,9 +81,19 @@ struct Position: Equatable {
     
     static let zero = Position(x: 0, y: 0)
     static let up = Position(x: 0, y: -1)
-    static let down = Position(x: 0, y: 0)
+    static let down = Position(x: 0, y: 1)
     static let left = Position(x: -1, y: 0)
     static let right = Position(x: 1, y: 0)
+    static let directions = [up, down, left, right]
+    
+    static func around(pos: Position) -> [Position] {
+        var positions = [Position]()
+        for dir in directions {
+            let target = pos + dir
+            if target.isValid { positions.append(target) }
+        }
+        return positions
+    }
 }
 
 // Schedule of human moves

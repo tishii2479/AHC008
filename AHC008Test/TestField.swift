@@ -8,10 +8,10 @@
 import XCTest
 
 class FieldTest: XCTestCase {
-    // ...H
-    // WH..
-    // P...
-    // ....
+    // ...H.
+    // WH.P.
+    // P....
+    // .....
     func testAddPlayer() throws {
         let field = Field()
         XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 0)
@@ -45,6 +45,42 @@ class FieldTest: XCTestCase {
         XCTAssertFalse(field.isValidMove(player: human2, move: .up))
         XCTAssertTrue(field.isValidMove(player: human2, move: .right))
         XCTAssertTrue(field.isValidMove(player: human2, move: .down))
+    }
+    
+    // .H.
+    // HP.
+    // P..
+    // ...
+    func testBlockMove() throws {
+        let field = Field()
+        let human = Human(pos: Position(x: 0, y: 1), id: 0)
+        let human2 = Human(pos: Position(x: 1, y: 0), id: 0)
+        let pet = Pet(kind: .cat, pos: Position(x: 1, y: 1), id: 1)
+        let pet2 = Pet(kind: .cat, pos: Position(x: 0, y: 2), id: 2)
+        field.addPlayers(players: [human, human2, pet, pet2])
+        
+        XCTAssertTrue(field.isValidBlockMove(player: human, blockMove: .up))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .down))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .right))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .left))
+        
+        pet.applyMove(move: .right)
+        field.updateField(players: [human, human2, pet, pet2])
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .right))
+        pet.applyMove(move: .right)
+        field.updateField(players: [human, human2, pet, pet2])
+        XCTAssertTrue(field.isValidBlockMove(player: human, blockMove: .right))
+        human2.applyMove(move: .down)
+        field.updateField(players: [human, human2, pet, pet2])
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .right))
+        
+        human.applyMove(move: .down)
+        field.updateField(players: [human, human2, pet, pet2])
+        
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .up))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .down))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .right))
+        XCTAssertFalse(field.isValidBlockMove(player: human, blockMove: .left))
     }
     
     func testMovePlayer() throws {

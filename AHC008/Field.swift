@@ -30,15 +30,16 @@ class Field {
     // 2. There is no *pet* around one block near `target`
     // 3. The target position is valid
     func isValidBlockMove(player: Player, blockMove: BlockMove) -> Bool {
-        let target = player.pos
+        let target = player.pos + blockMove.delta
         if !target.isValid { return false }
         if getPlayers(at: target).count > 0 { return false }
-        for x in -1 ... 1 {
-            for y in -1 ... 1 {
-                let check = Position(x: x, y: y) + target
-                for player in getPlayers(at: check) {
-                    if player is Pet { return false }
-                }
+        
+        // oxo
+        // xTx
+        // oxo
+        for check in Position.around(pos: target) {
+            for player in getPlayers(at: check) {
+                if player is Pet { return false }
             }
         }
         return true
