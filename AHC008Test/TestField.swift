@@ -8,13 +8,6 @@
 import XCTest
 
 class FieldTest: XCTestCase {
-
-    override func setUpWithError() throws {
-    }
-
-    override func tearDownWithError() throws {
-    }
-
     // ...H
     // WH..
     // P...
@@ -52,6 +45,17 @@ class FieldTest: XCTestCase {
         XCTAssertFalse(field.isValidMove(player: human2, move: .up))
         XCTAssertTrue(field.isValidMove(player: human2, move: .right))
         XCTAssertTrue(field.isValidMove(player: human2, move: .down))
+    }
+    
+    func testMovePlayer() throws {
+        let field = Field()
+        let human = Human(pos: Position(x: 1, y: 1), id: 0)
+        field.addPlayer(player: human)
+        XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 1)
+        human.applyMove(move: .up)
+        field.updateField(players: [human])
+        XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)
+        XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)
     }
 
 }
