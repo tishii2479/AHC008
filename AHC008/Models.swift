@@ -36,6 +36,14 @@ class Human: Player {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
     
+    // Call to perform a move
+    // Returns the command character
+    func step() -> Character {
+        guard let jobUnit = schedule.nextUnit else { return "." }
+        
+        return "."
+    }
+    
     func assign(job: Schedule.Job) {
         schedule.assign(job: job)
     }
@@ -79,11 +87,11 @@ struct Position: Equatable {
         lhs.x == rhs.x && lhs.y == rhs.y
     }
     
-    static let zero = Position(x: 0, y: 0)
-    static let up = Position(x: 0, y: -1)
-    static let down = Position(x: 0, y: 1)
-    static let left = Position(x: -1, y: 0)
-    static let right = Position(x: 1, y: 0)
+    static let zero     = Position(x:  0, y:  0)
+    static let up       = Position(x:  0, y: -1)
+    static let down     = Position(x:  0, y:  1)
+    static let left     = Position(x: -1, y:  0)
+    static let right    = Position(x:  1, y:  0)
     static let directions = [up, down, left, right]
     
     static func around(pos: Position) -> [Position] {

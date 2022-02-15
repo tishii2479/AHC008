@@ -4,7 +4,7 @@ class Field {
     
     init(players: [Player] = [], blocks: [Position] = []) {
         addPlayers(players: players)
-        addBlocks(blocks: blocks)
+        addBlocks(positions: blocks)
     }
     init(players: [Player] = [], blocks: [[Bool]]) {
         addPlayers(players: players)
@@ -73,11 +73,11 @@ extension Field {
         for player in players { addPlayer(player: player) }
     }
     
-    func addBlock(block: Position) {
-        blocks[block.y][block.x] = true
+    func addBlock(position: Position) {
+        blocks[position.y][position.x] = true
     }
     
-    func addBlocks(blocks: [Position]) {
-        for block in blocks { addBlock(block: block) }
+    func addBlocks(positions: [Position]) {
+        for pos in positions { addBlock(position: pos) }
     }
 }

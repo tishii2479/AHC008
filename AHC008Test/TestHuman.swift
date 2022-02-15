@@ -27,5 +27,21 @@ class TestHuman: XCTestCase {
         XCTAssertEqual(human.jobCost, expectedCost)
     }
     
+    func testPerformJob() throws {
+        let field = Field()
+        let startPosition = Position(x: 3, y: 3)
+        let human = Human(pos: startPosition, id: 0)
+        
+        field.addPlayer(player: human)
+        let job = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 2, y: 2)),
+            .init(kind: .move, pos: Position(x: 5, y: 2)),
+            .init(kind: .block, pos: Position(x: 4, y: 4)),
+            .init(kind: .block, pos: Position(x: 5, y: 5)),
+        ])
+        human.assign(job: job)
+        
+    }
+    
 }
 
