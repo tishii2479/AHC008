@@ -35,6 +35,10 @@ class Human: Player {
     var jobCost: Int {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
+    
+    func assign(job: Schedule.Job) {
+        schedule.assign(job: job)
+    }
 }
 
 class Pet: Player {

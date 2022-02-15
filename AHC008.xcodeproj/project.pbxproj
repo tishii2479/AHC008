@@ -25,7 +25,7 @@
 		49FE060A27BB76E200E3A5FE /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060927BB76E200E3A5FE /* Solver.swift */; };
 		49FE060B27BB7A5A00E3A5FE /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060927BB76E200E3A5FE /* Solver.swift */; };
 		49FE060D27BB7D5600E3A5FE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060C27BB7D5600E3A5FE /* Extensions.swift */; };
-		49FE060F27BB818600E3A5FE /* TestHumanMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060E27BB818600E3A5FE /* TestHumanMove.swift */; };
+		49FE060F27BB818600E3A5FE /* TestHuman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE060E27BB818600E3A5FE /* TestHuman.swift */; };
 		49FE061127BB879300E3A5FE /* TestScheduleJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE061027BB879300E3A5FE /* TestScheduleJob.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +55,7 @@
 		49FE060727BB642500E3A5FE /* TestField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestField.swift; sourceTree = "<group>"; };
 		49FE060927BB76E200E3A5FE /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
 		49FE060C27BB7D5600E3A5FE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		49FE060E27BB818600E3A5FE /* TestHumanMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHumanMove.swift; sourceTree = "<group>"; };
+		49FE060E27BB818600E3A5FE /* TestHuman.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHuman.swift; sourceTree = "<group>"; };
 		49FE061027BB879300E3A5FE /* TestScheduleJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScheduleJob.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -115,7 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				49FE060727BB642500E3A5FE /* TestField.swift */,
-				49FE060E27BB818600E3A5FE /* TestHumanMove.swift */,
+				49FE060E27BB818600E3A5FE /* TestHuman.swift */,
 				49FE061027BB879300E3A5FE /* TestScheduleJob.swift */,
 				49FE05FA27BB639D00E3A5FE /* Info.plist */,
 			);
@@ -226,7 +226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49FE060F27BB818600E3A5FE /* TestHumanMove.swift in Sources */,
+				49FE060F27BB818600E3A5FE /* TestHuman.swift in Sources */,
 				49FE061127BB879300E3A5FE /* TestScheduleJob.swift in Sources */,
 				49FE060127BB63A900E3A5FE /* main.swift in Sources */,
 				49FE060427BB63A900E3A5FE /* Field.swift in Sources */,

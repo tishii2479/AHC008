@@ -1,4 +1,5 @@
 import sys
+import re
 
 files = [
     "main.swift",
@@ -43,7 +44,7 @@ for file in files:
             # Others
             if skip_line:
                 # If the first line have content, do not skip
-                if len(line) > 1:
+                if not line.isspace():
                     src.append(line)
                 skip_line = False
             else:

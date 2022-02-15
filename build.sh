@@ -4,7 +4,7 @@ python3 comb.py
 
 echo "[LOG] Output file: out/main.swift"
 
-cat out/main.swift
+#cat out/main.swift
 
 echo "[LOG] Compile out/main.swift..."
 
