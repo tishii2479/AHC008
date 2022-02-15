@@ -23,22 +23,22 @@ class FieldTest: XCTestCase {
     // ....
     func testAddPlayer() throws {
         let field = Field()
-        XCTAssertEqual(field.players[1][1].count, 0)
+        XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 0)
         let human = Human(pos: Position(x: 1, y: 1), id: 0)
         field.addPlayer(player: human)
-        XCTAssertEqual(field.players[1][1].count, 1)
+        XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 1)
         let human2 = Human(pos: Position(x: 3, y: 0), id: 1)
         field.addPlayer(player: human2)
-        XCTAssertEqual(field.players[0][3].count, 1)
+        XCTAssertEqual(field.getPlayers(x: 3, y: 0).count, 1)
         
         let wall = Position(x: 0, y: 1)
         field.addWall(wall: wall)
-        XCTAssertTrue(field.walls[1][0])
+        XCTAssertTrue(field.checkWall(x: 0, y: 1))
         
-        XCTAssertEqual(field.players[2][0].count, 0)
+        XCTAssertEqual(field.getPlayers(x: 0, y: 2).count, 0)
         let pet = Pet(kind: .cat, pos: Position(x: 0, y: 2), id: 2)
         field.addPlayer(player: pet)
-        XCTAssertEqual(field.players[2][0].count, 1)
+        XCTAssertEqual(field.getPlayers(x: 0, y: 2).count, 1)
         
         XCTAssertFalse(field.isValidMove(player: human, move: .left))
         XCTAssertTrue(field.isValidMove(player: human, move: .up))

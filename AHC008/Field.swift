@@ -1,7 +1,6 @@
 class Field {
-    // TODO: Stop indexes to access players and walls, to prevent accident of using x and y
-    private(set) var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
-    private(set) var walls = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
+    private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+    private var walls = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
     
     init(players: [Player] = [], walls: [Position] = []) {
         addPlayers(players: players)
@@ -23,7 +22,7 @@ class Field {
     func isValidMove(player: Player, move: Move) -> Bool {
         let nextPosition = player.pos + move.delta
         if !nextPosition.isValid { return false }
-        return !walls[nextPosition.y][nextPosition.x]
+        return !checkWall(at: nextPosition)
     }
     
     // Return true if it satisfies below conditions
@@ -33,16 +32,36 @@ class Field {
     func isValidBlockMove(player: Player, blockMove: BlockMove) -> Bool {
         let target = player.pos
         if !target.isValid { return false }
-        if players[target.y][target.x].count > 0 { return false }
+        if getPlayers(at: target).count > 0 { return false }
         for x in -1 ... 1 {
             for y in -1 ... 1 {
                 let check = Position(x: x, y: y) + target
-                for player in players[check.y][check.x] {
+                for player in getPlayers(at: check) {
                     if player is Pet { return false }
                 }
             }
         }
         return true
+    }
+}
+
+// Field.Utilties
+
+extension Field {
+    func getPlayers(x: Int, y: Int) -> [Player] {
+        getPlayers(at: Position(x: x, y: y))
+    }
+    
+    func getPlayers(at position: Position) -> [Player] {
+        players[position.y][position.x]
+    }
+
+    func checkWall(x: Int, y: Int) -> Bool {
+        checkWall(at: Position(x: x, y: y))
+    }
+    
+    func checkWall(at position: Position) -> Bool {
+        walls[position.y][position.x]
     }
 
     func addPlayer(player: Player) {
