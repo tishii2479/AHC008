@@ -1,12 +1,12 @@
-class GameManager {
+class Manager {
     private var petCount: Int { pets.count }
     private var humanCount: Int { humans.count }
     private var pets = [Pet]()
     private var humans = [Human]()
     private var field = Field()
     
-    func startGame() {
-        initGame()
+    func start() {
+        initialize()
         
         for _ in 0 ..< turnLimit {
             outputHumanMove()
@@ -31,7 +31,7 @@ class GameManager {
         IO.output(moves)
     }
     
-    private func initGame() {
+    private func initialize() {
         let N = IO.readInt()
         for i in 0 ..< N {
             let arr = IO.readIntArray()

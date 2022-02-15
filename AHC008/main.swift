@@ -1,6 +1,6 @@
 func main() {
-    let manager = GameManager()
-    manager.startGame()
+    let manager = Manager()
+    manager.start()
 }
 
 main()
