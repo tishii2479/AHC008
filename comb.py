@@ -1,14 +1,15 @@
 import sys
 
 files = [
-    "Values.swift",
     "main.swift",
-    "GameManager.swift",
+    "Values.swift",
+    "Manager.swift",
     "Solver.swift",
     "Models.swift",
     "Field.swift",
     "Util.swift",
     "IO.swift",
+    "Extensions.swift",
 ]
 
 out_file = "out/main.swift"
@@ -42,7 +43,7 @@ for file in files:
             # Others
             if skip_line:
                 # If the first line have content, do not skip
-                if len(line) > 0:
+                if len(line) > 1:
                     src.append(line)
                 skip_line = False
             else:

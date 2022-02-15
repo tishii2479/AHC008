@@ -29,12 +29,38 @@ class Player: Equatable {
     }
 }
 
+
+class Human: Player {
+    var schedule: Schedule = Schedule()
+}
+
+class Pet: Player {
+    enum Kind: Int {
+        case cow
+        case pig
+        case rabbit
+        case dog
+        case cat
+    }
+    
+    var kind: Kind
+    
+    init(kind: Kind, pos: Position, id: Int) {
+        self.kind = kind
+        super.init(pos: pos, id: id)
+    }
+}
+
 struct Position: Equatable {
     var x: Int
     var y: Int
     
     var isValid: Bool {
         0 <= x && x < fieldSize && 0 <= y && y < fieldSize
+    }
+    
+    func dist(to: Position) -> Int {
+        abs(self.y - to.y) + abs(self.x - to.x)
     }
     
     static func +(lhs: Position, rhs: Position) -> Position {
@@ -52,9 +78,61 @@ struct Position: Equatable {
     static let right = Position(x: 1, y: 0)
 }
 
+// Schedule of human moves
+struct Schedule {
+    // Job to place wall to position
+    private(set) var jobs = Queue<Job>()
+    // Current job length
+    private(set) var cost: Int = 0
+    
+    init(jobs: [Job] = []) {
+        for job in jobs {
+            assign(job: job)
+        }
+    }
+    
+    mutating func assign(job: Job) {
+        cost += job.cost
+        
+        // Add cost to go from previous job
+        if let from = jobs.tail?.walls.tail,
+           let to = job.walls.front {
+            cost += from.dist(to: to)
+        }
+
+        jobs.push(job)
+    }
+}
+
+// There should be two types of human job
+// 1. Place wall
+// 2. Move to space
+// Type 2 should be performed only at the end of the game
+struct Job {
+    // Positions to place walls
+    var walls: Queue<Position>
+    // Estimated time to end this job
+    var cost: Int
+    init(walls: [Position]) {
+        self.walls = Queue<Position>()
+
+        for wall in walls {
+            self.walls.push(wall)
+        }
+
+        // ISSUE: Does not consider current wall, if there is a wall
+        // between the path, the cost will be bigger.
+        cost = 0
+        for i in 0 ..< walls.count - 1 {
+            // Add 1 to place wall
+            cost += walls[i].dist(to: walls[i + 1]) + 1
+        }
+    }
+}
+
 enum Move: Character {
     case none = "."
-    
+
     case up = "U"
     case down = "D"
     case left = "L"
@@ -111,28 +189,5 @@ enum BlockMove: Character {
         default:
             return .zero
         }
-    }
-}
-
-class Human: Player {
-    func applyBlockMove(move: BlockMove) {
-        
-    }
-}
-
-class Pet: Player {
-    enum Kind: Int {
-        case cow
-        case pig
-        case rabbit
-        case dog
-        case cat
-    }
-    
-    var kind: Kind
-    
-    init(kind: Kind, pos: Position, id: Int) {
-        self.kind = kind
-        super.init(pos: pos, id: id)
     }
 }

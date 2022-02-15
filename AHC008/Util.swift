@@ -1,9 +1,22 @@
-class Util {
-}
+struct Queue<T> {
+    private var elements: [T] = []
 
-extension Array where Element: Equatable {
-    mutating func remove(object: Element) {
-        guard let index = firstIndex(of: object) else { return }
-        remove(at: index)
+    mutating func push(_ value: T) {
+        elements.append(value)
+    }
+
+    mutating func pop() -> T? {
+        guard !elements.isEmpty else {
+            return nil
+        }
+        return elements.removeFirst()
+    }
+
+    var front: T? {
+        return elements.first
+    }
+    
+    var tail: T? {
+        return elements.last
     }
 }
