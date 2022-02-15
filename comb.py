@@ -2,8 +2,8 @@ import sys
 import re
 
 files = [
-    "main.swift",
     "Values.swift",
+    "main.swift",
     "Manager.swift",
     "Solver.swift",
     "Models.swift",
