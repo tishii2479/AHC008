@@ -32,6 +32,9 @@ class Player: Equatable {
 
 class Human: Player {
     var schedule: Schedule = Schedule()
+    var jobCost: Int {
+        schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
+    }
 }
 
 class Pet: Player {
@@ -59,8 +62,9 @@ struct Position: Equatable {
         0 <= x && x < fieldSize && 0 <= y && y < fieldSize
     }
     
-    func dist(to: Position) -> Int {
-        abs(self.y - to.y) + abs(self.x - to.x)
+    func dist(to: Position?) -> Int {
+        guard let to = to else { return 0 }
+        return abs(self.y - to.y) + abs(self.x - to.x)
     }
     
     static func +(lhs: Position, rhs: Position) -> Position {
@@ -83,12 +87,31 @@ struct Schedule {
     // Job to place block to position
     private(set) var jobs = Queue<Job>()
     // Current job length
+    // In addition to this cost, the true cost will be the sum of the distance
+    // from the human position to the first job unit position
     private(set) var cost: Int = 0
+    
+    var nextUnit: Job.Unit? {
+        while jobs.front?.units.isEmpty == true {
+            jobs.pop()
+        }
+        return jobs.front?.nextUnit
+    }
     
     init(jobs: [Job] = []) {
         for job in jobs {
             assign(job: job)
         }
+    }
+    
+    // Return jobs[0].units[0] if exists
+    @discardableResult
+    mutating func consume() -> Job.Unit? {
+        guard var job = jobs.front else { return nil }
+        guard let unit = job.consume() else { return nil }
+        // Reduce cost
+        cost -= unit.pos.dist(to: nextUnit?.pos)
+        return unit
     }
     
     mutating func assign(job: Job) {
@@ -108,8 +131,7 @@ struct Schedule {
         // There should be two types of human job
         // 1. move  := Move to space
         // 2. block := Place a block
-        // Type 2 should be performed only at the end of the game
-        struct Unit {
+        struct Unit: Equatable {
             enum Kind {
                 case move
                 case block
@@ -121,6 +143,9 @@ struct Schedule {
         var units = Queue<Unit>()
         // Estimated time to end this job
         var cost: Int = 0
+        var nextUnit: Unit? {
+            units.front
+        }
 
         init(units: [Unit]) {
             for unit in units {
@@ -134,6 +159,11 @@ struct Schedule {
             for i in 0 ..< units.count - 1 {
                 cost += units[i].pos.dist(to: units[i + 1].pos)
             }
+        }
+
+        @discardableResult
+        mutating func consume() -> Unit? {
+            units.pop()
         }
     }
 }

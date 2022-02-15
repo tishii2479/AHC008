@@ -1,11 +1,12 @@
-struct Queue<T> {
+class Queue<T> {
     private var elements: [T] = []
 
-    mutating func push(_ value: T) {
+    func push(_ value: T) {
         elements.append(value)
     }
 
-    mutating func pop() -> T? {
+    @discardableResult
+    func pop() -> T? {
         guard !elements.isEmpty else {
             return nil
         }
@@ -13,10 +14,14 @@ struct Queue<T> {
     }
 
     var front: T? {
-        return elements.first
+        elements.first
     }
     
     var tail: T? {
-        return elements.last
+        elements.last
+    }
+    
+    var isEmpty: Bool {
+        elements.isEmpty
     }
 }
