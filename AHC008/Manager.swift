@@ -1,14 +1,20 @@
 class Manager {
+    private var pets: [Pet]
+    private var humans: [Human]
+    private var field: Field
+    private var director: JobDirector
+    
     private var petCount: Int { pets.count }
     private var humanCount: Int { humans.count }
-    private var pets = [Pet]()
-    private var humans = [Human]()
-    private var field = Field()
-    private var director: JobDirector = Director()
+    
+    init(field: Field, humans: [Human], pets: [Pet], director: JobDirector) {
+        self.field = field
+        self.humans = humans
+        self.pets = pets
+        self.director = director
+    }
     
     func start() {
-        initialize()
-        
         for turn in 0 ..< turnLimit {
             director.assignJobs(field: &field, humans: &humans, pets: &pets, turn: turn)
             outputHumanCommand()
@@ -42,20 +48,16 @@ class Manager {
         
         // 0. Decide command
         for (i, human) in humans.enumerated() {
-            for command in human.commands(field: field) {
-                if field.isValidCommand(player: human, command: command) {
-                    commands[i] = command
-                    break
-                }
+            if let command = human.commands(field: field).first {
+                commands[i] = command
             }
         }
 
         // 1. Apply block
         for (i, human) in humans.enumerated() {
             if !commands[i].isBlock { continue }
-            // TODO: Refactor (avoid miss calling field.addBlock)
             human.applyCommand(command: commands[i])
-            field.addBlock(position: human.pos + commands[i].delta)
+            field.applyCommand(player: human, command: commands[i])
         }
 
         field.updateField(players: humans + pets)
@@ -63,6 +65,7 @@ class Manager {
         // 2. Apply move
         for (i, human) in humans.enumerated() {
             if !commands[i].isMove { continue }
+            // Check the destination is not blocked in this turn
             if field.isValidCommand(player: human, command: commands[i]) {
                 human.applyCommand(command: commands[i])
             }
@@ -72,33 +75,5 @@ class Manager {
         }
         
         return commands
-    }
-    
-    private func initialize() {
-        let N = IO.readInt()
-        for i in 0 ..< N {
-            let arr = IO.readIntArray()
-            guard arr.count == 3,
-                  let kind = Pet.Kind(rawValue: arr[2] - 1) else { fatalError("Input format error") }
-            pets.append(
-                Pet(
-                    kind: kind,
-                    pos: Position(x: arr[1] - 1, y: arr[0] - 1),
-                    id: i
-                )
-            )
-        }
-        let M = IO.readInt()
-        for i in 0 ..< M {
-            let arr = IO.readIntArray()
-            guard arr.count == 2 else { fatalError("Input format error") }
-            humans.append(
-                Human(
-                    pos: Position(x: arr[1] - 1, y: arr[0] - 1),
-                    id: i + N,
-                    logic: Logic()
-                )
-            )
-        }
     }
 }

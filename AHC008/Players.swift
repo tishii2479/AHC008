@@ -41,10 +41,12 @@ class Human: Player {
         super.init(pos: pos, id: id)
     }
     
-    // Call to get command candidate
+    // Call to get command candidate that is valid
     // Will be sorted by priority
     func commands(field: Field) -> [Command] {
-        return logic.command(field: field, pos: pos, jobUnit: schedule.nextUnit)
+        return logic.command(field: field, pos: pos, jobUnit: schedule.nextUnit).filter {
+            field.isValidCommand(player: self, command: $0)
+        }
     }
     
     func assign(job: Schedule.Job) {

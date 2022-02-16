@@ -1,5 +1,5 @@
 //
-//  TestScheduleJob.swift
+//  ScheduleJobTest.swift
 //  AHC008Test
 //
 //  Created by Tatsuya Ishii on 2022/02/15.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class TestScheduleJob: XCTestCase {
+class ScheduleJobTest: XCTestCase {
 
     func testJobManagement() throws {
         let job = Schedule.Job(units: [

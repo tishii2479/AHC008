@@ -15,12 +15,11 @@ struct Director: JobDirector {
         turn: Int
     ) {
         for human in humans {
-            var units = [Schedule.Job.Unit]()
-            let x = Int.random(in: 0 ..< 30)
-            for y in 0 ..< fieldSize {
-                units.append(.init(kind: .block, pos: Position(x: x, y: y)))
-            }
-            let job = Schedule.Job(units: units)
+            let x = Int.random(in: 0 ..< fieldSize)
+            let job = JobUtil.createLineBlockJob(points: [
+                Position(x: x, y: 0),
+                Position(x: x, y: fieldSize - 1),
+            ])
             human.assign(job: job)
         }
     }

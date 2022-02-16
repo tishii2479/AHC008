@@ -5,7 +5,9 @@ import Darwin.C
 #endif
 import Foundation
 
-class IO {
+class IO {}
+
+extension IO {
 
     // MARK: Input
 
@@ -41,18 +43,35 @@ class IO {
         }
         return arr[0]
     }
+    
+}
+
+extension IO {
 
     // MARK: Output
     
+    enum LogType: String {
+        case none   = ""
+        case info   = "[INFO]"
+        case warn   = "[WARN]"
+        case error  = "[ERROR]"
+        case out    = "[OUT]"
+    }
+    
     static func output(_ str: String) {
         print(str)
-        log("[OUT]", str)
+        log(str, type: .out)
         flush()
     }
     
-    static func log(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+    static func log(
+        _ items: Any...,
+        separator: String = " ",
+        terminator: String = "\n",
+        type: LogType = .none
+    ) {
         let output =
-            "[LOG] "
+            "[LOG]" + type.rawValue + " "
             + items.map { "\($0)" }.joined(separator: separator)
             + terminator
         fputs(output, stderr)

@@ -1,5 +1,5 @@
 //
-//  TestHuman.swift
+//  HumanTest.swift
 //  AHC008Test
 //
 //  Created by Tatsuya Ishii on 2022/02/15.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class TestHuman: XCTestCase {
+class HumanTest: XCTestCase {
 
     func testAssignJob() throws {
         let startPosition = Position(x: 3, y: 3)
@@ -42,12 +42,9 @@ class TestHuman: XCTestCase {
         human.assign(job: job)
         
         for _ in 0 ..< 20 {
-            for command in human.commands(field: field) {
-                if field.isValidCommand(player: human, command: command) {
-                    human.applyCommand(command: command)
-                    if command.isBlock { field.addBlock(position: human.pos + command.delta) }
-                    break
-                }
+            if let command = human.commands(field: field).first {
+                human.applyCommand(command: command)
+                field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
         }
@@ -71,12 +68,9 @@ class TestHuman: XCTestCase {
         human.assign(job: job)
         
         for _ in 0 ..< fieldSize * 2 - 1 {
-            for command in human.commands(field: field) {
-                if field.isValidCommand(player: human, command: command) {
-                    human.applyCommand(command: command)
-                    if command.isBlock { field.addBlock(position: human.pos + command.delta) }
-                    break
-                }
+            if let command = human.commands(field: field).first {
+                human.applyCommand(command: command)
+                field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
         }

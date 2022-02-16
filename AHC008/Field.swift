@@ -85,6 +85,12 @@ extension Field {
         for player in players { addPlayer(player: player) }
     }
     
+    func applyCommand(player: Player, command: Command) {
+        if command.isBlock {
+            addBlock(position: player.pos + command.delta)
+        }
+    }
+    
     func addBlock(position: Position) {
         blocks[position.y][position.x] = true
     }
