@@ -43,8 +43,6 @@ class JobAssignTest: XCTestCase {
             field.updateField(players: [human])
         }
         
-        field.dump()
-        
         for y in 0 ... 29 {
             XCTAssertTrue(field.checkBlock(x: 0, y: y))
         }

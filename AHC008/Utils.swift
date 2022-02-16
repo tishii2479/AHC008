@@ -56,7 +56,7 @@ class CommandUtil {
         return cand
     }
     
-    // BFS to find move, but slow
+    // BFS to find move, but slow?
     static func getCandidateMove(from: Position, to: Position, field: Field) -> [Command] {
         let queue = Queue<Position>()
         var dist = [[Int]](repeating: [Int](repeating: 123456, count: fieldSize), count: fieldSize)
@@ -64,11 +64,14 @@ class CommandUtil {
         dist[to.y][to.x] = 0
         while !queue.isEmpty {
             guard let cur = queue.pop() else { break }
+            // Prune unrequired search
+            guard dist[cur.y][cur.x] < dist[from.y][from.x] else { break }
+
             for dir in Position.directions {
                 let nxt = cur + dir
                 guard nxt.isValid,
-                      !field.checkBlock(at: nxt) else { continue }
-                if dist[nxt.y][nxt.x] <= dist[cur.y][cur.x] + 1 { continue }
+                      !field.checkBlock(at: nxt),
+                      dist[nxt.y][nxt.x] > dist[cur.y][cur.x] + 1 else { continue }
                 dist[nxt.y][nxt.x] = dist[cur.y][cur.x] + 1
                 queue.push(nxt)
             }
