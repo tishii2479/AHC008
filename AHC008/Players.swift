@@ -53,6 +53,14 @@ class Human: Player {
         schedule.assign(job: job)
     }
     
+    // The jobCost of this human if the job is assigned
+    func assignedCost(job: Schedule.Job) -> Int {
+        guard let lastJobPosition = schedule.jobs.tail?.units.tail?.pos else {
+            return job.cost
+        }
+        return job.cost + lastJobPosition.dist(to: job.nextUnit?.pos)
+    }
+    
     override func applyCommand(command: Command) {
         super.applyCommand(command: command)
         
