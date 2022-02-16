@@ -91,7 +91,7 @@ struct Schedule {
 
     // Schedule is composed of multiple jobs
     struct Job {
-        // There should be two types of human job
+        // There are two types of human job
         // 1. move  := Mommand to space
         // 2. block := Place a block
         struct Unit: Equatable {

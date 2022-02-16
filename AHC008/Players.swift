@@ -1,6 +1,6 @@
 class Player: Equatable {
-    var pos: Position
-    var id: Int
+    private(set) var pos: Position
+    private(set) var id: Int
     var x: Int { pos.x }
     var y: Int { pos.y }
 
@@ -30,21 +30,20 @@ class Player: Equatable {
 }
 
 class Human: Player {
-    var schedule: Schedule = Schedule()
+    private(set) var schedule: Schedule = Schedule()
     var jobCost: Int {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
-    var logic: HumanLogic
+    private var logic: HumanLogic
 
     init(pos: Position, id: Int, logic: HumanLogic) {
         self.logic = logic
         super.init(pos: pos, id: id)
     }
     
-    // TODO: make this logic injectable from outside
-    // Call to perform a command
-    // Return performed command
-    func command(field: Field) -> [Command] {
+    // Call to get command candidate
+    // Will be sorted by priority
+    func commands(field: Field) -> [Command] {
         return logic.command(field: field, pos: pos, jobUnit: schedule.nextUnit)
     }
     
@@ -57,7 +56,6 @@ class Human: Player {
         
         // Check job completion
         guard let nextUnit = schedule.nextUnit else { return }
-        
         switch nextUnit.kind {
         case .move:
             if pos == nextUnit.pos {
@@ -80,7 +78,7 @@ class Pet: Player {
         case cat
     }
     
-    var kind: Kind
+    private(set) var kind: Kind
     
     init(kind: Kind, pos: Position, id: Int) {
         self.kind = kind

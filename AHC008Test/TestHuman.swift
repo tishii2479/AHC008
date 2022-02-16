@@ -42,7 +42,7 @@ class TestHuman: XCTestCase {
         human.assign(job: job)
         
         for _ in 0 ..< 20 {
-            for command in human.command(field: field) {
+            for command in human.commands(field: field) {
                 if field.isValidCommand(player: human, command: command) {
                     human.applyCommand(command: command)
                     if command.isBlock { field.addBlock(position: human.pos + command.delta) }
@@ -71,7 +71,7 @@ class TestHuman: XCTestCase {
         human.assign(job: job)
         
         for _ in 0 ..< fieldSize * 2 - 1 {
-            for command in human.command(field: field) {
+            for command in human.commands(field: field) {
                 if field.isValidCommand(player: human, command: command) {
                     human.applyCommand(command: command)
                     if command.isBlock { field.addBlock(position: human.pos + command.delta) }

@@ -1,3 +1,22 @@
+class CommandUtil {
+    static func getCandidateMove(from delta: Position) -> [Command] {
+        var cand = [Command]()
+        if delta.x > 0 { cand.append(.moveRight) }
+        if delta.x < 0 { cand.append(.moveLeft) }
+        if delta.y < 0 { cand.append(.moveUp) }
+        if delta.y > 0 { cand.append(.moveDown) }
+        return cand
+    }
+    
+    static func getBlock(from delta: Position) -> Command? {
+        if delta.x > 0 { return .blockRight }
+        if delta.x < 0 { return .blockLeft }
+        if delta.y < 0 { return .blockUp }
+        if delta.y > 0 { return .blockDown }
+        return nil
+    }
+}
+
 class Queue<T> {
     private var elements: [T] = []
 

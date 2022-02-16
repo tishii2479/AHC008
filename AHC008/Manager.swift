@@ -4,20 +4,13 @@ class Manager {
     private var pets = [Pet]()
     private var humans = [Human]()
     private var field = Field()
+    private var director: JobDirector = Director()
     
     func start() {
         initialize()
         
-        for human in humans {
-            var units = [Schedule.Job.Unit]()
-            for y in 0 ..< fieldSize {
-                units.append(.init(kind: .block, pos: Position(x: human.x, y: y)))
-            }
-            let job = Schedule.Job(units: units)
-            human.assign(job: job)
-        }
-        
-        for _ in 0 ..< turnLimit {
+        for turn in 0 ..< turnLimit {
+            director.assignJobs(field: &field, humans: &humans, pets: &pets, turn: turn)
             outputHumanCommand()
             inputPetCommand()
         }
@@ -38,8 +31,47 @@ class Manager {
     }
     
     private func outputHumanCommand() {
-        let commands: [Command] = Solver.solve(field: &field, humans: &humans, pets: &pets)
+        let commands: [Command] = decideAndPerformCommand()
         IO.output(String(commands.map { $0.rawValue }))
+    }
+    
+    private func decideAndPerformCommand() -> [Command] {
+        var commands = [Command](repeating: .none, count: humanCount)
+
+        field.updateField(players: humans + pets)
+        
+        // 0. Decide command
+        for (i, human) in humans.enumerated() {
+            for command in human.commands(field: field) {
+                if field.isValidCommand(player: human, command: command) {
+                    commands[i] = command
+                    break
+                }
+            }
+        }
+
+        // 1. Apply block
+        for (i, human) in humans.enumerated() {
+            if !commands[i].isBlock { continue }
+            // TODO: Refactor (avoid miss calling field.addBlock)
+            human.applyCommand(command: commands[i])
+            field.addBlock(position: human.pos + commands[i].delta)
+        }
+
+        field.updateField(players: humans + pets)
+        
+        // 2. Apply move
+        for (i, human) in humans.enumerated() {
+            if !commands[i].isMove { continue }
+            if field.isValidCommand(player: human, command: commands[i]) {
+                human.applyCommand(command: commands[i])
+            }
+            else {
+                commands[i] = .none
+            }
+        }
+        
+        return commands
     }
     
     private func initialize() {
