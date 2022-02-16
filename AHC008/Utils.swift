@@ -1,6 +1,7 @@
 import Foundation
 
 class JobUtil {
+    // ISSUE: Is not efficent on creating diagonal lines
     static func createLineBlockJob(
         points: [Position],
         startPosition: Position? = nil
@@ -10,19 +11,17 @@ class JobUtil {
             units.append(.init(kind: .move, pos: start))
         }
         
-        if points.count <= 1 {
+        if points.count == 0 {
             IO.log("Points count is \(points.count), \(points)", type: .warn)
+        }
+        else {
+            // Start position
+            units.append(.init(kind: .block, pos: points[0]))
         }
         
         // To avoid infinite loop
         let loopLimit: Int = 100
         
-        if points.count > 0 {
-            // Start position
-            units.append(.init(kind: .block, pos: points[0]))
-        }
-        
-        // ISSUE: Is not efficent on creating diagonal lines
         for i in 0 ..< points.count - 1 {
             var from = points[i]
             let to = points[i + 1]

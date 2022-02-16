@@ -15,23 +15,58 @@ struct Director: JobDirector {
         turn: Int
     ) {
         if turn == 0 {
-            let xs = [0, 20, 10, 0, 20], ys = [1, 1, 10, 20, 20]
-            for (i, human) in humans.enumerated() {
-                let x = xs[i], y = ys[i]
-                let job = JobUtil.createLineBlockJob(points: [
-                    Position(x: x, y: y),
-                    Position(x: x, y: y + 8),
-                    Position(x: x + 8, y: y + 8),
-                    Position(x: x + 8, y: y),
-                    Position(x: x + 2, y: y),
+            let ys = [3, 7, 11, 15, 19, 23, 27]
+            let xs = [8, 10, 19, 21]
+            var jobs = [Schedule.Job]()
+            for y in ys {
+                jobs.append(contentsOf: [
+                    JobUtil.createLineBlockJob(points: [
+                        Position(x: 0, y: y),
+                        Position(x: xs[0] - 1, y: y),
+                    ]),
+                    JobUtil.createLineBlockJob(points: [
+                        Position(x: xs[1] + 1, y: y),
+                        Position(x: xs[2] - 1, y: y),
+                    ]),
+                    JobUtil.createLineBlockJob(points: [
+                        Position(x: xs[3] + 1, y: y),
+                        Position(x: fieldSize - 1, y: y),
+                    ])
                 ])
-                let job2 = Schedule.Job(units: [
-                    .init(kind: .move, pos: Position(x: x + 1, y: y + 1)),
-                    .init(kind: .block, pos: Position(x: x + 1, y: y))
-                ])
-                human.assign(job: job)
-                human.assign(job: job2)
+            }
+            
+            for x in xs {
+                jobs.append(
+                    JobUtil.createLineBlockJob(points: [
+                        Position(x: x, y: 0)
+                    ])
+                )
+                for y in ys {
+                    jobs.append(
+                        JobUtil.createLineBlockJob(points: [
+                            Position(x: x, y: y - 1),
+                            Position(x: x, y: y + 1),
+                        ])
+                    )
+                }
+            }
+            
+            for job in jobs {
+                if let assignee = findAssignee(job: job, humans: &humans) {
+                    assignee.assign(job: job)
+                }
             }
         }
+    }
+    
+    private func findAssignee(job: Schedule.Job, humans: inout [Human]) -> Human? {
+        guard humans.count > 0 else { return nil }
+        var assignee = humans[0]
+        for human in humans {
+            if human.assignedCost(job: job) < assignee.assignedCost(job: job) {
+                assignee = human
+            }
+        }
+        return assignee
     }
 }
