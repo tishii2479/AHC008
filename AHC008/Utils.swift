@@ -47,6 +47,7 @@ class JobUtil {
 }
 
 class CommandUtil {
+    // TODO: rename deltaToCommand?
     static func getCandidateMove(delta: Position) -> [Command] {
         var cand = [Command]()
         if delta.x > 0 { cand.append(.moveRight) }
@@ -58,7 +59,29 @@ class CommandUtil {
     
     // BFS to find move, but slow
     static func getCandidateMove(from: Position, to: Position, field: Field) -> [Command] {
-        return []
+        let queue = Queue<Position>()
+        var dist = [[Int]](repeating: [Int](repeating: 123456, count: fieldSize), count: fieldSize)
+        queue.push(to)
+        dist[to.y][to.x] = 0
+        while !queue.isEmpty {
+            guard let cur = queue.pop() else { break }
+            for dir in Position.directions {
+                let nxt = cur + dir
+                guard nxt.isValid,
+                      !field.checkBlock(at: nxt) else { continue }
+                if dist[nxt.y][nxt.x] <= dist[cur.y][cur.x] + 1 { continue }
+                dist[nxt.y][nxt.x] = dist[cur.y][cur.x] + 1
+                queue.push(nxt)
+            }
+        }
+        var cand = [Command]()
+        for dir in Position.directions {
+            let nxt = from + dir
+            if nxt.isValid && dist[from.y][from.x] == dist[nxt.y][nxt.x] + 1 {
+                cand.append(getCandidateMove(delta: dir)[0])
+            }
+        }
+        return cand
     }
     
     static func getBlock(delta: Position) -> Command? {

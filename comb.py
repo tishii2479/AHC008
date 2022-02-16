@@ -8,7 +8,7 @@ files = [
     "Players.swift",
     "Models.swift",
     "JobDirector.swift",
-    "HumanLogic.swift",
+    "Brain.swift",
     "Field.swift",
     "Utils.swift",
     "IO.swift",

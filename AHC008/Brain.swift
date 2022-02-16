@@ -8,7 +8,7 @@ class HumanBrain: Brain {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
         case .move:
-            let cand = CommandUtil.getCandidateMove(delta: jobUnit.pos - pos)
+            let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
             if cand.count == 0 { return [.none] }
             return cand.shuffled()
         case .block:
@@ -25,7 +25,7 @@ class HumanBrain: Brain {
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.getCandidateMove(delta: jobUnit.pos - pos)
+                let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
                 if cand.count == 0 { return [.none] }
                 return cand.shuffled()
             }
