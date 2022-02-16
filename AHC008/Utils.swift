@@ -12,36 +12,31 @@ class JobUtil {
             IO.log("Points count is \(points.count), \(points)", type: .warn)
         }
         
+        // To avoid infinite loop
+        let loopLimit: Int = 100
+        
+        if points.count > 0 {
+            // Start position
+            units.append(.init(kind: .block, pos: points[0]))
+        }
+        
+        // ISSUE: Is not efficent on creating diagonal lines
         for i in 0 ..< points.count - 1 {
-            let from = points[i], to = points[i + 1]
-            if from.x == to.x {
-                if from.y < to.y {
-                    for y in from.y ... to.y {
-                        units.append(.init(kind: .block, pos: Position(x: from.x, y: y)))
-                    }
+            var from = points[i]
+            let to = points[i + 1]
+            var loopCount: Int = 0
+            while from != to {
+                guard loopCount < loopLimit else {
+                    IO.log("Loop limit exceeded from \(from) to \(to)", type: .warn)
+                    break
                 }
-                else {
-                    for y in to.y ... from.y {
-                        units.append(.init(kind: .block, pos: Position(x: from.x, y: y)))
-                    }
-                    units.reverse()
+                guard let move = CommandUtil.getCandidateMove(delta: to - from).first else {
+                    IO.log("Move not found from \(from) to \(to)", type: .warn)
+                    break
                 }
-            }
-            else if from.y == to.y {
-                if from.x < to.x {
-                    for x in from.x ... to.x {
-                        units.append(.init(kind: .block, pos: Position(x: x, y: from.y)))
-                    }
-                }
-                else {
-                    for x in to.x ... from.x {
-                        units.append(.init(kind: .block, pos: Position(x: x, y: from.y)))
-                    }
-                    units.reverse()
-                }
-            }
-            else {
-                IO.log("Points are not align at \(i)->\(i + 1), points: \(points)", type: .warn)
+                units.append(.init(kind: .block, pos: from + move.delta))
+                from += move.delta
+                loopCount += 1
             }
         }
         
@@ -50,7 +45,7 @@ class JobUtil {
 }
 
 class CommandUtil {
-    static func getCandidateMove(from delta: Position) -> [Command] {
+    static func getCandidateMove(delta: Position) -> [Command] {
         var cand = [Command]()
         if delta.x > 0 { cand.append(.moveRight) }
         if delta.x < 0 { cand.append(.moveLeft) }
@@ -59,7 +54,7 @@ class CommandUtil {
         return cand
     }
     
-    static func getBlock(from delta: Position) -> Command? {
+    static func getBlock(delta: Position) -> Command? {
         if delta.x > 0 { return .blockRight }
         if delta.x < 0 { return .blockLeft }
         if delta.y < 0 { return .blockUp }
@@ -93,5 +88,9 @@ class Queue<T> {
     
     var isEmpty: Bool {
         elements.isEmpty
+    }
+    
+    var count: Int {
+        elements.count
     }
 }

@@ -8,7 +8,7 @@ class Logic: HumanLogic {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
         case .move:
-            let cand = CommandUtil.getCandidateMove(from: jobUnit.pos - pos)
+            let cand = CommandUtil.getCandidateMove(delta: jobUnit.pos - pos)
             if cand.count == 0 { return [.none] }
             return cand.shuffled()
         case .block:
@@ -20,12 +20,12 @@ class Logic: HumanLogic {
             }
             else if dist == 1 {
                 // adjacent to block, so place it
-                guard let block = CommandUtil.getBlock(from: jobUnit.pos - pos) else { return [.none] }
+                guard let block = CommandUtil.getBlock(delta: jobUnit.pos - pos) else { return [.none] }
                 return [block]
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.getCandidateMove(from: jobUnit.pos - pos)
+                let cand = CommandUtil.getCandidateMove(delta: jobUnit.pos - pos)
                 if cand.count == 0 { return [.none] }
                 return cand
             }

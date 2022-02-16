@@ -11,6 +11,11 @@ struct Position: Equatable {
         return abs(self.y - to.y) + abs(self.x - to.x)
     }
     
+    static func +=(lhs: inout Position, rhs: Position) {
+        lhs.x += rhs.x
+        lhs.y += rhs.y
+    }
+    
     static func +(lhs: Position, rhs: Position) -> Position {
         Position(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
     }
