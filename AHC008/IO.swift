@@ -60,7 +60,6 @@ extension IO {
     
     static func output(_ str: String) {
         print(str)
-        log(str, type: .out)
         flush()
     }
     
@@ -70,11 +69,13 @@ extension IO {
         terminator: String = "\n",
         type: LogType = .none
     ) {
-        let output =
-            "[LOG]" + type.rawValue + " "
-            + items.map { "\($0)" }.joined(separator: separator)
-            + terminator
-        fputs(output, stderr)
+//        if type == .error || type == .warn {
+            let output =
+                "[LOG]" + type.rawValue + " "
+                + items.map { "\($0)" }.joined(separator: separator)
+                + terminator
+            fputs(output, stderr)
+//        }
     }
 
     static func flush() {

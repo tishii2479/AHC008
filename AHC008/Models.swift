@@ -1,3 +1,4 @@
+// TODO: Create static func pos(x, y) and func delta(x, y) and avoid invalid position initialize
 struct Position: Equatable {
     var x: Int
     var y: Int
