@@ -1,3 +1,5 @@
+import Foundation
+
 class JobUtil {
     static func createLineBlockJob(
         points: [Position],
@@ -54,6 +56,11 @@ class CommandUtil {
         return cand
     }
     
+    // BFS to find move, but slow
+    static func getCandidateMove(from: Position, to: Position, field: Field) -> [Command] {
+        return []
+    }
+    
     static func getBlock(delta: Position) -> Command? {
         if delta.x > 0 { return .blockRight }
         if delta.x < 0 { return .blockLeft }
@@ -63,34 +70,53 @@ class CommandUtil {
     }
 }
 
-class Queue<T> {
-    private var elements: [T] = []
-
-    func push(_ value: T) {
-        elements.append(value)
+class Node<T> {
+    var value: T
+    var next: Node?
+    
+    init(value: T, next: Node? = nil) {
+        self.value = value
+        self.next = next
     }
+}
 
+class Queue<T> {
+    private(set) var frontNode: Node<T>?
+    private(set) var tailNode: Node<T>?
+    private(set) var count: Int = 0
+    var isEmpty: Bool {
+        frontNode == nil
+    }
+    var front: T? {
+        frontNode?.value
+    }
+    var tail: T? {
+        tailNode?.value
+    }
+    
+    func push(_ value: T) {
+        count += 1
+        if isEmpty {
+            frontNode = Node(value: value, next: frontNode)
+            if tailNode == nil {
+                tailNode = frontNode
+            }
+            return
+        }
+        
+        tailNode?.next = Node(value: value)
+        tailNode = tailNode?.next
+    }
+    
     @discardableResult
     func pop() -> T? {
-        guard !elements.isEmpty else {
-            return nil
+        defer {
+            count -= 1
+            frontNode = frontNode?.next
+            if isEmpty {
+                tailNode = nil
+            }
         }
-        return elements.removeFirst()
-    }
-
-    var front: T? {
-        elements.first
-    }
-    
-    var tail: T? {
-        elements.last
-    }
-    
-    var isEmpty: Bool {
-        elements.isEmpty
-    }
-    
-    var count: Int {
-        elements.count
+        return frontNode?.value
     }
 }
