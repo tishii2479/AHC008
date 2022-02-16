@@ -133,6 +133,20 @@ struct Schedule {
         mutating func consume() -> Unit? {
             units.pop()
         }
+        
+        static func +=(lhs: inout Job, rhs: Job) {
+            var rhs = rhs
+            lhs.cost += rhs.cost
+            if let end = lhs.units.tail?.pos,
+               let to = rhs.units.front?.pos {
+                lhs.cost += end.dist(to: to)
+            }
+            while !rhs.units.isEmpty {
+                if let unit = rhs.consume() {
+                    lhs.units.push(unit)
+                }
+            }
+        }
     }
 }
 

@@ -162,4 +162,29 @@ class ScheduleJobTest: XCTestCase {
         XCTAssertNil(schedule.consume())
     }
     
+    func testCombineJob() throws {
+        var job = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 10, y: 10)),
+            .init(kind: .block, pos: Position(x: 10, y: 20)),
+        ])
+        let jobCopy = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 10, y: 10)),
+            .init(kind: .block, pos: Position(x: 10, y: 20)),
+        ])
+        let job2 = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 3, y: 8)),
+            .init(kind: .block, pos: Position(x: 9, y: 12)),
+        ])
+        let job2Copy = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 3, y: 8)),
+            .init(kind: .block, pos: Position(x: 9, y: 12)),
+        ])
+        var schedule = Schedule(jobs: [jobCopy, job2Copy])
+        job += job2
+        XCTAssertEqual(schedule.cost, job.cost)
+        for _ in 0 ..< 5 {
+            XCTAssertEqual(schedule.consume(), job.consume())
+        }
+    }
+    
 }

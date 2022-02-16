@@ -39,55 +39,30 @@ struct GridJobDirector: JobDirector {
     
     init() {
         for y in ys {
-            grids.append(
-                Grid(
-                    topLeft: Position(x: 0, y: y - 3),
-                    bottomRight: Position(x: xs[0] - 1, y: y - 1),
-                    gates: [Position(x: xs[0], y: y - 2)]
-                )
-            )
-            grids.append(
-                Grid(
-                    topLeft: Position(x: xs[1] + 1, y: y - 3),
-                    bottomRight: Position(x: xs[2] - 1, y: y - 1),
-                    gates: [
-                        Position(x: xs[1], y: y - 2),
-                        Position(x: xs[2], y: y - 2),
-                    ]
-                )
-            )
-            grids.append(
-                Grid(
-                    topLeft: Position(x: xs[3] + 1, y: y - 3),
-                    bottomRight: Position(x: fieldSize - 1, y: y - 1),
-                    gates: [Position(x: xs[3], y: y - 2)]
-                )
-            )
+            grids.append(Grid(
+                            topLeft: Position(x: 0, y: y - 3),
+                            bottomRight: Position(x: xs[0] - 1, y: y - 1),
+                            gates: [Position(x: xs[0], y: y - 2)]))
+            grids.append(Grid(
+                            topLeft: Position(x: xs[1] + 1, y: y - 3),
+                            bottomRight: Position(x: xs[2] - 1, y: y - 1),
+                            gates: [Position(x: xs[1], y: y - 2),Position(x: xs[2], y: y - 2)]))
+            grids.append(Grid(topLeft: Position(x: xs[3] + 1, y: y - 3),
+                              bottomRight: Position(x: fieldSize - 1, y: y - 1),
+                              gates: [Position(x: xs[3], y: y - 2)]))
         }
-        grids.append(
-            Grid(
-                topLeft: Position(x: 0, y: 28),
-                bottomRight: Position(x: xs[0] - 1, y: 29),
-                gates: [Position(x: xs[0], y: 29)]
-            )
-        )
-        grids.append(
-            Grid(
-                topLeft: Position(x: xs[1] + 1, y: 28),
-                bottomRight: Position(x: xs[2] - 1, y: 29),
-                gates: [
-                    Position(x: xs[1], y: 29),
-                    Position(x: xs[2], y: 29),
-                ]
-            )
-        )
-        grids.append(
-            Grid(
-                topLeft: Position(x: xs[3] + 1, y: 28),
-                bottomRight: Position(x: fieldSize - 1, y: 29),
-                gates: [Position(x: xs[3], y: 29)]
-            )
-        )
+        grids.append(Grid(
+                        topLeft: Position(x: 0, y: 28),
+                        bottomRight: Position(x: xs[0] - 1, y: 29),
+                        gates: [Position(x: xs[0], y: 29)]))
+        grids.append(Grid(
+                        topLeft: Position(x: xs[1] + 1, y: 28),
+                        bottomRight: Position(x: xs[2] - 1, y: 29),
+                        gates: [Position(x: xs[1], y: 29), Position(x: xs[2], y: 29)]))
+        grids.append(Grid(
+                        topLeft: Position(x: xs[3] + 1, y: 28),
+                        bottomRight: Position(x: fieldSize - 1, y: 29),
+                        gates: [Position(x: xs[3], y: 29)]))
     }
     
     mutating func directJobs(
@@ -98,9 +73,9 @@ struct GridJobDirector: JobDirector {
     ) {
         if turn == 0 {
             createGrid(field: &field, humans: &humans, pets: &pets)
-            for human in humans {
+            for (i, human) in humans.enumerated() {
                 human.assign(job: Schedule.Job(units: [
-                    .init(kind: .move, pos: Position(x: Bool.random() ? xs[0] + 1 : xs[2] + 1, y: 15))
+                    .init(kind: .move, pos: Position(x: i % 2 == 0 ? xs[0] + 1 : xs[2] + 1, y: Int.random(in: 10 ... 20)))
                 ]))
             }
         }
@@ -116,15 +91,18 @@ struct GridJobDirector: JobDirector {
                 }
                 if petCount > 0 {
                     grids[i].assigned = true
-                    var jobs = [Schedule.Job]()
                     for gate in grids[i].gates {
-                        jobs.append(
-                            Schedule.Job(units: [
-                                .init(kind: .block, pos: gate)
-                            ])
-                        )
+                        let job = Schedule.Job(units: [.init(kind: .block, pos: gate)])
+                        let idx = gate.x < 15 ? 0 : 1
+                        var assignee = humans[idx]
+                        for (i, human) in humans.enumerated() {
+                            if i % 2 != idx { continue }
+                            if human.assignedCost(job: job) < assignee.assignedCost(job: job) {
+                                assignee = human
+                            }
+                        }
+                        assignee.assign(job: job)
                     }
-                    assignJobs(jobs: jobs, humans: &humans)
                 }
             }
         }
