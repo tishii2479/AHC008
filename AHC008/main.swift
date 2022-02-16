@@ -29,7 +29,7 @@ func main() {
         )
     }
     
-    let manager = Manager(field: field, humans: humans, pets: pets, director: Director())
+    let manager = Manager(field: field, humans: humans, pets: pets, director: GridJobDirector())
     manager.start()
 }
 

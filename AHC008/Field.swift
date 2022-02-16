@@ -1,5 +1,6 @@
 class Field {
     private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+    private var pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
     private var blocks = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
     
     init(players: [Player] = [], blocks: [Position] = []) {
@@ -15,6 +16,7 @@ class Field {
     
     func updateField(players updatedPlayers: [Player]) {
         players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+        pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
         addPlayers(players: updatedPlayers)
     }
     
@@ -68,6 +70,14 @@ extension Field {
     func getPlayers(at position: Position) -> [Player] {
         players[position.y][position.x]
     }
+    
+    func getPetCount(x: Int, y: Int) -> Int {
+        getPetCount(at: Position(x: x, y: y))
+    }
+    
+    func getPetCount(at position: Position) -> Int {
+        pets[position.y][position.x]
+    }
 
     func checkBlock(x: Int, y: Int) -> Bool {
         checkBlock(at: Position(x: x, y: y))
@@ -78,7 +88,10 @@ extension Field {
     }
 
     func addPlayer(player: Player) {
-        players[player.pos.y][player.pos.x].append(player)
+        players[player.y][player.x].append(player)
+        if player is Pet {
+            pets[player.y][player.x] += 1
+        }
     }
     
     func addPlayers(players: [Player]) {
