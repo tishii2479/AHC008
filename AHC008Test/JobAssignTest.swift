@@ -26,7 +26,7 @@ class JobAssignTest: XCTestCase {
     func testRunLineBlockJob() throws {
         let field = Field()
         let startPosition = Position(x: 15, y: 15)
-        let human = Human(pos: startPosition, id: 0, logic: Logic())
+        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
         let job = JobUtil.createLineBlockJob(points: [
             Position(x: 0, y: 0),
             Position(x: 0, y: 29),

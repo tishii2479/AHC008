@@ -34,17 +34,17 @@ class Human: Player {
     var jobCost: Int {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
-    private var logic: HumanLogic
+    private var brain: Brain
 
-    init(pos: Position, id: Int, logic: HumanLogic) {
-        self.logic = logic
+    init(pos: Position, id: Int, brain: Brain) {
+        self.brain = brain
         super.init(pos: pos, id: id)
     }
     
     // Call to get command candidate that is valid
     // Will be sorted by priority
     func commands(field: Field) -> [Command] {
-        return logic.command(field: field, pos: pos, jobUnit: schedule.nextUnit).filter {
+        return brain.command(field: field, pos: pos, jobUnit: schedule.nextUnit).filter {
             field.isValidCommand(player: self, command: $0)
         }
     }

@@ -24,7 +24,7 @@ func main() {
             Human(
                 pos: Position(x: arr[1] - 1, y: arr[0] - 1),
                 id: i + N,
-                logic: Logic()
+                brain: HumanBrain()
             )
         )
     }

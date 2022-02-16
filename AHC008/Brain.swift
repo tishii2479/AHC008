@@ -1,9 +1,9 @@
-protocol HumanLogic {
+protocol Brain {
     // Return command with sorted by high priority
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command]
 }
 
-class Logic: HumanLogic {
+class HumanBrain: Brain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
@@ -27,7 +27,7 @@ class Logic: HumanLogic {
                 // cant place block, so move towards the block
                 let cand = CommandUtil.getCandidateMove(delta: jobUnit.pos - pos)
                 if cand.count == 0 { return [.none] }
-                return cand
+                return cand.shuffled()
             }
         }
     }

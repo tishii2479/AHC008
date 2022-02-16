@@ -11,7 +11,7 @@ class HumanTest: XCTestCase {
 
     func testAssignJob() throws {
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0, logic: Logic())
+        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
         let job = Schedule.Job(units: [
             .init(kind: .move, pos: Position(x: 5, y: 7)),
         ])
@@ -30,7 +30,7 @@ class HumanTest: XCTestCase {
     func testPerformJob() throws {
         let field = Field()
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0, logic: Logic())
+        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
         
         field.addPlayer(player: human)
         let job = Schedule.Job(units: [
@@ -57,7 +57,7 @@ class HumanTest: XCTestCase {
     func testPerformBlockLine() throws {
         let field = Field()
         let startPosition = Position(x: 3, y: 1)
-        let human = Human(pos: startPosition, id: 0, logic: Logic())
+        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
         
         field.addPlayer(player: human)
         var units = [Schedule.Job.Unit]()

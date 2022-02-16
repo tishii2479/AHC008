@@ -14,21 +14,25 @@ struct Director: JobDirector {
         pets: inout [Pet],
         turn: Int
     ) {
-        for human in humans {
-            let x = Int.random(in: 2 ..< 22), y = Int.random(in: 2 ..< 22)
-            let job = JobUtil.createLineBlockJob(points: [
-                Position(x: x - 1, y: y),
-                Position(x: x - 1, y: y + 5),
-                Position(x: x + 4, y: y + 5),
-                Position(x: x + 4, y: y),
-                Position(x: x + 1, y: y),
-            ])
-            let job2 = Schedule.Job(units: [
-                .init(kind: .move, pos: Position(x: x, y: y + 1)),
-                .init(kind: .block, pos: Position(x: x, y: y)),
-            ])
-            human.assign(job: job)
-            human.assign(job: job2)
+        if turn == 0 {
+            for (i, human) in humans.enumerated() {
+                let x = i * fieldSize / humans.count
+                IO.log(x)
+                let pre = Schedule.Job(units: [
+                    .init(kind: .move, pos: Position(x: x + 1, y: 0))
+                ])
+                human.assign(job: pre)
+            }
+        }
+        if turn == 30 {
+            for (i, human) in humans.enumerated() {
+                let x = i * fieldSize / humans.count
+                let job = JobUtil.createLineBlockJob(points: [
+                    Position(x: x, y: 0),
+                    Position(x: x, y: fieldSize - 1)
+                ])
+                human.assign(job: job)
+            }
         }
     }
 }
