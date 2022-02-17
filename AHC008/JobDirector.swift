@@ -57,6 +57,33 @@ class SquareGridJobDirector: JobDirector {
     private var costLimit: Int {
         50
     }
+    // Where horizontal block and vertical block intersects
+    private let intersections = [
+        Position(x: 11, y: 4),
+        Position(x: 18, y: 4),
+        Position(x: 6, y: 6),
+        Position(x: 12, y: 6),
+        Position(x: 17, y: 6),
+        Position(x: 23, y: 6),
+        Position(x: 6, y: 23),
+        Position(x: 12, y: 23),
+        Position(x: 17, y: 23),
+        Position(x: 23, y: 23),
+        Position(x: 11, y: 25),
+        Position(x: 18, y: 25),
+        Position(x: 4, y: 11),
+        Position(x: 4, y: 18),
+        Position(x: 25, y: 11),
+        Position(x: 25, y: 18),
+        Position(x: 6, y: 12),
+        Position(x: 6, y: 17),
+        Position(x: 12, y: 12),
+        Position(x: 17, y: 17),
+        Position(x: 12, y: 17),
+        Position(x: 17, y: 12),
+        Position(x: 12, y: 14),
+        Position(x: 17, y: 14),
+    ]
     
     func directJobs(field: inout Field, humans: inout [Human], pets: inout [Pet], turn: Int) {
         if turn == 0 {
@@ -111,7 +138,7 @@ extension SquareGridJobDirector {
                     from: Position(x: x, y: 6),
                     to: Position(x: x, y: 23),
                     checkDirections: [.left, .right],
-                    skipBlocks: gates
+                    skipBlocks: gates + intersections
                 )
             )
         }
@@ -133,7 +160,7 @@ extension SquareGridJobDirector {
                 createLineBlockJob(
                     from: Position(x: x, y: 6),
                     to: Position(x: x, y: 23),
-                    skipBlocks: gates
+                    skipBlocks: gates + intersections
                 )
             )
         }
@@ -153,7 +180,7 @@ extension SquareGridJobDirector {
                     IO.log("Job start position does not exist for \(jobA), \(jobB)", type: .warn)
                     return false
                 }
-                return aStart.x < bStart.x
+                return aStart.y < bStart.y
             })
             
             var vJob = Schedule.Job(units: [])
@@ -198,21 +225,7 @@ extension SquareGridJobDirector {
                     from: Position(x: 6, y: y),
                     to: Position(x: 23, y: y),
                     checkDirections: [.down, .up],
-                    skipBlocks: gates + [
-                        // Where horizontal block and vertical block intersects
-                        Position(x: 11, y: 4),
-                        Position(x: 18, y: 4),
-                        Position(x: 6, y: 6),
-                        Position(x: 12, y: 6),
-                        Position(x: 17, y: 6),
-                        Position(x: 23, y: 6),
-                        Position(x: 6, y: 23),
-                        Position(x: 12, y: 23),
-                        Position(x: 17, y: 23),
-                        Position(x: 23, y: 23),
-                        Position(x: 11, y: 25),
-                        Position(x: 18, y: 25),
-                    ]
+                    skipBlocks: gates + intersections
                 )
             )
         }
@@ -247,169 +260,18 @@ extension SquareGridJobDirector {
                     IO.log("Job start position does not exist for \(jobA), \(jobB)", type: .warn)
                     return false
                 }
-                return aStart.y < bStart.y
-            })
-            
-            var hJob = Schedule.Job(units: [])
-            for job in hJobs[i] {
-                hJob += job
-                if hJob.cost > costLimit {
-                    jobs.append(hJob)
-                    hJob = Schedule.Job(units: [])
-                }
-            }
-            jobs.append(hJob)
-        }
-        
-        assignJobs(jobs: jobs, humans: &humans)
-    }
-
-    private func assignGridJobs(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
-        var jobs = [Schedule.Job]()
-        let gates: [Position] = {
-            var arr = [Position]()
-            for grid in grids { arr.append(grid.gate) }
-            return arr
-        }()
-        
-        var horizontalJobs = [Schedule.Job]()
-        var verticalJobs = [Schedule.Job]()
-        
-        // Side horizontal
-        for y in [5, 11, 18, 24] {
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 0, y: y),
-                Position(x: 3, y: y),
-            ], skipBlocks: gates))
-            
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 26, y: y),
-                Position(x: 29, y: y),
-            ], skipBlocks: gates).reversed())
-        }
-        
-        // Top and bottom horizontal
-        for y in [4, 25] {
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 6, y: y),
-                Position(x: 10, y: y),
-            ], skipBlocks: gates))
-            
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 12, y: y),
-                Position(x: 17, y: y),
-            ], skipBlocks: gates))
-            
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 19, y: y),
-                Position(x: 23, y: y),
-            ], skipBlocks: gates))
-        }
-        
-        // Center sides horizontal
-        for y in [6, 12, 17, 23] {
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 7, y: y),
-                Position(x: 11, y: y),
-            ], skipBlocks: gates))
-            
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 18, y: y),
-                Position(x: 22, y: y),
-            ], skipBlocks: gates))
-        }
-        
-        // Center center horizontal
-        for y in [6, 14, 23] {
-            horizontalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: 13, y: y),
-                Position(x: 16, y: y),
-            ], skipBlocks: gates))
-        }
-        
-        // Side vertical
-        for x in [4, 25] {
-            verticalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: x, y: 6),
-                Position(x: x, y: 24),
-            ], skipBlocks: gates))
-        }
-        
-        // Top and bottom vertical
-        for x in [5, 11, 18, 24] {
-            verticalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: x, y: 0),
-                Position(x: x, y: 4),
-            ], skipBlocks: gates))
-            
-            verticalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: x, y: 25),
-                Position(x: x, y: 29),
-            ], skipBlocks: gates).reversed())
-        }
-        
-        // Center vertical
-        for x in [6, 12, 17, 23] {
-            verticalJobs.append(JobUtil.createLineBlockJob(points: [
-                Position(x: x, y: 6),
-                Position(x: x, y: 23)
-            ], skipBlocks: gates))
-        }
-        
-        var hJobs = [[Schedule.Job]](repeating: [Schedule.Job](), count: 3)
-        for job in horizontalJobs {
-            guard let y = job.nextUnit?.pos.y else {
-                IO.log("Job start position does not exist for \(job)", type: .warn)
-                continue
-            }
-            hJobs[y / 10].append(job)
-        }
-        var vJobs = [[Schedule.Job]](repeating: [Schedule.Job](), count: 3)
-        for job in verticalJobs {
-            guard let x = job.nextUnit?.pos.x else {
-                IO.log("Job start position does not exist for \(job)", type: .warn)
-                continue
-            }
-            vJobs[x / 10].append(job)
-        }
-        for i in 0 ..< 3 {
-            hJobs[i].sort(by: { jobA, jobB in
-                guard let aStart = jobA.nextUnit?.pos, let bStart = jobB.nextUnit?.pos else {
-                    IO.log("Job start position does not exist for \(jobA), \(jobB)", type: .warn)
-                    return false
-                }
-                return aStart.y < bStart.y
-            })
-            vJobs[i].sort(by: { jobA, jobB in
-                guard let aStart = jobA.nextUnit?.pos, let bStart = jobB.nextUnit?.pos else {
-                    IO.log("Job start position does not exist for \(jobA), \(jobB)", type: .warn)
-                    return false
-                }
                 return aStart.x < bStart.x
             })
             
             var hJob = Schedule.Job(units: [])
-            var vJob = Schedule.Job(units: [])
             for job in hJobs[i] {
-                IO.log("H", job.startPosition!, job.endPosition!, job.cost)
                 hJob += job
                 if hJob.cost > costLimit {
-                    IO.log(hJob.cost)
                     jobs.append(hJob)
                     hJob = Schedule.Job(units: [])
                 }
             }
             jobs.append(hJob)
-            for job in vJobs[i] {
-                IO.log("V", job.startPosition!, job.endPosition!, job.cost)
-                vJob += job
-                if vJob.cost > costLimit {
-                    IO.log(vJob.cost)
-                    jobs.append(vJob)
-                    vJob = Schedule.Job(units: [])
-                }
-            }
-            jobs.append(vJob)
         }
         
         assignJobs(jobs: jobs, humans: &humans)
@@ -487,7 +349,9 @@ extension SquareGridJobDirector {
             else {
                 IO.log("Move position is invalid \(movePosition)", type: .warn)
             }
-            units.append(.init(kind: .block, pos: current))
+            if !skipBlocks.contains(current) {
+                units.append(.init(kind: .block, pos: current))
+            }
             current = movePosition
         }
 
