@@ -1,17 +1,13 @@
 import Foundation
 
 class JobUtil {
-    // ISSUE: Is not efficent on creating diagonal lines
     // ISSUE: Write in a row ---->
+    // Do not write diagonal lines!
     static func createLineBlockJob(
         points: [Position],
-        startPosition: Position? = nil,
         skipBlocks: [Position] = []
     ) -> Schedule.Job {
         var units = [Schedule.Job.Unit]()
-        if let start = startPosition {
-            units.append(.init(kind: .move, pos: start))
-        }
         
         if points.count == 0 {
             IO.log("Points count is \(points.count), \(points)", type: .warn)

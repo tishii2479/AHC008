@@ -116,6 +116,9 @@ struct Schedule {
         var startPosition: Position? {
             units.front?.pos
         }
+        var endPosition: Position? {
+            units.tail?.pos
+        }
 
         init(units: [Unit]) {
             for unit in units {

@@ -36,7 +36,7 @@ class Human: Player {
     }
     // The position the human will be after consuming all jobs
     var lastPosition: Position {
-        schedule.jobs.tail?.units.tail?.pos ?? pos
+        schedule.jobs.tail?.endPosition ?? pos
     }
     private var brain: Brain
 
