@@ -99,27 +99,6 @@ class SquareGridJobDirector: JobDirector {
         }
         else if turn >= 150 {
             // Start working around and close gates
-            findGridAndAssign(field: &field, humans: &humans, pets: &pets)
-        }
-    }
-    
-    private func findGridAndAssign(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
-        // Find a grid where pet is in, and the gate is not closed.
-        for i in 0 ..< grids.count {
-            if grids[i].assigned { continue }
-            var petCount: Int = 0
-            var playerCount: Int = 0
-            for x in grids[i].topLeft.x ... grids[i].bottomRight.x {
-                for y in grids[i].topLeft.y ... grids[i].bottomRight.y {
-                    petCount += field.getPetCount(x: x, y: y)
-                    playerCount += field.getPetCount(x: x, y: y)
-                }
-            }
-            if petCount > 0 && petCount == playerCount {
-                grids[i].assigned = true
-                let job = Schedule.Job(units: [.init(kind: .block, pos: grids[i].gate)])
-                assignJobs(jobs: [job], humans: &humans)
-            }
         }
     }
 }
