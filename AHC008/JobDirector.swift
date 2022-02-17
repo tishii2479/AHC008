@@ -92,7 +92,6 @@ class SquareGridJobDirector: JobDirector {
         else if turn == 200 {
             // Start working around and close gates
             for human in humans {
-                human.refreshJobs()
                 human.assign(job: .init(units: [
                     .init(kind: .move, pos: Position(x: 14, y: 24)),
                     .init(kind: .block, pos: Position(x: 14, y: 23))
