@@ -71,8 +71,8 @@ class SquareGridJobDirector: JobDirector {
             Position(x: 17, y: 17),
             Position(x: 12, y: 17),
             Position(x: 17, y: 12),
-            Position(x: 12, y: 14),
-            Position(x: 17, y: 14),
+//            Position(x: 12, y: 14),
+//            Position(x: 17, y: 14),
         ]
         return arr + intersections
     }()
@@ -82,11 +82,20 @@ class SquareGridJobDirector: JobDirector {
             createGrid()
             assignGridJobsHorizontal(field: &field, humans: &humans, pets: &pets)
             assignGridJobsVertical(field: &field, humans: &humans, pets: &pets)
-            // TODO: Gather to center grid for capture wolves
+            // Gather to center grid for capture wolves
+            for human in humans {
+                human.assign(job: .init(units: [
+                    .init(kind: .move, pos: Position(x: 14, y: 8))
+                ]))
+            }
         }
-        else if turn == 150 {
+        else if turn == 200 {
             // Start working around and close gates
             for human in humans {
+                human.assign(job: .init(units: [
+                    .init(kind: .move, pos: Position(x: 14, y: 24)),
+                    .init(kind: .block, pos: Position(x: 14, y: 23))
+                ]))
                 human.brain = HumanBrainWithGridKnowledge(grids: grids)
                 for _ in 0 ..< 10 {
                     human.assign(job: Schedule.Job(units: [
@@ -215,9 +224,9 @@ extension SquareGridJobDirector {
         }
         
         // Center center horizontal
-        horizontalJobs.append(
-            createLineBlockJob(from: Position(x: 13, y: 14), to: Position(x: 16, y: 14))
-        )
+//        horizontalJobs.append(
+//            createLineBlockJob(from: Position(x: 13, y: 14), to: Position(x: 16, y: 14))
+//        )
         
         
         var hJobs = [[Schedule.Job]](repeating: [Schedule.Job](), count: 3)
@@ -294,8 +303,8 @@ extension SquareGridJobDirector {
         // Center
         do {
             let width = 4
-            grids.append(Grid(top: 7, left: 13, width: width, height: 7, gate: Position(x: 14, y: 6)))
-            grids.append(Grid(top: 15, left: 13, width: width, height: 8, gate: Position(x: 14, y: 23)))
+            grids.append(Grid(top: 7, left: 13, width: width, height: 16, gate: Position(x: 14, y: 23)))
+//            grids.append(Grid(top: 15, left: 13, width: width, height: 8, gate: Position(x: 14, y: 23)))
         }
     }
     
