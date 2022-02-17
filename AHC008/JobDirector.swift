@@ -1,4 +1,7 @@
 protocol JobDirector {
+    // How to assign human to jobs
+    // Return the assignee
+    typealias Compare = (_ testHuman: Human, _ currentAssignee: Human, _ job: Schedule.Job) -> Human
     mutating func directJobs(
         field: inout Field,
         humans: inout [Human],
@@ -8,19 +11,17 @@ protocol JobDirector {
 }
 
 extension JobDirector {
-    func assignJobs(jobs: [Schedule.Job], humans: inout [Human]) {
+    func assignJobs(jobs: [Schedule.Job], humans: inout [Human], compare: Compare) {
         for job in jobs {
-            findAssignee(job: job, humans: &humans)?.assign(job: job)
+            findAssignee(job: job, humans: &humans, compare: compare)?.assign(job: job)
         }
     }
     
-    func findAssignee(job: Schedule.Job, humans: inout [Human]) -> Human? {
+    func findAssignee(job: Schedule.Job, humans: inout [Human], compare: Compare) -> Human? {
         guard humans.count > 0 else { return nil }
         var assignee = humans[0]
         for human in humans {
-            if human.assignedCost(job: job) < assignee.assignedCost(job: job) {
-                assignee = human
-            }
+            assignee = compare(human, assignee, job)
         }
         return assignee
     }
@@ -148,6 +149,11 @@ struct GridJobDirector: JobDirector {
             }
         }
         
-        assignJobs(jobs: jobs, humans: &humans)
+        assignJobs(jobs: jobs, humans: &humans, compare: { (testHuman, currentAssignee, job) in
+            if testHuman.assignedCost(job: job) < currentAssignee.assignedCost(job: job) {
+                return testHuman
+            }
+            return currentAssignee
+        })
     }
 }
