@@ -57,43 +57,48 @@ class SquareGridJobDirector: JobDirector {
     private var costLimit: Int {
         50
     }
-    // Where horizontal block and vertical block intersects
-    private let intersections = [
-        Position(x: 11, y: 4),
-        Position(x: 18, y: 4),
-        Position(x: 6, y: 6),
-        Position(x: 12, y: 6),
-        Position(x: 17, y: 6),
-        Position(x: 23, y: 6),
-        Position(x: 6, y: 23),
-        Position(x: 12, y: 23),
-        Position(x: 17, y: 23),
-        Position(x: 23, y: 23),
-        Position(x: 11, y: 25),
-        Position(x: 18, y: 25),
-        Position(x: 4, y: 11),
-        Position(x: 4, y: 18),
-        Position(x: 25, y: 11),
-        Position(x: 25, y: 18),
-        Position(x: 6, y: 12),
-        Position(x: 6, y: 17),
-        Position(x: 12, y: 12),
-        Position(x: 17, y: 17),
-        Position(x: 12, y: 17),
-        Position(x: 17, y: 12),
-        Position(x: 12, y: 14),
-        Position(x: 17, y: 14),
-    ]
+    lazy var skipBlocks: [Position] = {
+        var arr = [Position]()
+        for grid in grids { arr.append(grid.gate) }
+        // Where horizontal block and vertical block intersects
+        let intersections = [
+            Position(x: 11, y: 4),
+            Position(x: 18, y: 4),
+            Position(x: 6, y: 6),
+            Position(x: 12, y: 6),
+            Position(x: 17, y: 6),
+            Position(x: 23, y: 6),
+            Position(x: 6, y: 23),
+            Position(x: 12, y: 23),
+            Position(x: 17, y: 23),
+            Position(x: 23, y: 23),
+            Position(x: 11, y: 25),
+            Position(x: 18, y: 25),
+            Position(x: 4, y: 11),
+            Position(x: 4, y: 18),
+            Position(x: 25, y: 11),
+            Position(x: 25, y: 18),
+            Position(x: 6, y: 12),
+            Position(x: 6, y: 17),
+            Position(x: 12, y: 12),
+            Position(x: 17, y: 17),
+            Position(x: 12, y: 17),
+            Position(x: 17, y: 12),
+            Position(x: 12, y: 14),
+            Position(x: 17, y: 14),
+        ]
+        return arr + intersections
+    }()
     
     func directJobs(field: inout Field, humans: inout [Human], pets: inout [Pet], turn: Int) {
         if turn == 0 {
             createGrid()
             assignGridJobsHorizontal(field: &field, humans: &humans, pets: &pets)
-        }
-        if turn == 75 {
             assignGridJobsVertical(field: &field, humans: &humans, pets: &pets)
+            // Gather to center grid
         }
         else if turn >= 150 {
+            // Start working around and close gates
             findGridAndAssign(field: &field, humans: &humans, pets: &pets)
         }
     }
@@ -124,11 +129,6 @@ class SquareGridJobDirector: JobDirector {
 extension SquareGridJobDirector {
     private func assignGridJobsVertical(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
         var jobs = [Schedule.Job]()
-        let gates: [Position] = {
-            var arr = [Position]()
-            for grid in grids { arr.append(grid.gate) }
-            return arr
-        }()
         var verticalJobs = [Schedule.Job]()
         
         // Side vertical
@@ -138,7 +138,7 @@ extension SquareGridJobDirector {
                     from: Position(x: x, y: 6),
                     to: Position(x: x, y: 23),
                     checkDirections: [.left, .right],
-                    skipBlocks: gates + intersections
+                    skipBlocks: skipBlocks
                 )
             )
         }
@@ -160,7 +160,7 @@ extension SquareGridJobDirector {
                 createLineBlockJob(
                     from: Position(x: x, y: 6),
                     to: Position(x: x, y: 23),
-                    skipBlocks: gates + intersections
+                    skipBlocks: skipBlocks
                 )
             )
         }
@@ -199,12 +199,6 @@ extension SquareGridJobDirector {
     
     private func assignGridJobsHorizontal(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
         var jobs = [Schedule.Job]()
-        let gates: [Position] = {
-            var arr = [Position]()
-            for grid in grids { arr.append(grid.gate) }
-            return arr
-        }()
-        
         var horizontalJobs = [Schedule.Job]()
         
         // Side horizontal
@@ -225,7 +219,7 @@ extension SquareGridJobDirector {
                     from: Position(x: 6, y: y),
                     to: Position(x: 23, y: y),
                     checkDirections: [.down, .up],
-                    skipBlocks: gates + intersections
+                    skipBlocks: skipBlocks
                 )
             )
         }
@@ -324,6 +318,27 @@ extension SquareGridJobDirector {
             grids.append(Grid(top: 15, left: 13, width: width, height: 8, gate: Position(x: 14, y: 23)))
         }
     }
+    
+    // For Debug
+    private func dumpGrids(grids: [Grid]) {
+        for grid in grids {
+            var f = [[String]](repeating: [String](repeating: ".", count: fieldSize), count: fieldSize)
+            for x in grid.topLeft.x ... grid.bottomRight.x {
+                for y in grid.topLeft.y ... grid.bottomRight.y {
+                    f[y][x] = "0"
+                }
+            }
+            f[grid.gate.y][grid.gate.x] = "!"
+            var str = "\n"
+            for y in 0 ..< fieldSize {
+                for x in 0 ..< fieldSize {
+                    str += f[y][x]
+                }
+                str += "\n"
+            }
+            IO.log(grid, str)
+        }
+    }
 }
 
 // MARK: SquareGridJobDirector.Helper
@@ -389,26 +404,6 @@ extension SquareGridJobDirector {
         }
         
         return Schedule.Job(units: units)
-    }
-    
-    private func dumpGrids(grids: [Grid]) {
-        for grid in grids {
-            var f = [[String]](repeating: [String](repeating: ".", count: fieldSize), count: fieldSize)
-            for x in grid.topLeft.x ... grid.bottomRight.x {
-                for y in grid.topLeft.y ... grid.bottomRight.y {
-                    f[y][x] = "0"
-                }
-            }
-            f[grid.gate.y][grid.gate.x] = "!"
-            var str = "\n"
-            for y in 0 ..< fieldSize {
-                for x in 0 ..< fieldSize {
-                    str += f[y][x]
-                }
-                str += "\n"
-            }
-            IO.log(grid, str)
-        }
     }
 
 }
