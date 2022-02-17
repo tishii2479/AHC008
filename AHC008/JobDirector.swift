@@ -48,7 +48,7 @@ class SquareGridJobDirector: JobDirector {
     func directJobs(field: inout Field, humans: inout [Human], pets: inout [Pet], turn: Int) {
         if turn == 0 {
             grids = GridCreator().createGrid()
-            assignGridJobs2(field: &field, humans: &humans, pets: &pets)
+            assignGridJobs(field: &field, humans: &humans, pets: &pets)
             // Gather to center grid for capture wolves
 //            for human in humans {
 //                human.assign(job: .init(units: [
@@ -128,7 +128,7 @@ class SquareGridJobDirector: JobDirector {
 // MARK: SquareGridJobDirector.Assign
 
 extension SquareGridJobDirector {
-    private func assignGridJobs2(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    private func assignGridJobs(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
         var jobs = [Schedule.Job]()
         
         var leftSideJob = Schedule.Job(units: [])
@@ -236,95 +236,6 @@ extension SquareGridJobDirector {
                 createLineBlockJob(from: Position(x: 16, y: 16), to: Position(x: 16, y: 23), skipBlocks: skipBlocks)
             )
         }
-        
-        assignJobs(jobs: jobs, humans: &humans)
-    }
-
-    private func assignGridJobs(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
-        var jobs = [Schedule.Job]()
-        
-        // Side horizontal
-        for y in [4, 11, 18, 25] {
-            jobs.append(
-                createLineBlockJob(from: Position(x: 0, y: y), to: Position(x: 2, y: y))
-            )
-            
-            jobs.append(
-                createLineBlockJob(from: Position(x: 29, y: y), to: Position(x: 27, y: y))
-            )
-        }
-        
-        // Top and bottom horizontal
-        for y in [3, 26] {
-            jobs.append(
-                createLineBlockJob(from: Position(x: 4, y: y), to: Position(x: 25, y: y), skipBlocks: skipBlocks)
-            )
-        }
-        
-        // Center horizontal
-        do {
-            jobs.append(
-                createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 13, y: 20))
-            )
-            jobs.append(
-                createLineBlockJob(from: Position(x: 16, y: 9), to: Position(x: 23, y: 9))
-            )
-        }
-
-        // Side vertical
-        for x in [3, 26] {
-            jobs.append(
-                createLineBlockJob(from: Position(x: x, y: 5), to: Position(x: x, y: 24), skipBlocks: skipBlocks)
-            )
-        }
-        
-        // Top and bottom vertical
-        for x in [5, 11, 18, 24] {
-            jobs.append(
-                createLineBlockJob(from: Position(x: x, y: 0), to: Position(x: x, y: 2))
-            )
-            jobs.append(
-                createLineBlockJob(from: Position(x: x, y: 29), to: Position(x: x, y: 27))
-            )
-        }
-        
-        // Center vertical
-        do {
-            jobs.append(
-                createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 13))
-            )
-            jobs.append(
-                createLineBlockJob(from: Position(x: 20, y: 16), to: Position(x: 20, y: 23))
-            )
-        }
-        
-        // Center squares
-        do {
-            let l = [5, 5, 15, 16]
-            let r = [13, 14, 24, 24]
-            let t = [5, 16, 5, 15]
-            let b = [14, 24, 13, 24]
-            
-            for i in 0 ..< 4 {
-                jobs.append(
-                    createSquareBlockJob(points: [
-                        Position(x: l[i], y: t[i]),
-                        Position(x: l[i], y: b[i]),
-                        Position(x: r[i], y: b[i]),
-                        Position(x: r[i], y: t[i]),
-                        Position(x: l[i], y: t[i]),
-                    ], skipBlocks: skipBlocks)
-                )
-            }
-        }
-        
-        jobs.sort(by: { (a, b) in
-            guard let aPos = a.nextUnit?.pos,
-                  let bPos = b.nextUnit?.pos else {
-                return false
-            }
-            return aPos.x < bPos.x
-        })
         
         assignJobs(jobs: jobs, humans: &humans)
     }
