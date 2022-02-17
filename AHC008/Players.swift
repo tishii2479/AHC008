@@ -65,6 +65,12 @@ class Human: Player {
         return jobCost + job.cost + lastJobPosition.dist(to: job.nextUnit?.pos)
     }
     
+    func refreshJobs() {
+        while schedule.nextUnit != nil {
+            schedule.consume()
+        }
+    }
+    
     override func applyCommand(command: Command) {
         super.applyCommand(command: command)
         

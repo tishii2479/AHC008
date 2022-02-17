@@ -92,6 +92,7 @@ class SquareGridJobDirector: JobDirector {
         else if turn == 200 {
             // Start working around and close gates
             for human in humans {
+                human.refreshJobs()
                 human.assign(job: .init(units: [
                     .init(kind: .move, pos: Position(x: 14, y: 24)),
                     .init(kind: .block, pos: Position(x: 14, y: 23))
@@ -310,23 +311,23 @@ extension SquareGridJobDirector {
     
     // For Debug
     private func dumpGrids(grids: [Grid]) {
-        for grid in grids {
-            var f = [[String]](repeating: [String](repeating: ".", count: fieldSize), count: fieldSize)
+        var f = [[String]](repeating: [String](repeating: ".", count: fieldSize), count: fieldSize)
+        for (i, grid) in grids.enumerated() {
             for x in grid.topLeft.x ... grid.bottomRight.x {
                 for y in grid.topLeft.y ... grid.bottomRight.y {
-                    f[y][x] = "0"
+                    f[y][x] = String(i)
                 }
             }
             f[grid.gate.y][grid.gate.x] = "!"
-            var str = "\n"
-            for y in 0 ..< fieldSize {
-                for x in 0 ..< fieldSize {
-                    str += f[y][x]
-                }
-                str += "\n"
-            }
-            IO.log(grid, str)
         }
+        var str = "\n"
+        for y in 0 ..< fieldSize {
+            for x in 0 ..< fieldSize {
+                str += f[y][x]
+            }
+            str += "\n"
+        }
+        IO.log(str)
     }
 }
 
