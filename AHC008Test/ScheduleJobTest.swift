@@ -187,4 +187,15 @@ class ScheduleJobTest: XCTestCase {
         }
     }
     
+    func testReverseJob() throws {
+        let job = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 10, y: 10)),
+            .init(kind: .block, pos: Position(x: 10, y: 20)),
+        ])
+        var reversedJob = job.reversed()
+        XCTAssertEqual(reversedJob.nextUnit, job.units.tail)
+        reversedJob.consume()
+        XCTAssertEqual(reversedJob.nextUnit, job.nextUnit)
+    }
+    
 }

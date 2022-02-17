@@ -57,9 +57,7 @@ struct Schedule {
     private(set) var cost: Int = 0
     
     var nextUnit: Job.Unit? {
-        while jobs.front?.units.isEmpty == true {
-            jobs.pop()
-        }
+        while jobs.front?.units.isEmpty == true { jobs.pop() }
         return jobs.front?.nextUnit
     }
     
@@ -75,10 +73,11 @@ struct Schedule {
     mutating func consume() -> Job.Unit? {
         guard var job = jobs.front else { return nil }
         guard let unit = job.consume() else { return nil }
-
+        
         // End job unit, so reduce cost
         cost -= unit.pos.dist(to: nextUnit?.pos)
         if unit.kind == .block { cost -= 1 }
+        
         return unit
     }
     
@@ -151,6 +150,20 @@ struct Schedule {
                     lhs.units.push(unit)
                 }
             }
+        }
+        
+        func reversed() -> Job {
+            var copy = copy()
+            var units = [Unit]()
+            while copy.nextUnit != nil {
+                units.append(copy.consume()!)
+            }
+            units.reverse()
+            return Job(units: units)
+        }
+        
+        func copy() -> Job {
+            return Job(units: self.units.elements)
         }
     }
 }

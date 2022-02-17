@@ -2,9 +2,11 @@ import Foundation
 
 class JobUtil {
     // ISSUE: Is not efficent on creating diagonal lines
+    // ISSUE: Write in a row ---->
     static func createLineBlockJob(
         points: [Position],
-        startPosition: Position? = nil
+        startPosition: Position? = nil,
+        skipBlocks: [Position] = []
     ) -> Schedule.Job {
         var units = [Schedule.Job.Unit]()
         if let start = startPosition {
@@ -35,8 +37,11 @@ class JobUtil {
                     IO.log("Move not found from \(from) to \(to)", type: .warn)
                     break
                 }
-                units.append(.init(kind: .block, pos: from + move.delta))
                 from += move.delta
+                // Check skip blocks
+                if !skipBlocks.contains(from) {
+                    units.append(.init(kind: .block, pos: from))
+                }
                 loopCount += 1
             }
         }
@@ -94,13 +99,19 @@ class CommandUtil {
     }
 }
 
-class Node<T> {
+class Node<T> : Equatable {
+    let id: UUID
     var value: T
     var next: Node?
     
     init(value: T, next: Node? = nil) {
+        self.id = UUID()
         self.value = value
         self.next = next
+    }
+    
+    static func == (lhs: Node<T>, rhs: Node<T>) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
@@ -108,6 +119,20 @@ class Queue<T> {
     private(set) var frontNode: Node<T>?
     private(set) var tailNode: Node<T>?
     private(set) var count: Int = 0
+    var elements: [T] {
+        var res = [T]()
+        var currentNode = frontNode
+        while currentNode != tailNode {
+            if let value = currentNode?.value {
+                res.append(value)
+            }
+            currentNode = currentNode?.next
+        }
+        if let value = currentNode?.value {
+            res.append(value)
+        }
+        return res
+    }
     var isEmpty: Bool {
         frontNode == nil
     }
