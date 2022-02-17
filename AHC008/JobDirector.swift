@@ -51,10 +51,10 @@ class SquareGridJobDirector: JobDirector {
             assignGridJobs(field: &field, humans: &humans, pets: &pets)
             // Gather to center grid for capture wolves
             let positions = [
-                Position(x: 7, y: 15),
-                Position(x: 14, y: 7),
-                Position(x: 15, y: 22),
-                Position(x: 22, y: 14),
+                Position(x: 6, y: 15),
+                Position(x: 15, y: 23),
+                Position(x: 23, y: 14),
+                Position(x: 14, y: 6),
             ]
             for (i, human) in humans.enumerated() {
                 human.assign(job: .init(units: [
@@ -63,39 +63,50 @@ class SquareGridJobDirector: JobDirector {
             }
         }
         else if turn == 200 {
-            let moves = [
-                Position(x: 5, y: 15),
-                Position(x: 14, y: 5),
-                Position(x: 15, y: 24),
-                Position(x: 24, y: 14),
-            ]
             let blocks = [
-                Position(x: 6, y: 15),
-                Position(x: 14, y: 6),
-                Position(x: 15, y: 23),
-                Position(x: 23, y: 14),
+                Position(x: 7, y: 15),
+                Position(x: 15, y: 22),
+                Position(x: 22, y: 14),
+                Position(x: 14, y: 7),
+            ]
+            let start = [
+                Position(x: 4, y: 15),
+                Position(x: 14, y: 4),
+                Position(x: 15, y: 25),
+                Position(x: 25, y: 14),
+            ]
+            var corners: [Schedule.Job.Unit] = [
+                Schedule.Job.Unit(kind: .patrol, pos: Position(x: 4, y: 4)),
+                Schedule.Job.Unit(kind: .patrol, pos: Position(x: 4, y: 25)),
+                Schedule.Job.Unit(kind: .patrol, pos: Position(x: 25, y: 25)),
+                Schedule.Job.Unit(kind: .patrol, pos: Position(x: 25, y: 4)),
             ]
             // Start working around and close gates
             for (i, human) in humans.enumerated() {
-                human.assign(job: .init(units: [
-                    .init(kind: .move, pos: moves[i % 4]),
-                    .init(kind: .block, pos: blocks[i % 4]),
-                ]))
-            }
-            for human in humans {
                 human.brain = HumanBrainWithGridKnowledge(grids: grids)
+                human.assign(job: .init(units: [
+                    .init(kind: .block, pos: blocks[i % 4]),
+                    .init(kind: .move, pos: start[i % 4])
+                ]))
                 for _ in 0 ..< 10 {
-                    human.assign(job: Schedule.Job(units: [
-                        .init(kind: .patrol, pos: Position(x: 4, y: 4)),
-                        .init(kind: .patrol, pos: Position(x: 4, y: 25)),
-                        .init(kind: .patrol, pos: Position(x: 25, y: 25)),
-                        .init(kind: .patrol, pos: Position(x: 25, y: 4)),
-                    ].shuffled()))
+                    human.assign(
+                        job: Schedule.Job(
+                            units: [
+                                corners[i % 4],
+                                corners[(i + 1) % 4],
+                                corners[(i + 2) % 4],
+                                corners[(i + 3) % 4],
+                            ]
+                        )
+                    )
+                }
+                if i % 4 == 3 {
+                    corners.reverse()
                 }
             }
         }
-        else if turn >= 270 {
-            // TODO: Do something
+        else if turn == 300 {
+            // TODO: Do best move, search all
         }
     }
 
