@@ -8,6 +8,7 @@ files = [
     "Players.swift",
     "Models.swift",
     "JobDirector.swift",
+    "GridCreator.swift",
     "Brain.swift",
     "Field.swift",
     "Utils.swift",

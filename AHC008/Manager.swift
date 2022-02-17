@@ -41,7 +41,7 @@ class Manager {
         IO.output(String(commands.map { $0.rawValue }))
     }
     
-    private func decideAndPerformCommand() -> [Command] {
+    func decideAndPerformCommand() -> [Command] {
         var commands = [Command](repeating: .none, count: humanCount)
 
         field.updateField(players: humans + pets)

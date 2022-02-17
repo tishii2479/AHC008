@@ -14,6 +14,8 @@
 		49B749C527BC881E0070016C /* JobAssignTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B749C427BC881E0070016C /* JobAssignTest.swift */; };
 		49B749C727BCA34E0070016C /* UtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B749C627BCA34E0070016C /* UtilsTest.swift */; };
 		49F5CA1927BE6C9F00AA4C2B /* JobDirectorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */; };
+		49F5CA1B27BE93D700AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
+		49F5CA1C27BE991300AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
 		49FE05ED27BB4F0900E3A5FE /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EC27BB4F0900E3A5FE /* Field.swift */; };
 		49FE05EF27BB4FDC00E3A5FE /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05EE27BB4FDC00E3A5FE /* Values.swift */; };
 		49FE05F127BB57B900E3A5FE /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE05F027BB57B900E3A5FE /* Utils.swift */; };
@@ -58,6 +60,7 @@
 		49B749C427BC881E0070016C /* JobAssignTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAssignTest.swift; sourceTree = "<group>"; };
 		49B749C627BCA34E0070016C /* UtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTest.swift; sourceTree = "<group>"; };
 		49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDirectorTest.swift; sourceTree = "<group>"; };
+		49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCreator.swift; sourceTree = "<group>"; };
 		49FE05EC27BB4F0900E3A5FE /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		49FE05EE27BB4FDC00E3A5FE /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
 		49FE05F027BB57B900E3A5FE /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -122,6 +125,7 @@
 				49FE060C27BB7D5600E3A5FE /* Extensions.swift */,
 				49FE061227BBE03A00E3A5FE /* Players.swift */,
 				49FE061527BBE2CA00E3A5FE /* Brain.swift */,
+				49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */,
 			);
 			path = AHC008;
 			sourceTree = "<group>";
@@ -238,6 +242,7 @@
 				49258AC827BA8B59006C8BEA /* Manager.swift in Sources */,
 				49258AB727BA8308006C8BEA /* main.swift in Sources */,
 				49FE061327BBE03A00E3A5FE /* Players.swift in Sources */,
+				49F5CA1B27BE93D700AA4C2B /* GridCreator.swift in Sources */,
 				49258ACA27BAA7B5006C8BEA /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +267,7 @@
 				49FE061C27BBE8D500E3A5FE /* Models.swift in Sources */,
 				49FE062327BBE8D500E3A5FE /* Field.swift in Sources */,
 				49B749C527BC881E0070016C /* JobAssignTest.swift in Sources */,
+				49F5CA1C27BE991300AA4C2B /* GridCreator.swift in Sources */,
 				49FE062127BBE8D500E3A5FE /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
