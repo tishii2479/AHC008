@@ -34,6 +34,10 @@ class Human: Player {
     var jobCost: Int {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
+    // The position the human will be after consuming all jobs
+    var lastPosition: Position {
+        schedule.jobs.tail?.units.tail?.pos ?? pos
+    }
     private var brain: Brain
 
     init(pos: Position, id: Int, brain: Brain) {

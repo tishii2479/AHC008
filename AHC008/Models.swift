@@ -108,11 +108,14 @@ struct Schedule {
             var pos: Position
         }
 
-        var units = Queue<Unit>()
+        private(set) var units = Queue<Unit>()
         // Estimated time to end this job
         var cost: Int = 0
         var nextUnit: Unit? {
             units.front
+        }
+        var startPosition: Position? {
+            units.front?.pos
         }
 
         init(units: [Unit]) {
@@ -124,8 +127,10 @@ struct Schedule {
             // Cacluate distance of adjacent job units
             // ISSUE: Does not consider current block, if there is a block
             // between the path, the cost will be bigger.
-            for i in 0 ..< units.count - 1 {
-                cost += units[i].pos.dist(to: units[i + 1].pos)
+            if units.count > 0 {
+                for i in 0 ..< units.count - 1 {
+                    cost += units[i].pos.dist(to: units[i + 1].pos)
+                }
             }
         }
 

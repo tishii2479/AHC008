@@ -2,7 +2,8 @@ protocol JobDirector {
     // How to assign human to jobs
     // Return the assignee
     typealias Compare = (_ testHuman: Human, _ currentAssignee: Human, _ job: Schedule.Job) -> Human
-    mutating func directJobs(
+    typealias Eval = (_ human: Human, _ job: Schedule.Job) -> Int
+    func directJobs(
         field: inout Field,
         humans: inout [Human],
         pets: inout [Pet],
@@ -27,7 +28,7 @@ extension JobDirector {
     }
 }
 
-struct GridJobDirector: JobDirector {
+class ThreeColumnGridJobDirector: JobDirector {
     private struct Grid {
         var topLeft: Position
         var bottomRight: Position
@@ -66,7 +67,7 @@ struct GridJobDirector: JobDirector {
                         gates: [Position(x: xs[3], y: 29)]))
     }
     
-    mutating func directJobs(
+    func directJobs(
         field: inout Field,
         humans: inout [Human],
         pets: inout [Pet],
@@ -116,6 +117,14 @@ struct GridJobDirector: JobDirector {
         pets: inout [Pet]
     ) {
         var jobs = [Schedule.Job]()
+        
+        for x in xs {
+            jobs.append(
+                JobUtil.createLineBlockJob(points: [
+                    Position(x: x, y: 0)
+                ])
+            )
+        }
         for y in ys {
             jobs.append(contentsOf: [
                 JobUtil.createLineBlockJob(points: [
@@ -131,15 +140,8 @@ struct GridJobDirector: JobDirector {
                     Position(x: fieldSize - 1, y: y),
                 ])
             ])
-        }
-        
-        for x in xs {
-            jobs.append(
-                JobUtil.createLineBlockJob(points: [
-                    Position(x: x, y: 0)
-                ])
-            )
-            for y in ys {
+            
+            for x in xs {
                 jobs.append(
                     JobUtil.createLineBlockJob(points: [
                         Position(x: x, y: y - 1),
@@ -149,11 +151,17 @@ struct GridJobDirector: JobDirector {
             }
         }
         
-        assignJobs(jobs: jobs, humans: &humans, compare: { (testHuman, currentAssignee, job) in
-            if testHuman.assignedCost(job: job) < currentAssignee.assignedCost(job: job) {
+        let eval: Eval = { human, job in
+            human.assignedCost(job: job)
+        }
+        
+        let cmp: Compare = { (testHuman, currentAssignee, job) in
+            if eval(testHuman, job) < eval(currentAssignee, job) {
                 return testHuman
             }
             return currentAssignee
-        })
+        }
+        
+        assignJobs(jobs: jobs, humans: &humans, compare: cmp)
     }
 }
