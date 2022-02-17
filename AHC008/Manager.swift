@@ -67,7 +67,8 @@ class Manager {
             if commands[i].isBlock { continue }
             // Check the destination is not blocked in this turn
             if !field.isValidCommand(player: human, command: commands[i]) {
-                commands[i] = .none
+                commands[i] = Command.moves
+                    .filter { field.isValidCommand(player: human, command: $0) }.randomElement() ?? .none
             }
             human.applyCommand(command: commands[i])
         }
