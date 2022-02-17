@@ -199,6 +199,7 @@ extension SquareGridJobDirector {
                     to: Position(x: 23, y: y),
                     checkDirections: [.down, .up],
                     skipBlocks: gates + [
+                        // Where horizontal block and vertical block intersects
                         Position(x: 11, y: 4),
                         Position(x: 18, y: 4),
                         Position(x: 6, y: 6),

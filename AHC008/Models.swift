@@ -156,10 +156,10 @@ struct Schedule {
         }
         
         func reversed() -> Job {
-            var copy = copy()
+            var copiedJob = copy()
             var units = [Unit]()
-            while copy.nextUnit != nil {
-                units.append(copy.consume()!)
+            while copiedJob.nextUnit != nil {
+                units.append(copiedJob.consume()!)
             }
             units.reverse()
             return Job(units: units)

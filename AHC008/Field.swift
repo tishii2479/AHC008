@@ -78,6 +78,14 @@ extension Field {
     func getPetCount(at position: Position) -> Int {
         pets[position.y][position.x]
     }
+    
+    func getHumanCount(x: Int, y: Int) -> Int {
+        getHumanCount(at: Position(x: x, y: y))
+    }
+    
+    func getHumanCount(at position: Position) -> Int {
+        getPlayers(x: position.x, y: position.y).count - pets[position.y][position.x]
+    }
 
     func checkBlock(x: Int, y: Int) -> Bool {
         checkBlock(at: Position(x: x, y: y))
