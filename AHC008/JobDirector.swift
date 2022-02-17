@@ -135,11 +135,11 @@ extension SquareGridJobDirector {
         // Top and bottom vertical
         for x in [5, 11, 18, 24] {
             verticalJobs.append(
-                createLineBlockJob(from: Position(x: x, y: 0), to: Position(x: x, y: 4))
+                createLineBlockJob(from: Position(x: x, y: 0), to: Position(x: x, y: 3))
             )
             
             verticalJobs.append(
-                createLineBlockJob(from: Position(x: x, y: 29), to: Position(x: x, y: 25))
+                createLineBlockJob(from: Position(x: x, y: 29), to: Position(x: x, y: 26))
             )
         }
         
