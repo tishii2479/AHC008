@@ -64,14 +64,12 @@ class Manager {
         
         // 2. Apply move
         for (i, human) in humans.enumerated() {
-            if !commands[i].isMove { continue }
+            if commands[i].isBlock { continue }
             // Check the destination is not blocked in this turn
-            if field.isValidCommand(player: human, command: commands[i]) {
-                human.applyCommand(command: commands[i])
-            }
-            else {
+            if !field.isValidCommand(player: human, command: commands[i]) {
                 commands[i] = .none
             }
+            human.applyCommand(command: commands[i])
         }
         
         return commands

@@ -39,19 +39,6 @@ extension JobDirector {
     }
 }
 
-private struct Grid {
-    var topLeft: Position
-    var bottomRight: Position
-    var gate: Position
-    var assigned: Bool = false
-    
-    init(top: Int, left: Int, width: Int, height: Int, gate: Position) {
-        self.topLeft = Position(x: left, y: top)
-        self.bottomRight = Position(x: left + width - 1, y: top + height - 1)
-        self.gate = gate
-    }
-}
-
 class SquareGridJobDirector: JobDirector {
     private var grids = [Grid]()
     private var costLimit: Int {
@@ -95,10 +82,24 @@ class SquareGridJobDirector: JobDirector {
             createGrid()
             assignGridJobsHorizontal(field: &field, humans: &humans, pets: &pets)
             assignGridJobsVertical(field: &field, humans: &humans, pets: &pets)
-            // Gather to center grid
+            // TODO: Gather to center grid for capture wolves
         }
-        else if turn >= 150 {
+        else if turn == 150 {
             // Start working around and close gates
+            for human in humans {
+                human.brain = HumanBrainWithGridKnowledge(grids: grids)
+                for _ in 0 ..< 10 {
+                    human.assign(job: Schedule.Job(units: [
+                        .init(kind: .patrol, pos: Position(x: 5, y: 5)),
+                        .init(kind: .patrol, pos: Position(x: 5, y: 24)),
+                        .init(kind: .patrol, pos: Position(x: 24, y: 24)),
+                        .init(kind: .patrol, pos: Position(x: 24, y: 5)),
+                    ].shuffled()))
+                }
+            }
+        }
+        else if turn >= 270 {
+            // TODO: Do something
         }
     }
 }
@@ -329,7 +330,7 @@ extension SquareGridJobDirector {
         skipBlocks: [Position] = []
     ) -> Schedule.Job {
         var units = [Schedule.Job.Unit]()
-        let direction = CommandUtil.deltaToCommand(delta: to - from).first?.delta ?? .zero
+        let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
         if direction == .zero {
             IO.log("Direction is zero from \(from) to \(to)", type: .warn)
         }
@@ -359,7 +360,7 @@ extension SquareGridJobDirector {
         skipBlocks: [Position] = []
     ) -> Schedule.Job {
         var units = [Schedule.Job.Unit]()
-        let direction = CommandUtil.deltaToCommand(delta: to - from).first?.delta ?? .zero
+        let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
         if direction == .zero {
             IO.log("Direction is zero from \(from) to \(to)", type: .warn)
         }

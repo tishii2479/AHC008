@@ -38,7 +38,7 @@ class Human: Player {
     var lastPosition: Position {
         schedule.jobs.tail?.endPosition ?? pos
     }
-    private var brain: Brain
+    var brain: Brain
 
     init(pos: Position, id: Int, brain: Brain) {
         self.brain = brain
@@ -71,7 +71,7 @@ class Human: Player {
         // Check job completion
         guard let nextUnit = schedule.nextUnit else { return }
         switch nextUnit.kind {
-        case .move:
+        case .move, .patrol:
             if pos == nextUnit.pos {
                 schedule.consume()
             }

@@ -29,7 +29,7 @@ class JobUtil {
                     IO.log("Loop limit exceeded from \(from) to \(to)", type: .warn)
                     break
                 }
-                guard let move = CommandUtil.deltaToCommand(delta: to - from).first else {
+                guard let move = CommandUtil.deltaToMoveCommand(delta: to - from).first else {
                     IO.log("Move not found from \(from) to \(to)", type: .warn)
                     break
                 }
@@ -47,7 +47,7 @@ class JobUtil {
 }
 
 class CommandUtil {
-    static func deltaToCommand(delta: Position) -> [Command] {
+    static func deltaToMoveCommand(delta: Position) -> [Command] {
         var cand = [Command]()
         if delta.x > 0 { cand.append(.moveRight) }
         if delta.x < 0 { cand.append(.moveLeft) }
@@ -80,13 +80,13 @@ class CommandUtil {
         for dir in Position.directions {
             let nxt = from + dir
             if nxt.isValid && dist[from.y][from.x] == dist[nxt.y][nxt.x] + 1 {
-                cand.append(deltaToCommand(delta: dir)[0])
+                cand.append(deltaToMoveCommand(delta: dir)[0])
             }
         }
         return cand
     }
     
-    static func getBlock(delta: Position) -> Command? {
+    static func deltaToBlockCommand(delta: Position) -> Command? {
         if delta.x > 0 { return .blockRight }
         if delta.x < 0 { return .blockLeft }
         if delta.y < 0 { return .blockUp }

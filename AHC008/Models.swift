@@ -95,13 +95,15 @@ struct Schedule {
 
     // Schedule is composed of multiple jobs
     struct Job {
-        // There are two types of human job
+        // There are three types of human job
         // 1. move  := Mommand to space
         // 2. block := Place a block
+        // 3. patrol := Move around, and close gate if there is a pet in
         struct Unit: Equatable {
             enum Kind {
                 case move
                 case block
+                case patrol
             }
             var kind: Kind
             var pos: Position
@@ -215,5 +217,17 @@ enum Command: Character {
         default:
             return .zero
         }
+    }
+}
+
+struct Grid {
+    var topLeft: Position
+    var bottomRight: Position
+    var gate: Position
+    
+    init(top: Int, left: Int, width: Int, height: Int, gate: Position) {
+        self.topLeft = Position(x: left, y: top)
+        self.bottomRight = Position(x: left + width - 1, y: top + height - 1)
+        self.gate = gate
     }
 }
