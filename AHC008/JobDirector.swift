@@ -67,19 +67,17 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureWolfJob()
         }
-        if 180 <= turn && turn <= 299 {
+        // TODO: Check wolves exists in pets
+        // TODO: Find best timing
+        if 200 <= turn && turn <= 299 {
             if isPreparedToCaptureWolf(turn: turn) {
                 didCaputureWolf = true
                 assignCaptureWolfJob()
                 assignCloseGateJob()
             }
-//            if didCaputureWolf {
-//                findGridAndAssignBlockJob(field: &field, humans: &humans, pets: &pets)
-//            }
-        }
-        if turn == 300 {
-            // TODO: Do best move, search all
-//            assignBestJobForFinalTurn()
+            else if didCaputureWolf {
+                findGridAndAssignBlockJob()
+            }
         }
     }
 }
@@ -90,6 +88,7 @@ extension SquareGridJobDirector {
     private func isPreparedToCaptureWolf(turn: Int) -> Bool {
         guard !didCaputureWolf else { return false }
         if turn >= 220 { return true }  // TODO: consider timing
+        // TODO: Check wolves are all in the cage
         for human in humans {
             if human.jobCost > 0 { return false }
         }

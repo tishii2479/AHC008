@@ -71,7 +71,10 @@ class HumanBrainWithGridKnowledge: Brain {
             }
             else if dist == 1 {
                 // adjacent to block, so place it
-                guard let block = CommandUtil.deltaToBlockCommand(delta: jobUnit.pos - pos) else { return [.none] }
+                guard let block = CommandUtil.deltaToBlockCommand(delta: jobUnit.pos - pos) else {
+                    IO.log("Block command not found", type: .warn)
+                    return [.none]
+                }
                 return [block]
             }
             else {

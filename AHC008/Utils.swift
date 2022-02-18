@@ -166,6 +166,90 @@ class FieldUtil {
     }
 }
 
+class BestJobFinder {
+    private var field: Field
+    private var humans: [Human]
+    private var pets: [Pet]
+    private var bestCommands: [Command]
+    private var bestScore: Double = 0
+    private var stepCount: Int = 0
+    private let allCommands = [.none] + Command.blocks
+    
+    init(field: Field, humans: [Human], pets: [Pet]) {
+        self.field = field
+        self.humans = humans
+        self.pets = pets
+        self.bestCommands = [Command](repeating: .none, count: humans.count)
+    }
+    
+    func find() -> [Command] {
+        var ptr = [Int](repeating: 0, count: humans.count)
+        var cands = [[Command]](repeating: [Command](), count: humans.count)
+        for i in 0 ..< humans.count {
+            for command in allCommands {
+                if field.isValidCommand(player: humans[i], command: command)
+                    && field.checkBlock(at: humans[i].pos + command.delta) == false {
+                    cands[i].append(command)
+                }
+            }
+        }
+        
+        while ptr[humans.count - 1] < cands[humans.count - 1].count {
+            let testField = Field(players: humans + pets, blocks: field.blocks)
+            for i in 0 ..< humans.count {
+                if testField.isValidCommand(player: humans[i], command: cands[i][ptr[i]]) {
+                    testField.applyCommand(player: humans[i], command: cands[i][ptr[i]])
+                }
+            }
+
+            let score: Double = FieldUtil.calcScoreFromField(field: testField, humans: humans)
+            if score > bestScore {
+                var commands = [Command](repeating: .none, count: humans.count)
+                for i in 0 ..< humans.count {
+                    commands[i] = cands[i][ptr[i]]
+                }
+                IO.log(bestScore, score, commands)
+                bestCommands = commands
+                bestScore = score
+            }
+            
+            for i in 0 ..< humans.count {
+                ptr[i] += 1
+                if ptr[i] < cands[i].count { break }
+                if i < humans.count - 1 {
+                    ptr[i] = 0
+                }
+            }
+        }
+        return bestCommands
+    }
+    
+    func find2() -> [Command] {
+        var cands = [[Command]](repeating: [Command](), count: humans.count)
+        var commands = [Command](repeating: .none, count: humans.count)
+        let players = humans + pets
+        for i in 0 ..< humans.count {
+            cands[i] = allCommands.filter { field.isValidCommand(player: humans[i], command: $0) }
+        }
+        for _ in 0 ..< 2000 {
+            let testField = Field(players: players, blocks: field.blocks)
+            for i in 0 ..< humans.count {
+                commands[i] = cands[i].randomElement()!
+                testField.applyCommand(player: humans[i], command: commands[i])
+            }
+
+            let score: Double = FieldUtil.calcScoreFromField(field: testField, humans: humans)
+            if score > bestScore {
+                IO.log(bestScore, score)
+                bestCommands = commands
+                bestScore = score
+            }
+        }
+        return bestCommands
+    }
+}
+
+
 class Node<T> : Equatable {
     let id: UUID
     var value: T
