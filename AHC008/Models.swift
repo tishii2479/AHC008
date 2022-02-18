@@ -98,12 +98,10 @@ struct Schedule {
         // There are three types of human job
         // 1. move  := Mommand to space
         // 2. block := Place a block
-        // 3. patrol := Move around, and close gate if there is a pet in
         struct Unit: Equatable {
             enum Kind {
                 case move
                 case block
-                case patrol
             }
             var kind: Kind
             var pos: Position

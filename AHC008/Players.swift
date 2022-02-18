@@ -77,7 +77,7 @@ class Human: Player {
         // Check job completion
         guard let nextUnit = schedule.nextUnit else { return }
         switch nextUnit.kind {
-        case .move, .patrol:
+        case .move:
             if pos == nextUnit.pos {
                 schedule.consume()
             }

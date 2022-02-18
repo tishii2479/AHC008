@@ -8,6 +8,15 @@
 import XCTest
 
 class UtilsTest: XCTestCase {
+    func testCreateLineBlockJob() throws {
+        let job = JobUtil.createLineBlockJob(
+            from: Position(x: 3, y: 0),
+            to: Position(x: 3, y: 29)
+        )
+        XCTAssertEqual(job.units.count, 59)
+        XCTAssertEqual(job.cost, 30 + 29)
+    }
+    
     func testGetCandidateMove() throws {
         let field = Field()
         // s..

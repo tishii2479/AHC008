@@ -112,10 +112,10 @@ extension SquareGridJobDirector {
     private func assignCloseGateJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
         // Start working around and close gates
         var corners: [Schedule.Job.Unit] = [
-            Schedule.Job.Unit(kind: .patrol, pos: Position(x: 4, y: 4)),
-            Schedule.Job.Unit(kind: .patrol, pos: Position(x: 4, y: 25)),
-            Schedule.Job.Unit(kind: .patrol, pos: Position(x: 25, y: 25)),
-            Schedule.Job.Unit(kind: .patrol, pos: Position(x: 25, y: 4)),
+            Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 4)),
+            Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 25)),
+            Schedule.Job.Unit(kind: .move, pos: Position(x: 25, y: 25)),
+            Schedule.Job.Unit(kind: .move, pos: Position(x: 25, y: 4)),
         ]
         for (i, human) in humans.enumerated() {
             human.brain = HumanBrainWithGridKnowledge(grids: grids)
