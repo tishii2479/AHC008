@@ -16,7 +16,7 @@ class Manager {
     
     func start() {
         for turn in 0 ..< turnLimit {
-            director.directJobs(field: &field, humans: &humans, pets: &pets, turn: turn)
+            director.directJobs(turn: turn)
             outputHumanCommand()
             inputPetCommand()
         }

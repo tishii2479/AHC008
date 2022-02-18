@@ -2,23 +2,13 @@ protocol JobDirector {
     // How to assign human to jobs
     // Return the assignee
     typealias Compare = (_ testHuman: Human, _ currentAssignee: Human, _ job: Schedule.Job) -> Human
-    typealias Eval = (_ human: Human, _ job: Schedule.Job) -> Int
-    func directJobs(
-        field: inout Field,
-        humans: inout [Human],
-        pets: inout [Pet],
-        turn: Int
-    )
+    func directJobs(turn: Int)
 }
 
 extension JobDirector {
     func assignJobs(jobs: [Schedule.Job], humans: inout [Human]) {
-        let eval: Eval = { human, job in
-            human.assignedCost(job: job)
-        }
-        
         let compare: Compare = { (testHuman, currentAssignee, job) in
-            if eval(testHuman, job) < eval(currentAssignee, job) {
+            if testHuman.assignedCost(job: job) < currentAssignee.assignedCost(job: job) {
                 return testHuman
             }
             return currentAssignee
@@ -50,6 +40,9 @@ class SquareGridJobDirector: JobDirector {
         // TODO: Consider better value
         50
     }
+    private var field: Field
+    private var humans: [Human]
+    private var pets: [Pet]
     private let wolfBlocks = [
         Position(x: 7, y: 15),
         Position(x: 15, y: 22),
@@ -63,16 +56,22 @@ class SquareGridJobDirector: JobDirector {
         Position(x: 14, y: 6),
     ]
     
-    func directJobs(field: inout Field, humans: inout [Human], pets: inout [Pet], turn: Int) {
+    init(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+        self.field = field
+        self.humans = humans
+        self.pets = pets
+    }
+    
+    func directJobs(turn: Int) {
         if turn == 0 {
-            assignGridJob(field: &field, humans: &humans, pets: &pets)
-            assignPrepareForCaptureWolfJob(field: &field, humans: &humans, pets: &pets)
+            assignGridJob()
+            assignPrepareForCaptureWolfJob()
         }
         if 100 <= turn && turn <= 299 {
-            if isPreparedToCaptureWolf(field: &field, humans: &humans, pets: &pets, turn: turn) {
+            if isPreparedToCaptureWolf(turn: turn) {
                 didCaputureWolf = true
-                assignCaptureWolfJob(field: &field, humans: &humans, pets: &pets)
-                assignCloseGateJob(field: &field, humans: &humans, pets: &pets)
+                assignCaptureWolfJob()
+                assignCloseGateJob()
             }
 //            if didCaputureWolf {
 //                findGridAndAssignBlockJob(field: &field, humans: &humans, pets: &pets)
@@ -87,7 +86,7 @@ class SquareGridJobDirector: JobDirector {
 // MARK: SquareGridJobDirector.Helper
 
 extension SquareGridJobDirector {
-    private func isPreparedToCaptureWolf(field: inout Field, humans: inout [Human], pets: inout [Pet], turn: Int) -> Bool {
+    private func isPreparedToCaptureWolf(turn: Int) -> Bool {
         guard !didCaputureWolf else { return false }
         if turn >= 220 { return true }  // TODO: consider timing
         for human in humans {
@@ -103,13 +102,13 @@ extension SquareGridJobDirector {
 // MARK: SquareGridJobDirector.Assign
 
 extension SquareGridJobDirector {
-    private func assignGridJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    private func assignGridJob() {
         grids = gridManager.createGrid()
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: &humans)
     }
 
-    private func assignPrepareForCaptureWolfJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    private func assignPrepareForCaptureWolfJob() {
         // Gather to center grid for capture wolves
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
@@ -118,7 +117,7 @@ extension SquareGridJobDirector {
         }
     }
     
-    private func assignCaptureWolfJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    private func assignCaptureWolfJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
                 .init(kind: .block, pos: wolfBlocks[i % 4]),
@@ -126,7 +125,7 @@ extension SquareGridJobDirector {
         }
     }
     
-    private func assignCloseGateJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    private func assignCloseGateJob() {
         // Start working around and close gates
         var corners: [Schedule.Job.Unit] = [
             Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 4)),
@@ -154,13 +153,9 @@ extension SquareGridJobDirector {
         }
     }
     
-    private func findGridAndAssignBlockJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
-        let eval: Eval = { human, job in
-            human.pos.dist(to: job.nextUnit?.pos)
-        }
-        
+    private func findGridAndAssignBlockJob() {
         let compare: Compare = { (testHuman, currentAssignee, job) in
-            if eval(testHuman, job) < eval(currentAssignee, job) {
+            if testHuman.pos.dist(to: job.nextUnit?.pos) < testHuman.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
             }
             return currentAssignee

@@ -8,4 +8,4 @@ Write tests:
 Queue
 Assign(isMajor: true)
 JobUtil cost calculation
-Refator jobDirector, fix a lot of arguments, cmp, eval
+Refator jobDirector cmp, eval
