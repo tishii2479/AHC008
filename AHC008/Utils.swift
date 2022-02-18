@@ -231,7 +231,7 @@ class BestJobFinder {
         for i in 0 ..< humans.count {
             cands[i] = allCommands.filter { field.isValidCommand(player: humans[i], command: $0) }
         }
-        for _ in 0 ..< 2000 {
+        for _ in 0 ..< 1000 {
             let testField = Field(players: players, blocks: field.blocks)
             for i in 0 ..< humans.count {
                 commands[i] = cands[i].randomElement()!
