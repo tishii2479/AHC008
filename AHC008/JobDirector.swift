@@ -67,7 +67,7 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureWolfJob()
         }
-        if 100 <= turn && turn <= 299 {
+        if 180 <= turn && turn <= 299 {
             if isPreparedToCaptureWolf(turn: turn) {
                 didCaputureWolf = true
                 assignCaptureWolfJob()

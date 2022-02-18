@@ -8,7 +8,6 @@
 import XCTest
 
 class HumanTest: XCTestCase {
-
     func testAssignJob() throws {
         let startPosition = Position(x: 3, y: 3)
         let human = Human(pos: startPosition, id: 0, brain: HumanBrain())

@@ -3,6 +3,7 @@
 最終盤の行動
 Create input mock
 No wolfs, then no capture
+4角埋める
 
 Write tests:
 Queue

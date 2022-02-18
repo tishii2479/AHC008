@@ -93,5 +93,26 @@ class FieldTest: XCTestCase {
         XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)
         XCTAssertEqual(field.getPlayers(x: 1, y: 0).count, 1)
     }
+    
+    // .P.
+    // P.P
+    // .P.
+    func testIsValidBlock() throws {
+        let field = Field()
+        let pets = [
+            Position(x: 1, y: 0),
+            Position(x: 1, y: 2),
+            Position(x: 0, y: 1),
+            Position(x: 2, y: 1),
+        ]
+        for pet in pets {
+            field.addPlayer(player: Pet(kind: .cat, pos: pet, id: 0))
+        }
+        for y in 0 ... 2 {
+            for x in 0 ... 2 {
+                XCTAssertFalse(field.isValidBlock(target: Position(x: x, y: y)))
+            }
+        }
+    }
 
 }

@@ -110,44 +110,39 @@ private class BestJobFinder {
         self.bestCommands = [Command](repeating: .none, count: humans.count)
     }
     
-    private func dfs(cur: Int) {
-        if stepCount >= 1000 { return }
-        stepCount += 1
-        if cur == humans.count {
-            guard commands.count == humans.count else {
-                IO.log("commands count \(commands.count) is not equal to humans count \(humans.count), \(commands)")
-                return
-            }
-            
-            let testField = Field(players: humans + pets, blocks: field.blocks)
-            
-            for i in 0 ..< humans.count {
-                if testField.isValidCommand(player: humans[i], command: commands[i]) {
-                    testField.applyCommand(player: humans[i], command: commands[i])
+    func find() -> [Command] {
+        var ptr = [Int](repeating: 0, count: humans.count)
+        var cands = [[Command]](repeating: [Command](), count: humans.count)
+        for i in 0 ..< humans.count {
+            for command in allCommands {
+                if field.isValidCommand(player: humans[i], command: command)
+                    && field.checkBlock(at: humans[i].pos + command.delta) == false {
+                    cands[i].append(command)
                 }
             }
-            
+        }
+        
+        while ptr[humans.count - 1] < cands[humans.count - 1].count {
+            let testField = Field(players: humans + pets, blocks: field.blocks)
+            for i in 0 ..< humans.count {
+                if testField.isValidCommand(player: humans[i], command: cands[i][ptr[i]]) {
+                    testField.applyCommand(player: humans[i], command: cands[i][ptr[i]])
+                }
+            }
+
             let score: Double = FieldUtil.calcScoreFromField(field: testField, humans: humans)
             if score > bestScore {
-                IO.log(cur, bestScore, score, commands)
+                IO.log(bestScore, score, commands)
                 bestCommands = commands
                 bestScore = score
             }
-            return
-        }
-        
-        for command in allCommands {
-            if field.isValidCommand(player: humans[cur], command: command)
-                && field.checkBlock(at: humans[cur].pos + command.delta) == false {
-                commands.append(command)
-                dfs(cur: cur + 1)
-                commands.popLast()
+            
+            for i in 0 ..< humans.count {
+                ptr[i] += 1
+                if ptr[i] < cands[i].count { break }
+                ptr[i] = 0
             }
         }
-    }
-    
-    func find() -> [Command] {
-        dfs(cur: 0)
         return bestCommands
     }
 }

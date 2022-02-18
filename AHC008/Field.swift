@@ -53,14 +53,11 @@ class Field {
     func isValidBlock(target: Position) -> Bool {
         guard target.isValid,
               getPlayers(at: target).count == 0 else { return false }
-        
         // oxo
         // xTx
         // oxo
         for check in Position.around(pos: target) {
-            for player in getPlayers(at: check) {
-                if player is Pet { return false }
-            }
+            if getPetCount(at: check) > 0 { return false }
         }
         return true
     }
