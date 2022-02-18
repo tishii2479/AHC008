@@ -17,12 +17,12 @@ class JobDirectorTest: XCTestCase {
                       id: i, brain: HumanBrain()))
         }
         var pets: [Pet] = []
-        let director = SquareGridJobDirector()
+        let director = SquareGridJobDirector(field: &field, humans: &humans, pets: &pets)
         field.addPlayers(players: humans + pets)
         
         let expected: Int = 244
         for turn in 0 ..< 300 {
-            director.directJobs(field: &field, humans: &humans, pets: &pets, turn: turn)
+            director.directJobs(turn: turn)
             perform(field: &field, humans: &humans, pets: &pets)
             
             var count: Int = 0

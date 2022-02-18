@@ -7,5 +7,5 @@ No wolfs, then no capture
 Write tests:
 Queue
 Assign(isMajor: true)
+Human.ClearJob
 JobUtil cost calculation
-Refator jobDirector cmp, eval

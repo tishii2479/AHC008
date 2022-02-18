@@ -1,7 +1,7 @@
 class Field {
     private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
     private var pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
-    private var blocks = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
+    private(set) var blocks = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
     
     init(players: [Player] = [], blocks: [Position] = []) {
         addPlayers(players: players)
@@ -51,8 +51,8 @@ class Field {
     // 2. There is no *pet* around one block near `target`
     // 3. The target position is valid
     func isValidBlock(target: Position) -> Bool {
-        if !target.isValid { return false }
-        if getPlayers(at: target).count > 0 { return false }
+        guard target.isValid,
+              getPlayers(at: target).count == 0 else { return false }
         
         // oxo
         // xTx

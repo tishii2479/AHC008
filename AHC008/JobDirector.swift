@@ -79,6 +79,7 @@ class SquareGridJobDirector: JobDirector {
         }
         if turn == 300 {
             // TODO: Do best move, search all
+//            assignBestJobForFinalTurn()
         }
     }
 }

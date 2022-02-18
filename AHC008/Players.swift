@@ -67,7 +67,7 @@ class Human: Player {
         return jobCost + job.cost + lastJobPosition.dist(to: job.nextUnit?.pos)
     }
     
-    func refreshJobs() {
+    func clearJobs() {
         while schedule.nextUnit != nil {
             schedule.consume()
         }
