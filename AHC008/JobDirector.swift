@@ -74,6 +74,9 @@ class SquareGridJobDirector: JobDirector {
                 assignCaptureWolfJob(field: &field, humans: &humans, pets: &pets)
                 assignCloseGateJob(field: &field, humans: &humans, pets: &pets)
             }
+//            if didCaputureWolf {
+//                findGridAndAssignBlockJob(field: &field, humans: &humans, pets: &pets)
+//            }
         }
         if turn == 300 {
             // TODO: Do best move, search all
@@ -150,4 +153,33 @@ extension SquareGridJobDirector {
             }
         }
     }
+    
+    private func findGridAndAssignBlockJob(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+        let eval: Eval = { human, job in
+            human.pos.dist(to: job.nextUnit?.pos)
+        }
+        
+        let compare: Compare = { (testHuman, currentAssignee, job) in
+            if eval(testHuman, job) < eval(currentAssignee, job) {
+                return testHuman
+            }
+            return currentAssignee
+        }
+
+        for i in 0 ..< grids.count {
+            if grids[i].assigned { continue }
+            var petCount: Int = 0
+            for x in grids[i].topLeft.x ... grids[i].bottomRight.x {
+                for y in grids[i].topLeft.y ... grids[i].bottomRight.y {
+                    petCount += field.getPetCount(x: x, y: y)
+                }
+            }
+            if petCount > 0 {
+                grids[i].assigned = true
+                let job = Schedule.Job(units: [.init(kind: .block, pos: grids[i].gate)])
+                findAssignee(job: job, humans: &humans, compare: compare)?.assign(job: job, isMajor: true)
+            }
+        }
+    }
 }
+

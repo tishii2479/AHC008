@@ -53,8 +53,10 @@ class Human: Player {
         }
     }
     
-    func assign(job: Schedule.Job) {
-        schedule.assign(job: job)
+    // set isMajor to true to assign a major job, which means a job
+    // that is needed to be performed immediately
+    func assign(job: Schedule.Job, isMajor: Bool = false) {
+        schedule.assign(job: job, isMajor: isMajor)
     }
     
     // The jobCost of this human if the job is assigned

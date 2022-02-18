@@ -81,16 +81,26 @@ struct Schedule {
         return unit
     }
     
-    mutating func assign(job: Job) {
+    mutating func assign(job: Job, isMajor: Bool = false) {
         cost += job.cost
-        
-        // Add cost of the dist from the previous job if exists
-        if let from = jobs.tail?.units.tail?.pos,
-           let to = job.units.front?.pos {
-            cost += from.dist(to: to)
-        }
+        if isMajor {
+            jobs.pushFront(job)
 
-        jobs.push(job)
+            // Add cost of the dist from the added job if exists
+            if let from = job.units.tail?.pos,
+               let to = jobs.front?.units.front?.pos {
+                cost += from.dist(to: to)
+            }
+        }
+        else {
+            // Add cost of the dist from the previous job if exists
+            if let from = jobs.tail?.units.tail?.pos,
+               let to = job.units.front?.pos {
+                cost += from.dist(to: to)
+            }
+
+            jobs.push(job)
+        }
     }
 
     // Schedule is composed of multiple jobs
@@ -222,6 +232,7 @@ struct Grid {
     var topLeft: Position
     var bottomRight: Position
     var gate: Position
+    var assigned: Bool = false
     
     init(top: Int, left: Int, width: Int, height: Int, gate: Position) {
         self.topLeft = Position(x: left, y: top)

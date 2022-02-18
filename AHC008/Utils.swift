@@ -176,6 +176,14 @@ class Queue<T> {
         tailNode?.value
     }
     
+    func pushFront(_ value: T) {
+        count += 1
+        frontNode = Node(value: value, next: frontNode)
+        if tailNode == nil {
+            tailNode = frontNode
+        }
+    }
+    
     func push(_ value: T) {
         count += 1
         if isEmpty {

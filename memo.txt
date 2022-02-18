@@ -3,3 +3,9 @@
 最終盤の行動
 Create input mock
 No wolfs, then no capture
+
+Write tests:
+Queue
+Assign(isMajor: true)
+JobUtil cost calculation
+Refator jobDirector, fix a lot of arguments, cmp, eval
