@@ -34,17 +34,23 @@ class Field {
     
     // Return true if there is no block at `nextPosition`, and the position is valid
     private func isValidMove(player: Player, delta: Position) -> Bool {
-        let nextPosition = player.pos + delta
-        if !nextPosition.isValid { return false }
-        return !checkBlock(at: nextPosition)
+        isValidMove(position: player.pos + delta)
     }
     
+    func isValidMove(position: Position) -> Bool {
+        if !position.isValid { return false }
+        return !checkBlock(at: position)
+    }
+
+    private func isValidBlock(player: Player, delta: Position) -> Bool {
+        isValidBlock(target: player.pos + delta)
+    }
+
     // Return true if it satisfies below conditions
     // 1. There is no player at `target`
     // 2. There is no *pet* around one block near `target`
     // 3. The target position is valid
-    private func isValidBlock(player: Player, delta: Position) -> Bool {
-        let target = player.pos + delta
+    func isValidBlock(target: Position) -> Bool {
         if !target.isValid { return false }
         if getPlayers(at: target).count > 0 { return false }
         

@@ -2,3 +2,4 @@
 動物がいるところに人を派遣する
 最終盤の行動
 Create input mock
+No wolfs, then no capture
