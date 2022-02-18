@@ -1,45 +1,82 @@
 import Foundation
 
 class JobUtil {
-    // ISSUE: Write in a row ---->
-    // Do not write diagonal lines!
-    static func createLineBlockJob(
+    static func createSquareBlockJob(
         points: [Position],
         skipBlocks: [Position] = []
     ) -> Schedule.Job {
-        var units = [Schedule.Job.Unit]()
-        
-        if points.count == 0 {
-            IO.log("Points count is \(points.count), \(points)", type: .warn)
+        var job = Schedule.Job(units: [])
+        guard points.count > 0 else {
+            IO.log("Points.count is 0", type: .warn)
+            return job
         }
-        else {
-            // Start position
-            units.append(.init(kind: .block, pos: points[0]))
-        }
-        
-        // To avoid infinite loop
-        let loopLimit: Int = 100
-        
         for i in 0 ..< points.count - 1 {
-            var from = points[i]
-            let to = points[i + 1]
-            var loopCount: Int = 0
-            while from != to {
-                guard loopCount < loopLimit else {
-                    IO.log("Loop limit exceeded from \(from) to \(to)", type: .warn)
-                    break
-                }
-                guard let move = CommandUtil.deltaToMoveCommand(delta: to - from).first else {
-                    IO.log("Move not found from \(from) to \(to)", type: .warn)
-                    break
-                }
-                from += move.delta
-                // Check skip blocks
-                if !skipBlocks.contains(from) {
-                    units.append(.init(kind: .block, pos: from))
-                }
-                loopCount += 1
+            job += createLineBlockJob(from: points[i], to: points[i + 1], skipBlocks: skipBlocks)
+        }
+        return job
+    }
+    
+    static func createLineBlockJob(
+        from: Position,
+        to: Position,
+        skipBlocks: [Position] = []
+    ) -> Schedule.Job {
+        var units = [Schedule.Job.Unit]()
+        let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
+        if direction == .zero {
+            IO.log("Direction is zero from \(from) to \(to)", type: .warn)
+        }
+        var current = from
+        // Go to [from, to + direction)
+        while current != to + direction {
+            let movePosition = current + direction
+            if movePosition.isValid {
+                units.append(.init(kind: .move, pos: movePosition))
             }
+            else {
+                IO.log("Move position is invalid \(movePosition)", type: .warn)
+            }
+            if !skipBlocks.contains(current) {
+                units.append(.init(kind: .block, pos: current))
+            }
+            current = movePosition
+        }
+
+        return Schedule.Job(units: units)
+    }
+    
+    // Create blocks when moving a path [from, to]
+    // ######
+    // oooooo
+    // ######
+    static func createBlockJobWithMove(
+        from: Position,
+        to: Position,
+        checkDirections: [Position],
+        skipBlocks: [Position] = []
+    ) -> Schedule.Job {
+        var units = [Schedule.Job.Unit]()
+        let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
+        if direction == .zero {
+            IO.log("Direction is zero from \(from) to \(to)", type: .warn)
+        }
+        var current = from
+        units.append(.init(kind: .move, pos: from))
+        // Go to [from, to + direction)
+        while current != to + direction {
+            for direction in checkDirections {
+                let target = current + direction
+                if skipBlocks.contains(target) { continue }
+                units.append(.init(kind: .block, pos: target))
+            }
+            let movePosition = current + direction
+            if movePosition.isValid {
+                units.append(.init(kind: .move, pos: movePosition))
+            }
+            else {
+                IO.log("Move position is invalid \(movePosition)", type: .warn)
+            }
+            current = movePosition
         }
         
         return Schedule.Job(units: units)
