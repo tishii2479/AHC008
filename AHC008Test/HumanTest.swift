@@ -42,7 +42,7 @@ class HumanTest: XCTestCase {
         
         for _ in 0 ..< 20 {
             if let command = human.commands(field: field).first {
-                human.applyCommand(command: command)
+                human.applyCommand(command: command, field: field)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
@@ -68,7 +68,7 @@ class HumanTest: XCTestCase {
         
         for _ in 0 ..< fieldSize * 2 - 1 {
             if let command = human.commands(field: field).first {
-                human.applyCommand(command: command)
+                human.applyCommand(command: command, field: field)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])

@@ -9,7 +9,7 @@ class Player: Equatable {
         self.id = id
     }
 
-    func applyCommand(command: Command) {
+    func applyMoveCommand(command: Command) {
         switch command {
         case .moveUp:
             pos.y -= 1
@@ -80,8 +80,8 @@ class Human: Player {
         }
     }
     
-    override func applyCommand(command: Command) {
-        super.applyCommand(command: command)
+    func applyCommand(command: Command, field: Field) {
+        applyMoveCommand(command: command)
         
         // Check job completion
         guard let nextUnit = schedule.nextUnit else { return }
@@ -112,6 +112,10 @@ class Pet: Player {
     }
     
     private(set) var kind: Kind
+    
+    func applyCommand(command: Command, field: Field) {
+        applyMoveCommand(command: command)
+    }
     
     init(kind: Kind, pos: Position, id: Int) {
         self.kind = kind

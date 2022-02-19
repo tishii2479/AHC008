@@ -21,7 +21,7 @@ class UtilsTest: XCTestCase {
         human.assign(job: job)
         for _ in 0 ..< 80 {
             if let command = human.commands(field: field).first {
-                human.applyCommand(command: command)
+                human.applyCommand(command: command, field: field)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
@@ -54,7 +54,7 @@ class UtilsTest: XCTestCase {
         human.assign(job: job)
         for _ in 0 ..< 30 {
             if let command = human.commands(field: field).first {
-                human.applyCommand(command: command)
+                human.applyCommand(command: command, field: field)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
@@ -83,7 +83,7 @@ class UtilsTest: XCTestCase {
         human.assign(job: job)
         for _ in 0 ..< 100 {
             if let command = human.commands(field: field).first {
-                human.applyCommand(command: command)
+                human.applyCommand(command: command, field: field)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])

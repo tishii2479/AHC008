@@ -29,7 +29,12 @@ class Manager {
         field.updateField(players: humans + pets)
         director.directJobs(turn: turn)
         ioController.processOutput(humans: humans, commands: decideAndPerformCommand(turn: turn))
-        ioController.processInput(pets: pets)
+        let petCommands = ioController.processInput(petCount: pets.count)
+        for i in 0 ..< pets.count {
+            for command in petCommands[i] {
+                pets[i].applyCommand(command: command, field: field)
+            }
+        }
     }
     
     private func decideHumanCommand(turn: Int) -> [Command] {
@@ -53,7 +58,7 @@ class Manager {
         // 1. Apply block
         for (i, human) in humans.enumerated() {
             if !commands[i].isBlock { continue }
-            human.applyCommand(command: commands[i])
+            human.applyCommand(command: commands[i], field: field)
             field.applyCommand(player: human, command: commands[i])
         }
 
@@ -67,7 +72,7 @@ class Manager {
                 commands[i] = Command.moves
                     .filter { field.isValidCommand(player: human, command: $0) }.randomElement() ?? .none
             }
-            human.applyCommand(command: commands[i])
+            human.applyCommand(command: commands[i], field: field)
         }
         
         return commands

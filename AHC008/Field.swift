@@ -124,6 +124,7 @@ extension Field {
         for player in players { addPlayer(player: player) }
     }
     
+    // ISSUE: Does not move player
     func applyCommand(player: Player, command: Command) {
         if command.isBlock {
             addBlock(position: player.pos + command.delta)

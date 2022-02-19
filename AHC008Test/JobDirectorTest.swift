@@ -40,7 +40,7 @@ class JobDirectorTest: XCTestCase {
     }
     
     func testBlockJobPerformance() throws {
-        let expected: Int = 248
+        let expected: Int = 256
         for turn in 0 ..< 300 {
             director.directJobs(turn: turn)
             manager.processTurn(turn: turn)

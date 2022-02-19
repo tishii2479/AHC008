@@ -1,19 +1,21 @@
 protocol IOController {
     func processOutput(humans: [Human], commands: [Command])
-    func processInput(pets: [Pet])
+    func processInput(petCount: Int) -> [[Command]]
 }
 
 struct RealIOController: IOController {
-    func processInput(pets: [Pet]) {
-        let petCommands = IO.readStringArray()
-        guard petCommands.count == pets.count else {
+    func processInput(petCount: Int) -> [[Command]] {
+        let petCommandStrArray = IO.readStringArray()
+        guard petCommandStrArray.count == petCount else {
             fatalError("Input format error")
         }
-        for i in 0 ..< pets.count {
-            for e in petCommands[i] {
-                pets[i].applyCommand(command: Command.toEnum(e))
+        var petCommands = [[Command]](repeating: [], count: petCount)
+        for i in 0 ..< petCount {
+            for e in petCommandStrArray[i] {
+                petCommands[i].append(Command.toEnum(e))
             }
         }
+        return petCommands
     }
     
     func processOutput(humans: [Human], commands: [Command]) {
@@ -22,8 +24,9 @@ struct RealIOController: IOController {
 }
 
 struct MockIOController: IOController {
-    func processInput(pets: [Pet]) {
+    func processInput(petCount: Int) -> [[Command]] {
         // Do nothing
+        [[Command]](repeating: [.none], count: petCount)
     }
     
     func processOutput(humans: [Human], commands: [Command]) {
