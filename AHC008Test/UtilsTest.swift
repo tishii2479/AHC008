@@ -21,7 +21,7 @@ class UtilsTest: XCTestCase {
     
     func testCreateSquareBlockJob() throws {
         let field = Field()
-        let human = Human(pos: Position(x: 15, y: 15), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 5, y: 5), id: 0, brain: HumanBrain())
         let job = JobUtil.createSquareBlockJob(points: [
             Position(x: 5, y: 5),
             Position(x: 15, y: 5),
@@ -29,6 +29,25 @@ class UtilsTest: XCTestCase {
             Position(x: 5, y: 15),
             Position(x: 5, y: 5),
         ])
+        human.assign(job: job)
+        for _ in 0 ..< 90 {
+            if let command = human.commands(field: field).first {
+                human.applyCommand(command: command)
+                field.applyCommand(player: human, command: command)
+            }
+            field.updateField(players: [human])
+        }
+        field.dump()
+        for y in 0 ..< fieldSize {
+            for x in 0 ..< fieldSize {
+                if x == 5 || x == 15 || y == 5 || y == 15 {
+                    XCTAssertTrue(field.checkBlock(x: x, y: y))
+                }
+                else {
+                    XCTAssertFalse(field.checkBlock(x: x, y: y))
+                }
+            }
+        }
     }
     
     func testGetCandidateMove() throws {

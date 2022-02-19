@@ -8,7 +8,7 @@
 import XCTest
 
 class JobAssignTest: XCTestCase {
-    func testLikeBlockJobWithSkip() throws {
+    func testLineBlockJobWithSkip() throws {
         let field = Field()
         let startPosition = Position(x: 0, y: 0)
         let human = Human(pos: startPosition, id: 0, brain: HumanBrain())

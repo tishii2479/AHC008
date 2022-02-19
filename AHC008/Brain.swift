@@ -3,14 +3,14 @@ protocol Brain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command]
 }
 
-class HumanBrain: Brain {
+struct HumanBrain: Brain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
         case .move:
             let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
             if cand.count == 0 { return [.none] }
-            return cand.shuffled()
+            return cand.shuffled() + Command.moves.shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
@@ -33,11 +33,8 @@ class HumanBrain: Brain {
     }
 }
 
-class HumanBrainWithGridKnowledge: Brain {
+struct HumanBrainWithGridKnowledge: Brain {
     let grids: [Grid]
-    init(grids: [Grid]) {
-        self.grids = grids
-    }
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
@@ -61,7 +58,7 @@ class HumanBrainWithGridKnowledge: Brain {
                     }
                 }
             }
-            return commands + CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled()
+            return commands + CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled() + Command.moves.shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
