@@ -4,7 +4,7 @@ TODO:
 Create input mock
 No wolfs, then no capture
 4角埋める
-たまにいない時に閉めちゃう
+たまにいない時に閉めちゃう -> 角だけ?
 
 Write tests:
 JobUtil cost calculation

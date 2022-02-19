@@ -141,10 +141,7 @@ class SquareGridManager: GridManager {
         do {
             // Horizontal
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 6, y: 14), to: Position(x: 13, y: 14), skipBlocks: skipBlocks)
-            )
-            jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 6, y: 16), to: Position(x: 13, y: 16), skipBlocks: skipBlocks)
+                JobUtil.createBlockJobWithMove(from: Position(x: 6, y: 15), to: Position(x: 13, y: 15), checkDirections: [.up, .down], skipBlocks: skipBlocks)
             )
             jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 13, y: 20), skipBlocks: skipBlocks)
@@ -154,10 +151,7 @@ class SquareGridManager: GridManager {
                 JobUtil.createLineBlockJob(from: Position(x: 16, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 16, y: 13), to: Position(x: 23, y: 13), skipBlocks: skipBlocks)
-            )
-            jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 16, y: 15), to: Position(x: 23, y: 15), skipBlocks: skipBlocks)
+                JobUtil.createBlockJobWithMove(from: Position(x: 16, y: 14), to: Position(x: 23, y: 14), checkDirections: [.up, .down], skipBlocks: skipBlocks)
             )
 
             // Vertical
@@ -165,19 +159,13 @@ class SquareGridManager: GridManager {
                 JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 13), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 13, y: 6), to: Position(x: 13, y: 13), skipBlocks: skipBlocks)
-            )
-            jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 15, y: 6), to: Position(x: 15, y: 12), skipBlocks: skipBlocks)
-            )
-            jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 14, y: 17), to: Position(x: 14, y: 23), skipBlocks: skipBlocks)
+                JobUtil.createBlockJobWithMove(from: Position(x: 14, y: 6), to: Position(x: 14, y: 13), checkDirections: [.left, .right], skipBlocks: skipBlocks)
             )
             jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 20, y: 16), to: Position(x: 20, y: 23), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 16, y: 16), to: Position(x: 16, y: 23), skipBlocks: skipBlocks)
+                JobUtil.createBlockJobWithMove(from: Position(x: 15, y: 16), to: Position(x: 15, y: 23), checkDirections: [.left, .right], skipBlocks: skipBlocks)
             )
         }
         
