@@ -155,6 +155,13 @@ extension Field {
                 realmSize += 1
                 petCount += getPetCount(at: pos)
                 humanCount += getHumanCount(at: pos)
+
+//                for player in getPlayers(at: pos) {
+//                    if let pet = player as? Pet,
+//                       pet.kind == .dog {
+//                        IO.log("Dog is not captured!", type: .warn)
+//                    }
+//                }
                 
                 for dir in Position.directions {
                     let nxt = pos + dir

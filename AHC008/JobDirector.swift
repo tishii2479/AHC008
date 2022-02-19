@@ -95,6 +95,7 @@ class SquareGridJobDirector: JobDirector {
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
                 IO.log("Captured dog at turn: \(turn)")
+                field.dump()
                 didCaputureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
@@ -141,8 +142,8 @@ extension SquareGridJobDirector {
         captureDogCount += getDogCountAt(x: 16, y: 15)
         captureDogCount += getDogCountAt(x: 14, y: 16)
         captureDogCount += getDogCountAt(x: 9, y: 14)
-        captureDogCount += getDogCountAt(x: 14, y: 9)
-        captureDogCount += getDogCountAt(x: 15, y: 20)
+        captureDogCount += getDogCountAt(x: 15, y: 9)
+        captureDogCount += getDogCountAt(x: 14, y: 20)
         captureDogCount += getDogCountAt(x: 20, y: 15)
         return captureDogCount
     }

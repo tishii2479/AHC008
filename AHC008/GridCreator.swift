@@ -32,30 +32,14 @@ class SquareGridManager: GridManager {
         for grid in createGrid() { arr.append(grid.gate) }
         // Where horizontal block and vertical block intersects
         let intersections = [
-            Position(x: 5, y: 3),
-            Position(x: 11, y: 3),
-            Position(x: 18, y: 3),
-            Position(x: 24, y: 3),
-            Position(x: 9, y: 5),
             Position(x: 15, y: 9),
-            Position(x: 24, y: 9),
-            Position(x: 3, y: 11),
-            Position(x: 26, y: 11),
             Position(x: 15, y: 13),
             Position(x: 9, y: 14),
             Position(x: 13, y: 14),
             Position(x: 16, y: 15),
             Position(x: 20, y: 15),
             Position(x: 14, y: 16),
-            Position(x: 3, y: 18),
-            Position(x: 26, y: 18),
-            Position(x: 5, y: 20),
             Position(x: 14, y: 20),
-            Position(x: 20, y: 24),
-            Position(x: 5, y: 26),
-            Position(x: 11, y: 26),
-            Position(x: 18, y: 26),
-            Position(x: 24, y: 26),
             Position(x: 5, y: 15),
             Position(x: 14, y: 5),
             Position(x: 24, y: 14),
@@ -107,14 +91,14 @@ class SquareGridManager: GridManager {
                 JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 29), to: Position(x: xs[i], y: 27))
             if i + 1 < xs.count {
                 topJob += JobUtil.createBlockJobWithMove(
-                    from: Position(x: max(xs[i], 6), y: 4),
-                    to: Position(x: min(xs[i + 1], 23), y: 4),
+                    from: Position(x: max(xs[i], 5), y: 4),
+                    to: Position(x: min(xs[i + 1], 24), y: 4),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
                 bottomJob += JobUtil.createBlockJobWithMove(
-                    from: Position(x: max(xs[i], 6), y: 25),
-                    to: Position(x: min(xs[i + 1], 23), y: 25),
+                    from: Position(x: max(xs[i], 5), y: 25),
+                    to: Position(x: min(xs[i + 1], 24), y: 25),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
@@ -133,19 +117,19 @@ class SquareGridManager: GridManager {
         do {
             // Horizontal
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 13, y: 20), skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 13, y: 20), skipBlocks: skipBlocks, addMove: false)
             )
             
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 16, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 16, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks, addMove: false)
             )
 
             // Vertical
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 13), skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 13), skipBlocks: skipBlocks, addMove: false)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 20, y: 16), to: Position(x: 20, y: 23), skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 20, y: 16), to: Position(x: 20, y: 23), skipBlocks: skipBlocks, addMove: false)
             )
             
             // These should be the last job!

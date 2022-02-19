@@ -99,26 +99,6 @@ class Human: Player {
                 schedule.consume()
             }
         }
-        
-        // Consume unrequired jobs
-        while currentJobUnit != nil {
-            guard let nextUnit = currentJobUnit else { return }
-            switch nextUnit.kind {
-            case .move:
-                if pos == nextUnit.pos || field.checkBlock(at: nextUnit.pos) {
-                    schedule.consume()
-                    continue
-                }
-            case .block:
-                if field.checkBlock(at: nextUnit.pos) {
-                    schedule.consume()
-                    continue
-                }
-            default:
-                break
-            }
-            break
-        }
     }
 }
 

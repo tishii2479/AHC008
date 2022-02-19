@@ -4,7 +4,8 @@ class JobUtil {
     static func createLineBlockJob(
         from: Position,
         to: Position,
-        skipBlocks: [Position] = []
+        skipBlocks: [Position] = [],
+        addMove: Bool = true
     ) -> Schedule.Job {
         var units = [Schedule.Job.Unit]()
         let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
@@ -15,11 +16,13 @@ class JobUtil {
         // Go to [from, to + direction)
         while current != to + direction {
             let movePosition = current + direction
-            if movePosition.isValid {
-                units.append(.init(kind: .move, pos: movePosition))
-            }
-            else {
-                IO.log("Move position is invalid \(movePosition)", type: .warn)
+            if addMove {
+                if movePosition.isValid {
+                    units.append(.init(kind: .move, pos: movePosition))
+                }
+                else {
+                    IO.log("Move position is invalid \(movePosition)", type: .warn)
+                }
             }
             if !skipBlocks.contains(current) {
                 units.append(.init(kind: .block, pos: current))
