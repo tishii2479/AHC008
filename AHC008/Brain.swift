@@ -61,7 +61,7 @@ class HumanBrainWithGridKnowledge: Brain {
                     }
                 }
             }
-            return commands + CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
+            return commands + CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {

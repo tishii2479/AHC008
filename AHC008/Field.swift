@@ -1,8 +1,9 @@
 import Foundation
 
 class Field {
-    private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
-    private var pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
+    private(set) var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+    private(set) var humans = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
+    private(set) var pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
     private(set) var blocks = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
     
     init(players: [Player] = [], blocks: [Position] = []) {
@@ -18,6 +19,7 @@ class Field {
     
     func updateField(players updatedPlayers: [Player]) {
         players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
+        humans = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
         pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
         addPlayers(players: updatedPlayers)
     }
@@ -54,7 +56,7 @@ class Field {
     // 3. The target position is valid
     func isValidBlock(target: Position) -> Bool {
         guard target.isValid,
-              getPlayers(at: target).count == 0 else { return false }
+              getPlayerCount(at: target) == 0 else { return false }
         // oxo
         // xTx
         // oxo
@@ -69,41 +71,52 @@ class Field {
 
 extension Field {
     func getPlayers(x: Int, y: Int) -> [Player] {
-        getPlayers(at: Position(x: x, y: y))
+        players[y][x]
     }
     
     func getPlayers(at position: Position) -> [Player] {
-        players[position.y][position.x]
+        getPlayers(x: position.x, y: position.y)
+    }
+    
+    func getPlayerCount(x: Int, y: Int) -> Int {
+        getHumanCount(x: x, y: y) + getPetCount(x: x, y: y)
+    }
+    
+    func getPlayerCount(at position: Position) -> Int {
+        getPlayerCount(x: position.x, y: position.y)
     }
     
     func getPetCount(x: Int, y: Int) -> Int {
-        getPetCount(at: Position(x: x, y: y))
+        pets[y][x]
     }
     
     func getPetCount(at position: Position) -> Int {
-        pets[position.y][position.x]
+        getPetCount(x: position.x, y: position.y)
     }
     
     func getHumanCount(x: Int, y: Int) -> Int {
-        getHumanCount(at: Position(x: x, y: y))
+        humans[y][x]
     }
     
     func getHumanCount(at position: Position) -> Int {
-        getPlayers(x: position.x, y: position.y).count - pets[position.y][position.x]
+        getHumanCount(x: position.x, y: position.y)
     }
 
     func checkBlock(x: Int, y: Int) -> Bool {
-        checkBlock(at: Position(x: x, y: y))
+        blocks[y][x]
     }
     
     func checkBlock(at position: Position) -> Bool {
-        blocks[position.y][position.x]
+        checkBlock(x: position.x, y: position.y)
     }
 
     func addPlayer(player: Player) {
         players[player.y][player.x].append(player)
         if player is Pet {
             pets[player.y][player.x] += 1
+        }
+        else if player is Human {
+            humans[player.y][player.x] += 1
         }
     }
     
@@ -162,8 +175,8 @@ extension Field {
         for y in 0 ..< fieldSize {
             for x in 0 ..< fieldSize {
                 if blocks[y][x] { str += "#" }
-                else if players[y][x].count > 0 {
-                    if players[y][x][0] is Pet { str += "P" }
+                else if getPlayerCount(x: x, y: y) > 0 {
+                    if getPetCount(x: x, y: y) > 0 { str += "P" }
                     else { str += "H" }
                 }
                 else { str += "." }
