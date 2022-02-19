@@ -30,8 +30,19 @@ func main() {
     }
     
     field.addPlayers(players: humans + pets)
-    let director = SquareGridJobDirector(field: &field, humans: &humans, pets: &pets)
-    let manager = Manager(field: field, humans: humans, pets: pets, director: director)
+    let director = SquareGridJobDirector(
+        field: &field,
+        humans: &humans,
+        pets: &pets,
+        gridManager: SquareGridManager()
+    )
+    let manager = Manager(
+        field: field,
+        humans: humans,
+        pets: pets,
+        director: director,
+        ioController: RealIOController()
+    )
     manager.start()
 }
 

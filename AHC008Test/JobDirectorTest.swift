@@ -17,14 +17,25 @@ class JobDirectorTest: XCTestCase {
                       id: i, brain: HumanBrain()))
         }
         var pets: [Pet] = []
-        let director = SquareGridJobDirector(field: &field, humans: &humans, pets: &pets)
+        let director = SquareGridJobDirector(
+            field: &field,
+            humans: &humans,
+            pets: &pets,
+            gridManager: SquareGridManager()
+        )
+        let manager = Manager(
+            field: field,
+            humans: humans,
+            pets: pets,
+            director: director,
+            ioController: MockIOController()
+        )
         field.addPlayers(players: humans + pets)
         
         let expected: Int = 244
         for turn in 0 ..< 300 {
             director.directJobs(turn: turn)
-            perform(field: &field, humans: &humans, pets: &pets)
-            
+            manager.processTurn(turn: turn)
             var count: Int = 0
             for y in 0 ..< fieldSize {
                 for x in 0 ..< fieldSize {
@@ -33,7 +44,6 @@ class JobDirectorTest: XCTestCase {
             }
             
             if count == expected {
-                field.dump()
                 XCTAssertTrue(true)
                 IO.log("Finished in turn: \(turn)")
                 return

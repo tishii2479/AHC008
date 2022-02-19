@@ -3,48 +3,41 @@ class Manager {
     private var humans: [Human]
     private var field: Field
     private var director: JobDirector
-    
-    private var petCount: Int { pets.count }
-    private var humanCount: Int { humans.count }
-    
-    init(field: Field, humans: [Human], pets: [Pet], director: JobDirector) {
+    private var ioController: IOController
+
+    init(
+        field: Field,
+        humans: [Human],
+        pets: [Pet],
+        director: JobDirector,
+        ioController: IOController
+    ) {
         self.field = field
         self.humans = humans
         self.pets = pets
         self.director = director
+        self.ioController = ioController
     }
     
     func start() {
         for turn in 0 ..< turnLimit {
-            field.updateField(players: humans + pets)
-            director.directJobs(turn: turn)
-            outputHumanCommand(turn: turn)
-            inputPetCommand()
+            processTurn(turn: turn)
         }
     }
     
-    private func inputPetCommand() {
-        let petCommands = IO.readStringArray()
-        guard petCommands.count == petCount else {
-            fatalError("Input format error")
-        }
-        for i in 0 ..< petCount {
-            for e in petCommands[i] {
-                pets[i].applyCommand(command: Command.toEnum(e))
-            }
-        }
-    }
-    
-    private func outputHumanCommand(turn: Int) {
-        let commands: [Command] = decideAndPerformCommand(turn: turn)
-        IO.output(String(commands.map { $0.rawValue }))
+    func processTurn(turn: Int) {
+        field.updateField(players: humans + pets)
+        director.directJobs(turn: turn)
+        ioController.processOutput(humans: &humans, commands: decideAndPerformCommand(turn: turn))
+        ioController.processInput(pets: &pets)
     }
     
     private func decideHumanCommand(turn: Int) -> [Command] {
         if turn == turnLimit - 1 {
+            // Final turn
             return calcBestCommandForFinalTurn()
         }
-        var commands = [Command](repeating: .none, count: humanCount)
+        var commands = [Command](repeating: .none, count: humans.count)
         for (i, human) in humans.enumerated() {
             if let command = human.commands(field: field).first {
                 commands[i] = command
@@ -53,7 +46,7 @@ class Manager {
         return commands
     }
     
-    func decideAndPerformCommand(turn: Int) -> [Command] {
+    private func decideAndPerformCommand(turn: Int) -> [Command] {
         // 0. Decide command
         var commands = decideHumanCommand(turn: turn)
 

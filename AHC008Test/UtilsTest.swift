@@ -9,12 +9,26 @@ import XCTest
 
 class UtilsTest: XCTestCase {
     func testCreateLineBlockJob() throws {
+        let field = Field()
+        let human = Human(pos: Position(x: 15, y: 15), id: 0, brain: HumanBrain())
         let job = JobUtil.createLineBlockJob(
             from: Position(x: 3, y: 0),
             to: Position(x: 3, y: 29)
         )
         XCTAssertEqual(job.units.count, 59)
         XCTAssertEqual(job.cost, 30 + 29)
+    }
+    
+    func testCreateSquareBlockJob() throws {
+        let field = Field()
+        let human = Human(pos: Position(x: 15, y: 15), id: 0, brain: HumanBrain())
+        let job = JobUtil.createSquareBlockJob(points: [
+            Position(x: 5, y: 5),
+            Position(x: 15, y: 5),
+            Position(x: 15, y: 15),
+            Position(x: 5, y: 15),
+            Position(x: 5, y: 5),
+        ])
     }
     
     func testGetCandidateMove() throws {

@@ -197,7 +197,7 @@ class BestJobFinder {
         for i in 0 ..< humans.count {
             cands[i] = allCommands.filter { field.isValidCommand(player: humans[i], command: $0) }
         }
-        while startTime.addingTimeInterval(2.7) > Date() {
+        while Date() < runLimitDate {
             let testField = Field(players: players, blocks: field.blocks)
             for i in 0 ..< humans.count {
                 commands[i] = cands[i].randomElement()!

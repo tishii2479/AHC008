@@ -33,16 +33,17 @@ extension JobDirector {
 }
 
 class SquareGridJobDirector: JobDirector {
-    private var gridManager: GridManager = SquareGridManager()
+    private var field: Field
+    private var humans: [Human]
+    private var pets: [Pet]
+    private var gridManager: GridManager
+
     private var grids = [Grid]()
     private var didCaputureDog: Bool = false
     private var costLimit: Int {
         // TODO: Consider better value
         50
     }
-    private var field: Field
-    private var humans: [Human]
-    private var pets: [Pet]
     private lazy var dogCount: Int = {
         var count: Int = 0
         pets.forEach {
@@ -71,10 +72,16 @@ class SquareGridJobDirector: JobDirector {
         Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 4)),
     ]
     
-    init(field: inout Field, humans: inout [Human], pets: inout [Pet]) {
+    init(
+        field: inout Field,
+        humans: inout [Human],
+        pets: inout [Pet],
+        gridManager: GridManager
+    ) {
         self.field = field
         self.humans = humans
         self.pets = pets
+        self.gridManager = gridManager
     }
     
     func directJobs(turn: Int) {
