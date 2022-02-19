@@ -11,7 +11,7 @@ struct BasicHumanBrain: HumanBrain {
             let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
             if cand.count == 0 { return [.none] }
             return cand.shuffled() + Command.moves.shuffled()
-        case .block:
+        case .block, .close:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
                 // if human is on the target, move some where random
@@ -39,19 +39,11 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return Command.moves.shuffled() }
         switch jobUnit.kind {
-        case .move:
+        case .move, .close:
             for grid in grids {
                 guard !field.checkBlock(at: grid.gate),
                       grid.gate.dist(to: pos) == 1 else { continue }
-                var petCount: Int = 0
-                var humanCount: Int = 0
-                for x in grid.topLeft.x ... grid.bottomRight.x {
-                    for y in grid.topLeft.y ... grid.bottomRight.y {
-                        petCount += field.getPetCount(x: x, y: y)
-                        humanCount += field.getHumanCount(x: x, y: y)
-                    }
-                }
-                if petCount > 0 && humanCount == 0 {
+                if grid.petCountInGrid(field: field) > 0 {
                     if let block = CommandUtil.deltaToBlockCommand(delta: grid.gate - pos) {
                         return [block, .none]
                     }

@@ -51,7 +51,7 @@ class Human: Player {
     // Call to get command candidate that is valid
     // Will be sorted by priority
     func commands(field: Field) -> [Command] {
-        return brain.command(field: field, pos: pos, jobUnit: schedule.nextUnit).filter {
+        return brain.command(field: field, pos: pos, jobUnit: currentJobUnit).filter {
             field.isValidCommand(player: self, command: $0)
         }
     }
@@ -92,6 +92,10 @@ class Human: Player {
             }
         case .block:
             if command.isBlock {
+                schedule.consume()
+            }
+        case .close:
+            if command.isBlock || pos.dist(to: nextUnit.pos) == 1 {
                 schedule.consume()
             }
         }

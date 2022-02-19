@@ -8,34 +8,30 @@
 import XCTest
 
 class JobAssignTest: XCTestCase {
-    func testLineBlockJobWithSkip() throws {
+    func testMajorJobTest() throws {
         let field = Field()
-        let startPosition = Position(x: 0, y: 0)
-        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
-        let job = JobUtil.createLineBlockJob(
-            from: Position(x: 0, y: 0),
-            to: Position(x: 0, y: 10),
-            skipBlocks: [
-                Position(x: 0, y: 4),
-                Position(x: 0, y: 8),
-            ]
-        )
+        let human = Human(pos: Position(x: 5, y: 5), id: 0)
+        
+        let job = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 10, y: 10)),
+            .init(kind: .block, pos: Position(x: 10, y: 20)),
+        ])
         human.assign(job: job)
-        for _ in 0 ..< 30 {
+        let majorJob = Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 10, y: 0))
+        ])
+        human.assign(job: majorJob, isMajor: true)
+        
+        for _ in 0 ..< 60 {
             if let command = human.commands(field: field).first {
                 human.applyCommand(command: command)
                 field.applyCommand(player: human, command: command)
             }
             field.updateField(players: [human])
         }
-        for y in 0 ... 10 {
-            if y == 4 || y == 8 {
-                XCTAssertFalse(field.checkBlock(x: 0, y: y))
-            }
-            else {
-                XCTAssertTrue(field.checkBlock(x: 0, y: y))
-            }
-        }
+        
+        XCTAssertTrue(field.checkBlock(x: 10, y: 0))
+        XCTAssertTrue(field.checkBlock(x: 10, y: 10))
+        XCTAssertTrue(field.checkBlock(x: 10, y: 20))
     }
-
 }

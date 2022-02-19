@@ -3,7 +3,9 @@ TODO:
 Priority with count in grids.
 Improve grid jobs.
 
+TEST:
 最終盤の行動, ちゃんと調べる
+Gate size?
 No wolfs, then no capture 
 
 Write tests:

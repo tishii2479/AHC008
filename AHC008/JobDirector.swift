@@ -216,16 +216,14 @@ extension SquareGridJobDirector {
             if field.checkBlock(at: grids[i].gate) { continue }
             let petCount: Int = grids[i].petCountInGrid(field: field)
             if petCount == 0 {
-                grids[i].assignee?.clearCurrentJob()
                 grids[i].assignee = nil
                 continue
             }
             if grids[i].assignee != nil { continue }
 
             if petCount > 0 {
-                let job = Schedule.Job(units: [.init(kind: .move, pos: grids[i].gate)])
+                let job = Schedule.Job(units: [.init(kind: .close, pos: grids[i].gate)])
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
-                    IO.log("TURN: \(turn), assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(String(describing: job.nextUnit?.pos))")
                     grids[i].assignee = assignee
                     assignee.assign(job: job, isMajor: true)
                 }

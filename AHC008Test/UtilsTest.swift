@@ -39,6 +39,36 @@ class UtilsTest: XCTestCase {
         }
     }
     
+    func testLineBlockJobWithSkip() throws {
+        let field = Field()
+        let startPosition = Position(x: 0, y: 0)
+        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
+        let job = JobUtil.createLineBlockJob(
+            from: Position(x: 0, y: 0),
+            to: Position(x: 0, y: 10),
+            skipBlocks: [
+                Position(x: 0, y: 4),
+                Position(x: 0, y: 8),
+            ]
+        )
+        human.assign(job: job)
+        for _ in 0 ..< 30 {
+            if let command = human.commands(field: field).first {
+                human.applyCommand(command: command)
+                field.applyCommand(player: human, command: command)
+            }
+            field.updateField(players: [human])
+        }
+        for y in 0 ... 10 {
+            if y == 4 || y == 8 {
+                XCTAssertFalse(field.checkBlock(x: 0, y: y))
+            }
+            else {
+                XCTAssertTrue(field.checkBlock(x: 0, y: y))
+            }
+        }
+    }
+    
     func testCreateBlockJobWithMove() throws {
         let field = Field()
         let human = Human(pos: Position(x: 4, y: 15), id: 0, brain: BasicHumanBrain())
@@ -120,6 +150,12 @@ class UtilsTest: XCTestCase {
         XCTAssertEqual(queue.front, 5)
         XCTAssertEqual(queue.tail, 5)
         queue.pushFront(7)
+        XCTAssertEqual(queue.front, 7)
+        XCTAssertEqual(queue.tail, 5)
+        queue.pushFront(8)
+        XCTAssertEqual(queue.front, 8)
+        XCTAssertEqual(queue.tail, 5)
+        queue.pop()
         XCTAssertEqual(queue.front, 7)
         XCTAssertEqual(queue.tail, 5)
     }

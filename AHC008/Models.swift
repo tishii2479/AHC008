@@ -108,10 +108,12 @@ struct Schedule {
         // There are three types of human job
         // 1. move  := Mommand to space
         // 2. block := Place a block
+        // 3. close := Patrol to pos, and close the gate if pet is in the grid
         struct Unit: Equatable {
             enum Kind {
                 case move
                 case block
+                case close
             }
             var kind: Kind
             var pos: Position
@@ -163,6 +165,12 @@ struct Schedule {
                     lhs.units.push(unit)
                 }
             }
+        }
+        
+        static func +(lhs: Job, rhs: Job) -> Job {
+            var lhs = lhs
+            lhs += rhs
+            return lhs
         }
         
         func reversed() -> Job {
