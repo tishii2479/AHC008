@@ -1,21 +1,6 @@
 import Foundation
 
 class JobUtil {
-    static func createSquareBlockJob(
-        points: [Position],
-        skipBlocks: [Position] = []
-    ) -> Schedule.Job {
-        var job = Schedule.Job(units: [])
-        guard points.count > 0 else {
-            IO.log("Points.count is 0", type: .warn)
-            return job
-        }
-        for i in 0 ..< points.count - 1 {
-            job += createLineBlockJob(from: points[i], to: points[i + 1], skipBlocks: skipBlocks)
-        }
-        return job
-    }
-    
     static func createLineBlockJob(
         from: Position,
         to: Position,
