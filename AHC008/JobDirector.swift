@@ -40,10 +40,6 @@ class SquareGridJobDirector: JobDirector {
 
     private var grids = [Grid]()
     private var didCaputureDog: Bool = false
-    private var costLimit: Int {
-        // TODO: Consider better value
-        30
-    }
     private lazy var dogCount: Int = {
         var count: Int = 0
         pets.forEach {
@@ -66,11 +62,11 @@ class SquareGridJobDirector: JobDirector {
         Position(x: 14, y: 6),
     ]
     private var capturePosition: [Int]
-    private var corners: [Schedule.Job.Unit] = [
-        Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 25)),
-        Schedule.Job.Unit(kind: .move, pos: Position(x: 25, y: 25)),
-        Schedule.Job.Unit(kind: .move, pos: Position(x: 25, y: 4)),
-        Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 4)),
+    private var corners: [Position] = [
+        Position(x: 4, y: 25),
+        Position(x: 25, y: 25),
+        Position(x: 25, y: 4),
+        Position(x: 4, y: 4),
     ]
     
     init(
@@ -115,6 +111,7 @@ extension SquareGridJobDirector {
         if turn >= 299 { return true } 
         if getCapturedDogCount() < dogCount { return false }
         for human in humans {
+            if !dogPositions.contains(human.pos) { return false }
             if human.jobCost > 0 { return false }
         }
         for block in dogBlocks {
@@ -195,10 +192,10 @@ extension SquareGridJobDirector {
                 human.assign(
                     job: Schedule.Job(
                         units: [
-                            corners[i % 4],
-                            corners[(i + 1) % 4],
-                            corners[(i + 2) % 4],
-                            corners[(i + 3) % 4],
+                            .init(kind: .move, pos: corners[i % 4]),
+                            .init(kind: .move, pos: corners[(i + 1) % 4]),
+                            .init(kind: .move, pos: corners[(i + 2) % 4]),
+                            .init(kind: .move, pos: corners[(i + 3) % 4]),
                         ]
                     )
                 )
