@@ -42,7 +42,7 @@ class SquareGridJobDirector: JobDirector {
     private var didCaputureDog: Bool = false
     private var costLimit: Int {
         // TODO: Consider better value
-        50
+        30
     }
     private lazy var dogCount: Int = {
         var count: Int = 0
@@ -65,6 +65,7 @@ class SquareGridJobDirector: JobDirector {
         Position(x: 23, y: 14),
         Position(x: 14, y: 6),
     ]
+    private var capturePosition: [Int]
     private var corners: [Schedule.Job.Unit] = [
         Schedule.Job.Unit(kind: .move, pos: Position(x: 4, y: 25)),
         Schedule.Job.Unit(kind: .move, pos: Position(x: 25, y: 25)),
@@ -82,6 +83,8 @@ class SquareGridJobDirector: JobDirector {
         self.humans = humans
         self.pets = pets
         self.gridManager = gridManager
+        
+        self.capturePosition = [Int](repeating: 0, count: humans.count)
     }
     
     func directJobs(turn: Int) {
@@ -168,16 +171,24 @@ extension SquareGridJobDirector {
     private func assignPrepareForCaptureDogJob() {
         // Gather to center grid for capture wolves
         for (i, human) in humans.enumerated() {
-            human.assign(job: .init(units: [
-                .init(kind: .move, pos: dogPositions[i % 4])
-            ]))
+            for j in 0 ..< 4 {
+                if human.lastPosition.dist(to: dogPositions[j])
+                    < human.lastPosition.dist(to: dogPositions[capturePosition[i]]) {
+                    capturePosition[i] = j
+                }
+            }
+            if human.lastPosition.dist(to: dogPositions[capturePosition[i]]) > 0 {
+                human.assign(job: .init(units: [
+                    .init(kind: .move, pos: dogPositions[capturePosition[i]])
+                ]))
+            }
         }
     }
     
     private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: dogBlocks[i % 4]),
+                .init(kind: .block, pos: dogBlocks[capturePosition[i]]),
             ]))
         }
     }
@@ -216,6 +227,7 @@ extension SquareGridJobDirector {
             if field.checkBlock(at: grids[i].gate) { continue }
             let petCount: Int = grids[i].petCountInGrid(field: field)
             if petCount == 0 {
+                grids[i].assignee?.clearCurrentJob()
                 grids[i].assignee = nil
                 continue
             }

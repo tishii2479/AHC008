@@ -95,7 +95,7 @@ class Human: Player {
                 schedule.consume()
             }
         case .close:
-            if command.isBlock || pos.dist(to: nextUnit.pos) == 1 {
+            if command.isBlock || pos.dist(to: nextUnit.pos) <= 1 {
                 schedule.consume()
             }
         }
