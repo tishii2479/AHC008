@@ -232,11 +232,21 @@ struct Grid {
     var topLeft: Position
     var bottomRight: Position
     var gate: Position
-    var assigned: Bool = false
+    var assignee: Human? = nil
     
     init(top: Int, left: Int, width: Int, height: Int, gate: Position) {
         self.topLeft = Position(x: left, y: top)
         self.bottomRight = Position(x: left + width - 1, y: top + height - 1)
         self.gate = gate
+    }
+    
+    func petCountInGrid(field: Field) -> Int {
+        var petCount = 0
+        for x in topLeft.x ... bottomRight.x {
+           for y in topLeft.y ... bottomRight.y {
+               petCount += field.getPetCount(x: x, y: y)
+           }
+        }
+        return petCount
     }
 }

@@ -1,11 +1,10 @@
 TODO: 
-動物がいるところに人を派遣する
-最終盤の行動, ちゃんと調べる
-Create input mock
-No wolfs, then no capture
 真ん中埋める
 Priority with count in grids.
 Improve grid jobs.
+
+最終盤の行動, ちゃんと調べる
+No wolfs, then no capture 
 
 Write tests:
 JobUtil cost calculation

@@ -97,7 +97,7 @@ class SquareGridJobDirector: JobDirector {
                 assignCloseGateJob()
             }
             else if didCaputureDog {
-                findGridAndAssignBlockJob()
+                findGridAndAssignBlockJob(turn: turn)
             }
         }
     }
@@ -108,7 +108,7 @@ class SquareGridJobDirector: JobDirector {
 extension SquareGridJobDirector {
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
-        if turn >= 299 { return true }  // TODO: consider timing
+        if turn >= 299 { return true } 
         if getCapturedDogCount() < dogCount { return false }
         for human in humans {
             if human.jobCost > 0 { return false }
@@ -200,7 +200,7 @@ extension SquareGridJobDirector {
         }
     }
     
-    private func findGridAndAssignBlockJob() {
+    private func findGridAndAssignBlockJob(turn: Int) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
             if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
@@ -210,28 +210,24 @@ extension SquareGridJobDirector {
 
         for i in 0 ..< grids.count {
             if field.checkBlock(at: grids[i].gate) { continue }
-            if grids[i].assigned { continue }
-            // TODO: Extract to Grid
-            var petCount: Int = 0
-            for x in grids[i].topLeft.x ... grids[i].bottomRight.x {
-                for y in grids[i].topLeft.y ... grids[i].bottomRight.y {
-                    petCount += field.getPetCount(x: x, y: y)
-                }
+            let petCount: Int = grids[i].petCountInGrid(field: field)
+            if petCount == 0 {
+                grids[i].assignee?.clearCurrentJob()
+                grids[i].assignee = nil
+                continue
             }
+            if grids[i].assignee != nil { continue }
 
             if petCount > 0 {
-                grids[i].assigned = true
                 let job = Schedule.Job(units: [.init(kind: .move, pos: grids[i].gate)])
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
-                    IO.log("Assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(String(describing: job.nextUnit?.pos))")
+                    IO.log("TURN: \(turn), assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(String(describing: job.nextUnit?.pos))")
+                    grids[i].assignee = assignee
                     assignee.assign(job: job, isMajor: true)
                 }
                 else {
                     IO.log("Assignee not found for grid: \(grids[i])", type: .warn)
                 }
-            }
-            else {
-                grids[i].assigned = false
             }
         }
     }
