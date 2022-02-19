@@ -37,10 +37,9 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     let grids: [Grid]
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
-        guard let jobUnit = jobUnit else { return [.none] }
+        guard let jobUnit = jobUnit else { return Command.moves.shuffled() }
         switch jobUnit.kind {
         case .move:
-            var commands = [Command]()
             for grid in grids {
                 guard !field.checkBlock(at: grid.gate),
                       grid.gate.dist(to: pos) == 1 else { continue }
@@ -54,11 +53,11 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                 }
                 if petCount > 0 && humanCount == 0 {
                     if let block = CommandUtil.deltaToBlockCommand(delta: grid.gate - pos) {
-                        commands.append(block)
+                        return [block, .none]
                     }
                 }
             }
-            return commands + CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled() + Command.moves.shuffled()
+            return CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
