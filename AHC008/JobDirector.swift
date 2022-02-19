@@ -35,7 +35,7 @@ extension JobDirector {
 class SquareGridJobDirector: JobDirector {
     private var gridManager: GridManager = SquareGridManager()
     private var grids = [Grid]()
-    private var didCaputureWolf: Bool = false
+    private var didCaputureDog: Bool = false
     private var costLimit: Int {
         // TODO: Consider better value
         50
@@ -43,14 +43,22 @@ class SquareGridJobDirector: JobDirector {
     private var field: Field
     private var humans: [Human]
     private var pets: [Pet]
-    private var wolfCount: Int = 0
-    private let wolfBlocks = [
+    private lazy var dogCount: Int = {
+        var count: Int = 0
+        pets.forEach {
+            if $0.kind == .dog {
+                count += 1
+            }
+        }
+        return count
+    }()
+    private let dogBlocks = [
         Position(x: 7, y: 15),
         Position(x: 15, y: 22),
         Position(x: 22, y: 14),
         Position(x: 14, y: 7),
     ]
-    private let wolfPositions = [
+    private let dogPositions = [
         Position(x: 6, y: 15),
         Position(x: 15, y: 23),
         Position(x: 23, y: 14),
@@ -67,22 +75,21 @@ class SquareGridJobDirector: JobDirector {
         self.field = field
         self.humans = humans
         self.pets = pets
-        pets.forEach { if $0.kind == .dog { wolfCount += 1 } }
     }
     
     func directJobs(turn: Int) {
         if turn == 0 {
             assignGridJob()
-            assignPrepareForCaptureWolfJob()
+            assignPrepareForCaptureDogJob()
         }
         // TODO: Find best timing
         if 100 <= turn && turn <= 299 {
-            if isPreparedToCaptureWolf(turn: turn) {
-                didCaputureWolf = true
-                assignCaptureWolfJob()
+            if isPreparedToCaptureDog(turn: turn) {
+                didCaputureDog = true
+                assignCaptureDogJob()
                 assignCloseGateJob()
             }
-            else if didCaputureWolf {
+            else if didCaputureDog {
                 findGridAndAssignBlockJob()
             }
         }
@@ -92,45 +99,49 @@ class SquareGridJobDirector: JobDirector {
 // MARK: SquareGridJobDirector.Helper
 
 extension SquareGridJobDirector {
-    private func isPreparedToCaptureWolf(turn: Int) -> Bool {
-        guard !didCaputureWolf else { return false }
+    private func isPreparedToCaptureDog(turn: Int) -> Bool {
+        guard !didCaputureDog else { return false }
         if turn >= 220 { return true }  // TODO: consider timing
-        if getCapturedWolfCount() < wolfCount { return false }
+        if getCapturedDogCount() < dogCount { return false }
         for human in humans {
             if human.jobCost > 0 { return false }
         }
-        for block in wolfBlocks {
+        for block in dogBlocks {
             if !field.isValidBlock(target: block) { return false }
         }
         return true
     }
     
-    private func getCapturedWolfCount() -> Int {
-        var captureWolfCount: Int = 0
+    private func getCapturedDogCount() -> Int {
+        var captureDogCount: Int = 0
         for x in 8 ... 14 {
-            captureWolfCount += getWolfCountAt(x: x, y: 15)
+            captureDogCount += getDogCountAt(x: x, y: 15)
         }
         for x in 15 ... 21 {
-            captureWolfCount += getWolfCountAt(x: x, y: 14)
+            captureDogCount += getDogCountAt(x: x, y: 14)
         }
         for y in 8 ... 14 {
-            captureWolfCount += getWolfCountAt(x: 14, y: y)
+            captureDogCount += getDogCountAt(x: 14, y: y)
         }
         for y in 15 ... 21 {
-            captureWolfCount += getWolfCountAt(x: 15, y: y)
+            captureDogCount += getDogCountAt(x: 15, y: y)
         }
-        return captureWolfCount
+        captureDogCount += getDogCountAt(x: 15, y: 13)
+        captureDogCount += getDogCountAt(x: 13, y: 14)
+        captureDogCount += getDogCountAt(x: 16, y: 15)
+        captureDogCount += getDogCountAt(x: 14, y: 16)
+        return captureDogCount
     }
     
-    private func getWolfCountAt(x: Int, y: Int) -> Int {
-        var wolfCount = 0
+    private func getDogCountAt(x: Int, y: Int) -> Int {
+        var dogCount = 0
         for player in field.getPlayers(x: x, y: y) {
             if let pet = player as? Pet,
                pet.kind == .dog {
-                wolfCount += 1
+                dogCount += 1
             }
         }
-        return wolfCount
+        return dogCount
     }
 }
 
@@ -143,19 +154,19 @@ extension SquareGridJobDirector {
         assignJobs(jobs: jobs, humans: &humans)
     }
 
-    private func assignPrepareForCaptureWolfJob() {
+    private func assignPrepareForCaptureDogJob() {
         // Gather to center grid for capture wolves
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .move, pos: wolfPositions[i % 4])
+                .init(kind: .move, pos: dogPositions[i % 4])
             ]))
         }
     }
     
-    private func assignCaptureWolfJob() {
+    private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: wolfBlocks[i % 4]),
+                .init(kind: .block, pos: dogBlocks[i % 4]),
             ]))
         }
     }
