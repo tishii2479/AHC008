@@ -13,6 +13,8 @@
 		49258ACA27BAA7B5006C8BEA /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC927BAA7B5006C8BEA /* IO.swift */; };
 		49B749C527BC881E0070016C /* JobAssignTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B749C427BC881E0070016C /* JobAssignTest.swift */; };
 		49B749C727BCA34E0070016C /* UtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B749C627BCA34E0070016C /* UtilsTest.swift */; };
+		49E8532627C0971D00EF03FB /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532527C0971D00EF03FB /* DataStructures.swift */; };
+		49E8532727C0972F00EF03FB /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532527C0971D00EF03FB /* DataStructures.swift */; };
 		49F5CA1927BE6C9F00AA4C2B /* JobDirectorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */; };
 		49F5CA1B27BE93D700AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
 		49F5CA1C27BE991300AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
@@ -59,6 +61,7 @@
 		49258AC927BAA7B5006C8BEA /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
 		49B749C427BC881E0070016C /* JobAssignTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAssignTest.swift; sourceTree = "<group>"; };
 		49B749C627BCA34E0070016C /* UtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTest.swift; sourceTree = "<group>"; };
+		49E8532527C0971D00EF03FB /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
 		49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDirectorTest.swift; sourceTree = "<group>"; };
 		49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCreator.swift; sourceTree = "<group>"; };
 		49FE05EC27BB4F0900E3A5FE /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
@@ -126,6 +129,7 @@
 				49FE061227BBE03A00E3A5FE /* Players.swift */,
 				49FE061527BBE2CA00E3A5FE /* Brain.swift */,
 				49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */,
+				49E8532527C0971D00EF03FB /* DataStructures.swift */,
 			);
 			path = AHC008;
 			sourceTree = "<group>";
@@ -236,6 +240,7 @@
 				49FE060D27BB7D5600E3A5FE /* Extensions.swift in Sources */,
 				49FE05EF27BB4FDC00E3A5FE /* Values.swift in Sources */,
 				49FE060A27BB76E200E3A5FE /* JobDirector.swift in Sources */,
+				49E8532627C0971D00EF03FB /* DataStructures.swift in Sources */,
 				49258AC727BA8B59006C8BEA /* Models.swift in Sources */,
 				49FE05F127BB57B900E3A5FE /* Utils.swift in Sources */,
 				49FE061627BBE2CA00E3A5FE /* Brain.swift in Sources */,
@@ -265,6 +270,7 @@
 				49F5CA1927BE6C9F00AA4C2B /* JobDirectorTest.swift in Sources */,
 				49B749C727BCA34E0070016C /* UtilsTest.swift in Sources */,
 				49FE061C27BBE8D500E3A5FE /* Models.swift in Sources */,
+				49E8532727C0972F00EF03FB /* DataStructures.swift in Sources */,
 				49FE062327BBE8D500E3A5FE /* Field.swift in Sources */,
 				49B749C527BC881E0070016C /* JobAssignTest.swift in Sources */,
 				49F5CA1C27BE991300AA4C2B /* GridCreator.swift in Sources */,

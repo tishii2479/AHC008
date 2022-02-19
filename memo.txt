@@ -1,12 +1,10 @@
-閉じられるまで待つ
+TODO: 
 動物がいるところに人を派遣する
-最終盤の行動
+最終盤の行動, ちゃんと調べる
 Create input mock
 No wolfs, then no capture
 4角埋める
+たまにいない時に閉めちゃう
 
 Write tests:
-Queue
-Assign(isMajor: true)
-Human.ClearJob
 JobUtil cost calculation

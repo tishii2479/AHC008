@@ -101,7 +101,7 @@ class SquareGridJobDirector: JobDirector {
 extension SquareGridJobDirector {
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
-        if turn >= 220 { return true }  // TODO: consider timing
+        if turn >= 299 { return true }  // TODO: consider timing
         if getCapturedDogCount() < dogCount { return false }
         for human in humans {
             if human.jobCost > 0 { return false }

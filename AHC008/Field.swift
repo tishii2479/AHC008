@@ -1,3 +1,5 @@
+import Foundation
+
 class Field {
     private var players = [[[Player]]](repeating: [[Player]](repeating: [Player](), count: fieldSize), count: fieldSize)
     private var pets = [[Int]](repeating: [Int](repeating: 0, count: fieldSize), count: fieldSize)
@@ -121,6 +123,38 @@ extension Field {
     
     func addBlocks(positions: [Position]) {
         for pos in positions { addBlock(position: pos) }
+    }
+    
+    func calcScore(humans: [Human]) -> Double {
+        var totalScore: Double = 0
+        var seen = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
+        for human in humans {
+            if seen[human.y][human.x] { continue }
+            var humanCount: Int = 0
+            var petCount: Int = 0
+            var realmSize: Int = 0
+            let queue = Queue<Position>()
+            seen[human.y][human.x] = true
+            queue.push(human.pos)
+            while !queue.isEmpty {
+                guard let pos = queue.pop() else { break }
+                realmSize += 1
+                petCount += getPetCount(at: pos)
+                humanCount += getHumanCount(at: pos)
+                
+                for dir in Position.directions {
+                    let nxt = pos + dir
+                    guard nxt.isValid,
+                          !checkBlock(at: nxt),
+                          !seen[nxt.y][nxt.x] else { continue }
+                    seen[nxt.y][nxt.x] = true
+                    queue.push(nxt)
+                }
+            }
+            
+            totalScore += Double(humanCount) * Double(realmSize) / 900.0 / pow(2.0, Double(petCount))
+        }
+        return totalScore * 100_000_000 / Double(humans.count)
     }
     
     func dump() {

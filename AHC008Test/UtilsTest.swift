@@ -55,5 +55,19 @@ class UtilsTest: XCTestCase {
             }
         }
     }
+    
+    func testQueue() throws {
+        let queue = Queue<Int>()
+        queue.push(3)
+        queue.push(5)
+        XCTAssertEqual(queue.front, 3)
+        XCTAssertEqual(queue.tail, 5)
+        queue.pop()
+        XCTAssertEqual(queue.front, 5)
+        XCTAssertEqual(queue.tail, 5)
+        queue.pushFront(7)
+        XCTAssertEqual(queue.front, 7)
+        XCTAssertEqual(queue.tail, 5)
+    }
 
 }

@@ -132,40 +132,6 @@ class CommandUtil {
     }
 }
 
-class FieldUtil {
-    static func calcScoreFromField(field: Field, humans: [Human]) -> Double {
-        var totalScore: Double = 0
-        var seen = [[Bool]](repeating: [Bool](repeating: false, count: fieldSize), count: fieldSize)
-        for human in humans {
-            if seen[human.y][human.x] { continue }
-            var humanCount: Int = 0
-            var petCount: Int = 0
-            var realmSize: Int = 0
-            let queue = Queue<Position>()
-            seen[human.y][human.x] = true
-            queue.push(human.pos)
-            while !queue.isEmpty {
-                guard let pos = queue.pop() else { break }
-                realmSize += 1
-                petCount += field.getPetCount(at: pos)
-                humanCount += field.getHumanCount(at: pos)
-                
-                for dir in Position.directions {
-                    let nxt = pos + dir
-                    guard nxt.isValid,
-                          !field.checkBlock(at: nxt),
-                          !seen[nxt.y][nxt.x] else { continue }
-                    seen[nxt.y][nxt.x] = true
-                    queue.push(nxt)
-                }
-            }
-            
-            totalScore += Double(humanCount) * Double(realmSize) / 900.0 / pow(2.0, Double(petCount))
-        }
-        return totalScore * 100_000_000 / Double(humans.count)
-    }
-}
-
 class BestJobFinder {
     private var field: Field
     private var humans: [Human]
@@ -202,7 +168,7 @@ class BestJobFinder {
                 }
             }
 
-            let score: Double = FieldUtil.calcScoreFromField(field: testField, humans: humans)
+            let score: Double = testField.calcScore(humans: humans)
             if score > bestScore {
                 var commands = [Command](repeating: .none, count: humans.count)
                 for i in 0 ..< humans.count {
@@ -238,7 +204,7 @@ class BestJobFinder {
                 testField.applyCommand(player: humans[i], command: commands[i])
             }
 
-            let score: Double = FieldUtil.calcScoreFromField(field: testField, humans: humans)
+            let score: Double = testField.calcScore(humans: humans)
             if score > bestScore {
                 IO.log(bestScore, score)
                 bestCommands = commands
@@ -246,85 +212,5 @@ class BestJobFinder {
             }
         }
         return bestCommands
-    }
-}
-
-
-class Node<T> : Equatable {
-    let id: UUID
-    var value: T
-    var next: Node?
-    
-    init(value: T, next: Node? = nil) {
-        self.id = UUID()
-        self.value = value
-        self.next = next
-    }
-    
-    static func == (lhs: Node<T>, rhs: Node<T>) -> Bool {
-        lhs.id == rhs.id
-    }
-}
-
-class Queue<T> {
-    private(set) var frontNode: Node<T>?
-    private(set) var tailNode: Node<T>?
-    private(set) var count: Int = 0
-    var elements: [T] {
-        var res = [T]()
-        var currentNode = frontNode
-        while currentNode != tailNode {
-            if let value = currentNode?.value {
-                res.append(value)
-            }
-            currentNode = currentNode?.next
-        }
-        if let value = currentNode?.value {
-            res.append(value)
-        }
-        return res
-    }
-    var isEmpty: Bool {
-        frontNode == nil
-    }
-    var front: T? {
-        frontNode?.value
-    }
-    var tail: T? {
-        tailNode?.value
-    }
-    
-    func pushFront(_ value: T) {
-        count += 1
-        frontNode = Node(value: value, next: frontNode)
-        if tailNode == nil {
-            tailNode = frontNode
-        }
-    }
-    
-    func push(_ value: T) {
-        count += 1
-        if isEmpty {
-            frontNode = Node(value: value, next: frontNode)
-            if tailNode == nil {
-                tailNode = frontNode
-            }
-            return
-        }
-        
-        tailNode?.next = Node(value: value)
-        tailNode = tailNode?.next
-    }
-    
-    @discardableResult
-    func pop() -> T? {
-        defer {
-            count -= 1
-            frontNode = frontNode?.next
-            if isEmpty {
-                tailNode = nil
-            }
-        }
-        return frontNode?.value
     }
 }

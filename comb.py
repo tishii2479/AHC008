@@ -12,6 +12,7 @@ files = [
     "Brain.swift",
     "Field.swift",
     "Utils.swift",
+    "DataStructures.swift",
     "IO.swift",
 #    "Extensions.swift",
 ]

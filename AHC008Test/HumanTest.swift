@@ -79,5 +79,30 @@ class HumanTest: XCTestCase {
         }
     }
     
+    func testClearJob() throws {
+        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: HumanBrain())
+        for _ in 0 ..< 4 {
+            human.assign(job: Schedule.Job(units: [
+                .init(kind: .move, pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)))
+            ]))
+        }
+        human.clearJobs()
+        XCTAssertNil(human.currentJobUnit)
+        XCTAssertEqual(human.jobCost, 0)
+    }
+    
+    func testAssignMajorJob() throws {
+        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: HumanBrain())
+        for _ in 0 ..< 4 {
+            human.assign(job: Schedule.Job(units: [
+                .init(kind: .move, pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)))
+            ]))
+        }
+        human.assign(job: Schedule.Job(units: [
+            .init(kind: .block, pos: Position(x: 0, y: 0))
+        ]), isMajor: true)
+        XCTAssertEqual(human.currentJobUnit, Schedule.Job.Unit(kind: .block, pos: Position(x: 0, y: 0)))
+    }
+    
 }
 

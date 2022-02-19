@@ -38,6 +38,9 @@ class Human: Player {
     var lastPosition: Position {
         schedule.jobs.tail?.endPosition ?? pos
     }
+    var currentJobUnit: Schedule.Job.Unit? {
+        schedule.nextUnit
+    }
     var brain: Brain
 
     init(pos: Position, id: Int, brain: Brain) {
