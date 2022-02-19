@@ -167,28 +167,21 @@ extension SquareGridJobDirector {
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: humans)
     }
-
+    
+    // TODO: Assign better positions
     private func assignPrepareForCaptureDogJob() {
         // Gather to center grid for capture wolves
         for (i, human) in humans.enumerated() {
-            for j in 0 ..< 4 {
-                if human.lastPosition.dist(to: dogPositions[j])
-                    < human.lastPosition.dist(to: dogPositions[capturePosition[i]]) {
-                    capturePosition[i] = j
-                }
-            }
-            if human.lastPosition.dist(to: dogPositions[capturePosition[i]]) > 0 {
-                human.assign(job: .init(units: [
-                    .init(kind: .move, pos: dogPositions[capturePosition[i]])
-                ]))
-            }
+            human.assign(job: .init(units: [
+                .init(kind: .move, pos: dogPositions[i % 4])
+            ]))
         }
     }
     
     private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: dogBlocks[capturePosition[i]]),
+                .init(kind: .block, pos: dogBlocks[i % 4]),
             ]))
         }
     }
