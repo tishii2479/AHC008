@@ -208,6 +208,8 @@ extension SquareGridJobDirector {
     
     private func findGridAndAssignBlockJob(turn: Int) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
+            if testHuman.isBusy && !currentAssignee.isBusy { return currentAssignee }
+            if !testHuman.isBusy && currentAssignee.isBusy { return testHuman }
             if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
             }
@@ -233,6 +235,7 @@ extension SquareGridJobDirector {
                 let job = Schedule.Job(units: units)
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
                     grids[i].assignee = assignee
+                    IO.log(units, assignee.pos)
                     assignee.assign(job: job, isMajor: true)
                 }
                 else {

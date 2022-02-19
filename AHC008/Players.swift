@@ -31,6 +31,8 @@ class Player: Equatable {
 
 class Human: Player {
     private(set) var schedule: Schedule = Schedule()
+    // If this human is doing a major job
+    private(set) var isBusy: Bool = false
     var jobCost: Int {
         schedule.cost + pos.dist(to: schedule.nextUnit?.pos)
     }
@@ -60,6 +62,9 @@ class Human: Player {
     // that is needed to be performed immediately
     func assign(job: Schedule.Job, isMajor: Bool = false) {
         schedule.assign(job: job, isMajor: isMajor)
+        if isMajor {
+            isBusy = true
+        }
     }
     
     // The jobCost of this human if the job is assigned
@@ -72,6 +77,7 @@ class Human: Player {
     
     func clearCurrentJob() {
         schedule.consume()
+        isBusy = false
     }
     
     func clearJobs() {
@@ -88,15 +94,15 @@ class Human: Player {
         switch nextUnit.kind {
         case .move:
             if pos == nextUnit.pos || field.checkBlock(at: nextUnit.pos) {
-                schedule.consume()
+                clearCurrentJob()
             }
         case .block:
             if command.isBlock || field.checkBlock(at: nextUnit.pos) {
-                schedule.consume()
+                clearCurrentJob()
             }
         case .close:
             if command.isBlock || pos.dist(to: nextUnit.pos) <= 1 {
-                schedule.consume()
+                clearCurrentJob()
             }
         }
     }
