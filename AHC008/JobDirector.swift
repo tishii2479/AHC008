@@ -6,7 +6,7 @@ protocol JobDirector {
 }
 
 extension JobDirector {
-    func assignJobs(jobs: [Schedule.Job], humans: inout [Human]) {
+    func assignJobs(jobs: [Schedule.Job], humans: [Human]) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
             if testHuman.assignedCost(job: job) < currentAssignee.assignedCost(job: job) {
                 return testHuman
@@ -15,11 +15,11 @@ extension JobDirector {
         }
 
         for job in jobs {
-            findAssignee(job: job, humans: &humans, compare: compare)?.assign(job: job)
+            findAssignee(job: job, humans: humans, compare: compare)?.assign(job: job)
         }
     }
     
-    func findAssignee(job: Schedule.Job, humans: inout [Human], compare: Compare) -> Human? {
+    func findAssignee(job: Schedule.Job, humans: [Human], compare: Compare) -> Human? {
         guard humans.count > 0 else {
             IO.log("Human count is zero.", type: .warn)
             return nil
@@ -73,9 +73,9 @@ class SquareGridJobDirector: JobDirector {
     ]
     
     init(
-        field: inout Field,
-        humans: inout [Human],
-        pets: inout [Pet],
+        field: Field,
+        humans: [Human],
+        pets: [Pet],
         gridManager: GridManager
     ) {
         self.field = field
@@ -158,7 +158,7 @@ extension SquareGridJobDirector {
     private func assignGridJob() {
         grids = gridManager.createGrid()
         let jobs = gridManager.createGridJobs()
-        assignJobs(jobs: jobs, humans: &humans)
+        assignJobs(jobs: jobs, humans: humans)
     }
 
     private func assignPrepareForCaptureDogJob() {
@@ -222,7 +222,7 @@ extension SquareGridJobDirector {
             if petCount > 0 {
                 grids[i].assigned = true
                 let job = Schedule.Job(units: [.init(kind: .move, pos: grids[i].gate)])
-                if let assignee = findAssignee(job: job, humans: &humans, compare: compare) {
+                if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
                     IO.log("Assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(String(describing: job.nextUnit?.pos))")
                     assignee.assign(job: job, isMajor: true)
                 }

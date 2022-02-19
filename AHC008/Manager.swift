@@ -28,8 +28,8 @@ class Manager {
     func processTurn(turn: Int) {
         field.updateField(players: humans + pets)
         director.directJobs(turn: turn)
-        ioController.processOutput(humans: &humans, commands: decideAndPerformCommand(turn: turn))
-        ioController.processInput(pets: &pets)
+        ioController.processOutput(humans: humans, commands: decideAndPerformCommand(turn: turn))
+        ioController.processInput(pets: pets)
     }
     
     private func decideHumanCommand(turn: Int) -> [Command] {

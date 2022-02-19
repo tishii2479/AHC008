@@ -1,7 +1,6 @@
 func main() {
     var pets = [Pet]()
     var humans = [Human]()
-    var field = Field()
 
     let N = IO.readInt()
     for i in 0 ..< N {
@@ -29,11 +28,12 @@ func main() {
         )
     }
     
+    let field = Field()
     field.addPlayers(players: humans + pets)
     let director = SquareGridJobDirector(
-        field: &field,
-        humans: &humans,
-        pets: &pets,
+        field: field,
+        humans: humans,
+        pets: pets,
         gridManager: SquareGridManager()
     )
     let manager = Manager(

@@ -3,8 +3,9 @@ TODO:
 最終盤の行動, ちゃんと調べる
 Create input mock
 No wolfs, then no capture
-4角埋める
-たまにいない時に閉めちゃう -> 角だけ?
+真ん中埋める
+Priority with count in grids.
+Improve grid jobs.
 
 Write tests:
 JobUtil cost calculation

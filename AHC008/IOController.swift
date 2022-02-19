@@ -1,10 +1,10 @@
 protocol IOController {
-    func processOutput(humans: inout [Human], commands: [Command])
-    func processInput(pets: inout [Pet])
+    func processOutput(humans: [Human], commands: [Command])
+    func processInput(pets: [Pet])
 }
 
 struct RealIOController: IOController {
-    func processInput(pets: inout [Pet]) {
+    func processInput(pets: [Pet]) {
         let petCommands = IO.readStringArray()
         guard petCommands.count == pets.count else {
             fatalError("Input format error")
@@ -16,17 +16,17 @@ struct RealIOController: IOController {
         }
     }
     
-    func processOutput(humans: inout [Human], commands: [Command]) {
+    func processOutput(humans: [Human], commands: [Command]) {
         IO.output(String(commands.map { $0.rawValue }))
     }
 }
 
 struct MockIOController: IOController {
-    func processInput(pets: inout [Pet]) {
+    func processInput(pets: [Pet]) {
         // Do nothing
     }
     
-    func processOutput(humans: inout [Human], commands: [Command]) {
+    func processOutput(humans: [Human], commands: [Command]) {
         // Do nothing
     }
 }

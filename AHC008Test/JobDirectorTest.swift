@@ -24,9 +24,9 @@ class JobDirectorTest: XCTestCase {
         }
         pets = []
         director = SquareGridJobDirector(
-            field: &field,
-            humans: &humans,
-            pets: &pets,
+            field: field,
+            humans: humans,
+            pets: pets,
             gridManager: SquareGridManager()
         )
         manager = Manager(
