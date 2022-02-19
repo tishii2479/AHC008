@@ -137,6 +137,10 @@ extension SquareGridJobDirector {
         captureDogCount += getDogCountAt(x: 13, y: 14)
         captureDogCount += getDogCountAt(x: 16, y: 15)
         captureDogCount += getDogCountAt(x: 14, y: 16)
+        captureDogCount += getDogCountAt(x: 9, y: 14)
+        captureDogCount += getDogCountAt(x: 14, y: 9)
+        captureDogCount += getDogCountAt(x: 15, y: 20)
+        captureDogCount += getDogCountAt(x: 20, y: 15)
         return captureDogCount
     }
     
