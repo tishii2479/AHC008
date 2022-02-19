@@ -7,10 +7,9 @@ import Foundation
 
 class IO {}
 
+// MARK: IO.Input
+
 extension IO {
-
-    // MARK: Input
-
     static func readStringArray() -> [String] {
         guard let str = readLine() else {
             fatalError("Failed to read integer array")
@@ -46,10 +45,9 @@ extension IO {
     
 }
 
-extension IO {
+// MARK: IO.Output
 
-    // MARK: Output
-    
+extension IO {
     enum LogType: String {
         case none   = ""
         case info   = "[INFO]"

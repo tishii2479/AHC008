@@ -3,7 +3,7 @@ protocol IOController {
     func processInput(pets: inout [Pet])
 }
 
-class RealIOController: IOController {
+struct RealIOController: IOController {
     func processInput(pets: inout [Pet]) {
         let petCommands = IO.readStringArray()
         guard petCommands.count == pets.count else {
@@ -21,7 +21,7 @@ class RealIOController: IOController {
     }
 }
 
-class MockIOController: IOController {
+struct MockIOController: IOController {
     func processInput(pets: inout [Pet]) {
         // Do nothing
     }

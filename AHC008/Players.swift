@@ -41,9 +41,9 @@ class Human: Player {
     var currentJobUnit: Schedule.Job.Unit? {
         schedule.nextUnit
     }
-    var brain: Brain
+    var brain: HumanBrain
 
-    init(pos: Position, id: Int, brain: Brain) {
+    init(pos: Position, id: Int, brain: HumanBrain) {
         self.brain = brain
         super.init(pos: pos, id: id)
     }

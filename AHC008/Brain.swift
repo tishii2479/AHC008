@@ -1,9 +1,9 @@
-protocol Brain {
+protocol HumanBrain {
     // Return command with sorted by high priority
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command]
 }
 
-struct HumanBrain: Brain {
+struct BasicHumanBrain: HumanBrain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
@@ -33,7 +33,7 @@ struct HumanBrain: Brain {
     }
 }
 
-struct HumanBrainWithGridKnowledge: Brain {
+struct HumanBrainWithGridKnowledge: HumanBrain {
     let grids: [Grid]
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {

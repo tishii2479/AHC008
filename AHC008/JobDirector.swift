@@ -89,7 +89,6 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureDogJob()
         }
-        // TODO: Find best timing
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
                 didCaputureDog = true
