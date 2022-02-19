@@ -91,11 +91,13 @@ class SquareGridJobDirector: JobDirector {
         }
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
+                IO.log("Captured dog at turn: \(turn)")
                 didCaputureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
             }
             else if didCaputureDog {
+                IO.log("TURN:", turn)
                 findGridAndAssignBlockJob()
             }
         }
@@ -201,24 +203,39 @@ extension SquareGridJobDirector {
     
     private func findGridAndAssignBlockJob() {
         let compare: Compare = { (testHuman, currentAssignee, job) in
-            if testHuman.pos.dist(to: job.nextUnit?.pos) < testHuman.pos.dist(to: job.nextUnit?.pos) {
+            if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
             }
             return currentAssignee
         }
 
         for i in 0 ..< grids.count {
+            if field.checkBlock(at: grids[i].gate) { continue }
             if grids[i].assigned { continue }
+            // TODO: Extract to Grid
             var petCount: Int = 0
             for x in grids[i].topLeft.x ... grids[i].bottomRight.x {
                 for y in grids[i].topLeft.y ... grids[i].bottomRight.y {
                     petCount += field.getPetCount(x: x, y: y)
                 }
             }
+
             if petCount > 0 {
                 grids[i].assigned = true
-                let job = Schedule.Job(units: [.init(kind: .block, pos: grids[i].gate)])
-                findAssignee(job: job, humans: &humans, compare: compare)?.assign(job: job, isMajor: true)
+                let job = Schedule.Job(units: [.init(kind: .move, pos: grids[i].gate)])
+                if let assignee = findAssignee(job: job, humans: &humans, compare: compare) {
+                    for human in humans {
+                        IO.log(human.pos, human.schedule.jobs.count)
+                    }
+                    IO.log("Assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(job.nextUnit?.pos)")
+                    assignee.assign(job: job, isMajor: true)
+                }
+                else {
+                    IO.log("Assignee not found for grid: \(grids[i])")
+                }
+            }
+            else {
+                grids[i].assigned = false
             }
         }
     }
