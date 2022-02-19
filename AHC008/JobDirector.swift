@@ -221,7 +221,6 @@ extension SquareGridJobDirector {
             if field.checkBlock(at: grids[i].gate) { continue }
             let petCount: Int = grids[i].petCountInGrid(field: field)
             if petCount == 0 {
-                grids[i].assignee?.clearCurrentJob()
                 grids[i].assignee = nil
                 continue
             }

@@ -1,12 +1,14 @@
 TODO: 
-真ん中埋める
-Priority with count in grids.
+Priority with pet count in grids.
 Improve grid jobs.
+Calculate job cost properly.
 
 TEST:
-最終盤の行動, ちゃんと調べる
-Gate size?
-No wolfs, then no capture 
+Polish final best turn.
+
+IDEA:
+Change gate size
+Change grid structure depending on human count.
 
 Write tests:
-JobUtil cost calculation
+JobUtil cost calculation.
