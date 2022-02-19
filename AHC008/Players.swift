@@ -43,8 +43,8 @@ class Human: Player {
     }
     var brain: HumanBrain
 
-    init(pos: Position, id: Int, brain: HumanBrain) {
-        self.brain = brain
+    init(pos: Position, id: Int, brain: HumanBrain? = nil) {
+        self.brain = brain ?? BasicHumanBrain()
         super.init(pos: pos, id: id)
     }
     
