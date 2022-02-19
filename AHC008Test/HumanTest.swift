@@ -10,7 +10,7 @@ import XCTest
 class HumanTest: XCTestCase {
     func testAssignJob() throws {
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
+        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
         let job = Schedule.Job(units: [
             .init(kind: .move, pos: Position(x: 5, y: 7)),
         ])
@@ -29,7 +29,7 @@ class HumanTest: XCTestCase {
     func testPerformJob() throws {
         let field = Field()
         let startPosition = Position(x: 3, y: 3)
-        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
+        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
         
         field.addPlayer(player: human)
         let job = Schedule.Job(units: [
@@ -56,7 +56,7 @@ class HumanTest: XCTestCase {
     func testPerformBlockLine() throws {
         let field = Field()
         let startPosition = Position(x: 3, y: 1)
-        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
+        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
         
         field.addPlayer(player: human)
         var units = [Schedule.Job.Unit]()
@@ -80,7 +80,7 @@ class HumanTest: XCTestCase {
     }
     
     func testClearJob() throws {
-        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: BasicHumanBrain())
         for _ in 0 ..< 4 {
             human.assign(job: Schedule.Job(units: [
                 .init(kind: .move, pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)))
@@ -92,7 +92,7 @@ class HumanTest: XCTestCase {
     }
     
     func testAssignMajorJob() throws {
-        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 3, y: 3), id: 0, brain: BasicHumanBrain())
         for _ in 0 ..< 4 {
             human.assign(job: Schedule.Job(units: [
                 .init(kind: .move, pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)))

@@ -20,7 +20,7 @@ class JobDirectorTest: XCTestCase {
         for i in 0 ..< 5 {
             humans.append(
                 Human(pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)),
-                      id: i, brain: HumanBrain()))
+                      id: i, brain: BasicHumanBrain()))
         }
         pets = []
         director = SquareGridJobDirector(
@@ -40,7 +40,7 @@ class JobDirectorTest: XCTestCase {
     }
     
     func testBlockJobPerformance() throws {
-        let expected: Int = 244
+        let expected: Int = 248
         for turn in 0 ..< 300 {
             director.directJobs(turn: turn)
             manager.processTurn(turn: turn)
@@ -53,6 +53,7 @@ class JobDirectorTest: XCTestCase {
             
             if count == expected {
                 XCTAssertTrue(true)
+                field.dump()
                 IO.log("Finished in turn: \(turn)")
                 return
             }

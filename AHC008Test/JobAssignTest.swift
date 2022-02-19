@@ -11,7 +11,7 @@ class JobAssignTest: XCTestCase {
     func testLineBlockJobWithSkip() throws {
         let field = Field()
         let startPosition = Position(x: 0, y: 0)
-        let human = Human(pos: startPosition, id: 0, brain: HumanBrain())
+        let human = Human(pos: startPosition, id: 0, brain: BasicHumanBrain())
         let job = JobUtil.createLineBlockJob(
             from: Position(x: 0, y: 0),
             to: Position(x: 0, y: 10),

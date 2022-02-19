@@ -15,10 +15,10 @@ class FieldTest: XCTestCase {
     func testAddPlayer() throws {
         let field = Field()
         XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 0)
-        let human = Human(pos: Position(x: 1, y: 1), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 1, y: 1), id: 0, brain: BasicHumanBrain())
         field.addPlayer(player: human)
         XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 1)
-        let human2 = Human(pos: Position(x: 3, y: 0), id: 1, brain: HumanBrain())
+        let human2 = Human(pos: Position(x: 3, y: 0), id: 1, brain: BasicHumanBrain())
         field.addPlayer(player: human2)
         XCTAssertEqual(field.getPlayers(x: 3, y: 0).count, 1)
         
@@ -53,8 +53,8 @@ class FieldTest: XCTestCase {
     // ...
     func testBlockCommand() throws {
         let field = Field()
-        let human = Human(pos: Position(x: 0, y: 1), id: 0, brain: HumanBrain())
-        let human2 = Human(pos: Position(x: 1, y: 0), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 0, y: 1), id: 0, brain: BasicHumanBrain())
+        let human2 = Human(pos: Position(x: 1, y: 0), id: 0, brain: BasicHumanBrain())
         let pet = Pet(kind: .cat, pos: Position(x: 1, y: 1), id: 1)
         let pet2 = Pet(kind: .cat, pos: Position(x: 0, y: 2), id: 2)
         field.addPlayers(players: [human, human2, pet, pet2])
@@ -85,7 +85,7 @@ class FieldTest: XCTestCase {
     
     func testCommandPlayer() throws {
         let field = Field()
-        let human = Human(pos: Position(x: 1, y: 1), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 1, y: 1), id: 0, brain: BasicHumanBrain())
         field.addPlayer(player: human)
         XCTAssertEqual(field.getPlayers(x: 1, y: 1).count, 1)
         human.applyCommand(command: .moveUp)

@@ -10,7 +10,7 @@ import XCTest
 class UtilsTest: XCTestCase {
     func testCreateLineBlockJob() throws {
         let field = Field()
-        let human = Human(pos: Position(x: 4, y: 0), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 4, y: 0), id: 0, brain: BasicHumanBrain())
         let job = JobUtil.createLineBlockJob(
             from: Position(x: 3, y: 0),
             to: Position(x: 3, y: 29)
@@ -41,7 +41,7 @@ class UtilsTest: XCTestCase {
     
     func testCreateBlockJobWithMove() throws {
         let field = Field()
-        let human = Human(pos: Position(x: 4, y: 15), id: 0, brain: HumanBrain())
+        let human = Human(pos: Position(x: 4, y: 15), id: 0, brain: BasicHumanBrain())
         let job = JobUtil.createBlockJobWithMove(
             from: Position(x: 5, y: 15),
             to: Position(x: 15, y: 15),
