@@ -84,20 +84,40 @@ class Human: Player {
         applyMoveCommand(command: command)
         
         // Check job completion
-        guard let nextUnit = schedule.nextUnit else { return }
+        guard let nextUnit = currentJobUnit else { return }
         switch nextUnit.kind {
         case .move:
-            if pos == nextUnit.pos {
+            if pos == nextUnit.pos || field.checkBlock(at: nextUnit.pos) {
                 schedule.consume()
             }
         case .block:
-            if command.isBlock {
+            if command.isBlock || field.checkBlock(at: nextUnit.pos) {
                 schedule.consume()
             }
         case .close:
             if command.isBlock || pos.dist(to: nextUnit.pos) <= 1 {
                 schedule.consume()
             }
+        }
+        
+        // Consume unrequired jobs
+        while currentJobUnit != nil {
+            guard let nextUnit = currentJobUnit else { return }
+            switch nextUnit.kind {
+            case .move:
+                if pos == nextUnit.pos || field.checkBlock(at: nextUnit.pos) {
+                    schedule.consume()
+                    continue
+                }
+            case .block:
+                if field.checkBlock(at: nextUnit.pos) {
+                    schedule.consume()
+                    continue
+                }
+            default:
+                break
+            }
+            break
         }
     }
 }
