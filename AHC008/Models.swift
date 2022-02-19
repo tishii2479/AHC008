@@ -143,7 +143,12 @@ struct Schedule {
             // between the path, the cost will be bigger.
             if units.count > 0 {
                 for i in 0 ..< units.count - 1 {
-                    cost += units[i].pos.dist(to: units[i + 1].pos)
+                    var dist = units[i].pos.dist(to: units[i + 1].pos)
+                    if (units[i].kind == .block && units[i + 1].kind != .block)
+                        || (units[i].kind != .block && units[i + 1].kind == .block) {
+                        dist -= 1
+                    }
+                    cost += dist
                 }
             }
         }

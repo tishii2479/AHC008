@@ -77,8 +77,8 @@ class UtilsTest: XCTestCase {
             to: Position(x: 15, y: 15),
             checkDirections: [.up, .down]
         )
-        XCTAssertEqual(job.units.count, 33)
-        XCTAssertEqual(job.cost, 33)
+        XCTAssertEqual(job.units.count, 34)
+        XCTAssertEqual(job.cost, 55)
 
         human.assign(job: job)
         for _ in 0 ..< 100 {

@@ -1,3 +1,6 @@
+PROBLEM:
+Pet are not getting into the grid. -> Size of the gate?
+
 TODO: 
 Priority with pet count in grids.
 Improve grid jobs.
@@ -7,8 +10,8 @@ TEST:
 Polish final best turn.
 
 IDEA:
-Change gate size
-Change grid structure depending on human count.
+Change gate size?
+Change grid structure depending on human count?
 
 Write tests:
 JobUtil cost calculation.
