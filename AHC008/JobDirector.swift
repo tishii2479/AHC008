@@ -97,7 +97,6 @@ class SquareGridJobDirector: JobDirector {
                 assignCloseGateJob()
             }
             else if didCaputureDog {
-                IO.log("TURN:", turn)
                 findGridAndAssignBlockJob()
             }
         }
@@ -224,14 +223,11 @@ extension SquareGridJobDirector {
                 grids[i].assigned = true
                 let job = Schedule.Job(units: [.init(kind: .move, pos: grids[i].gate)])
                 if let assignee = findAssignee(job: job, humans: &humans, compare: compare) {
-                    for human in humans {
-                        IO.log(human.pos, human.schedule.jobs.count)
-                    }
-                    IO.log("Assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(job.nextUnit?.pos)")
+                    IO.log("Assign block for gate: \(grids[i].gate), assignee: \(assignee.pos), job: \(String(describing: job.nextUnit?.pos))")
                     assignee.assign(job: job, isMajor: true)
                 }
                 else {
-                    IO.log("Assignee not found for grid: \(grids[i])")
+                    IO.log("Assignee not found for grid: \(grids[i])", type: .warn)
                 }
             }
             else {
