@@ -17,6 +17,7 @@
 		49E8532727C0972F00EF03FB /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532527C0971D00EF03FB /* DataStructures.swift */; };
 		49E8532927C09D3300EF03FB /* IOController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532827C09D3300EF03FB /* IOController.swift */; };
 		49E8532A27C09D6500EF03FB /* IOController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532827C09D3300EF03FB /* IOController.swift */; };
+		49E8532E27C1335C00EF03FB /* GridTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8532D27C1335C00EF03FB /* GridTest.swift */; };
 		49F5CA1927BE6C9F00AA4C2B /* JobDirectorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */; };
 		49F5CA1B27BE93D700AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
 		49F5CA1C27BE991300AA4C2B /* GridCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */; };
@@ -65,6 +66,7 @@
 		49B749C627BCA34E0070016C /* UtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTest.swift; sourceTree = "<group>"; };
 		49E8532527C0971D00EF03FB /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
 		49E8532827C09D3300EF03FB /* IOController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOController.swift; sourceTree = "<group>"; };
+		49E8532D27C1335C00EF03FB /* GridTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridTest.swift; sourceTree = "<group>"; };
 		49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDirectorTest.swift; sourceTree = "<group>"; };
 		49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCreator.swift; sourceTree = "<group>"; };
 		49FE05EC27BB4F0900E3A5FE /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				49B749C427BC881E0070016C /* JobAssignTest.swift */,
 				49F5CA1827BE6C9F00AA4C2B /* JobDirectorTest.swift */,
 				49B749C627BCA34E0070016C /* UtilsTest.swift */,
+				49E8532D27C1335C00EF03FB /* GridTest.swift */,
 				49FE05FA27BB639D00E3A5FE /* Info.plist */,
 			);
 			path = AHC008Test;
@@ -272,6 +275,7 @@
 				49E8532A27C09D6500EF03FB /* IOController.swift in Sources */,
 				49FE062027BBE8D500E3A5FE /* Manager.swift in Sources */,
 				49FE061927BBE8D500E3A5FE /* Values.swift in Sources */,
+				49E8532E27C1335C00EF03FB /* GridTest.swift in Sources */,
 				49FE062227BBE8D500E3A5FE /* JobDirector.swift in Sources */,
 				49F5CA1927BE6C9F00AA4C2B /* JobDirectorTest.swift in Sources */,
 				49B749C727BCA34E0070016C /* UtilsTest.swift in Sources */,

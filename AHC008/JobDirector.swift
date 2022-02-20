@@ -207,6 +207,8 @@ extension SquareGridJobDirector {
     
     private func findGridAndAssignBlockJob(turn: Int) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
+            if testHuman.isBusy && !currentAssignee.isBusy { return currentAssignee }
+            if !testHuman.isBusy && currentAssignee.isBusy { return testHuman }
             if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
             }
@@ -214,7 +216,7 @@ extension SquareGridJobDirector {
         }
 
         for i in 0 ..< grids.count {
-            if field.checkBlock(at: grids[i].gate) { continue }
+            if grids[i].isClosed(field: field) { continue }
             let petCount: Int = grids[i].petCountInGrid(field: field)
             if petCount == 0 {
                 grids[i].assignee = nil
@@ -223,9 +225,16 @@ extension SquareGridJobDirector {
             if grids[i].assignee != nil { continue }
 
             if petCount > 0 {
-                let job = Schedule.Job(units: [.init(kind: .close, pos: grids[i].gate)])
+                var units = [Schedule.Job.Unit]()
+                for gate in grids[i].gates {
+                    if !field.checkBlock(at: gate) {
+                        units.append(.init(kind: .close, pos: gate))
+                    }
+                }
+                let job = Schedule.Job(units: units)
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
                     grids[i].assignee = assignee
+                    IO.log(units, assignee.pos)
                     assignee.assign(job: job, isMajor: true)
                 }
                 else {

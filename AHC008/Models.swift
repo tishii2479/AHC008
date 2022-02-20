@@ -244,13 +244,13 @@ enum Command: Character {
 struct Grid {
     var topLeft: Position
     var bottomRight: Position
-    var gate: Position
+    var gates: [Position]
     var assignee: Human? = nil
     
-    init(top: Int, left: Int, width: Int, height: Int, gate: Position) {
+    init(top: Int, left: Int, width: Int, height: Int, gates: [Position]) {
         self.topLeft = Position(x: left, y: top)
         self.bottomRight = Position(x: left + width - 1, y: top + height - 1)
-        self.gate = gate
+        self.gates = gates
     }
     
     func petCountInGrid(field: Field) -> Int {
@@ -261,5 +261,14 @@ struct Grid {
            }
         }
         return petCount
+    }
+    
+    func isClosed(field: Field) -> Bool {
+        for gate in gates {
+            if !field.checkBlock(at: gate) {
+                return false
+            }
+        }
+        return true
     }
 }

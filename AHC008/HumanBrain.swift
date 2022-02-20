@@ -41,10 +41,11 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
         switch jobUnit.kind {
         case .move, .close:
             for grid in grids {
-                guard !field.checkBlock(at: grid.gate),
-                      grid.gate.dist(to: pos) == 1 else { continue }
-                if grid.petCountInGrid(field: field) > 0 {
-                    if let block = CommandUtil.deltaToBlockCommand(delta: grid.gate - pos) {
+                for gate in grid.gates {
+                    guard !field.checkBlock(at: gate),
+                          gate.dist(to: pos) == 1,
+                          grid.petCountInGrid(field: field) > 0 else { continue }
+                    if let block = CommandUtil.deltaToBlockCommand(delta: gate - pos) {
                         return [block, .none]
                     }
                 }
