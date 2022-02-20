@@ -1,4 +1,8 @@
 protocol GridManager {
+    var dogCaptureBlocks: [Position] { get }
+    var dogCapturePositions: [Position] { get }
+    var dogCaptureZone: [Position] { get }
+    var skipBlocks: [Position] { get }
     func createGrid() -> [Grid]
     func createGridJobs() -> [Schedule.Job]
 }
@@ -29,7 +33,45 @@ extension GridManager {
 }
 
 class SquareGridManager: GridManager {
-    private lazy var skipBlocks: [Position] = {
+    let dogCaptureBlocks = [
+        Position(x: 7, y: 15),
+        Position(x: 15, y: 22),
+        Position(x: 22, y: 14),
+        Position(x: 14, y: 7),
+    ]
+    let dogCapturePositions = [
+        Position(x: 6, y: 15),
+        Position(x: 15, y: 23),
+        Position(x: 23, y: 14),
+        Position(x: 14, y: 6),
+    ]
+    let dogCaptureZone: [Position] = {
+        var positions = [Position]()
+        for x in 8 ... 14 {
+            positions.append(Position(x: x, y: 15))
+        }
+        for x in 15 ... 21 {
+            positions.append(Position(x: x, y: 14))
+        }
+        for y in 8 ... 14 {
+            positions.append(Position(x: 14, y: y))
+        }
+        for y in 15 ... 21 {
+            positions.append(Position(x: 15, y: y))
+        }
+        positions.append(Position(x: 15, y: 13))
+        positions.append(Position(x: 13, y: 14))
+        positions.append(Position(x: 16, y: 15))
+        positions.append(Position(x: 14, y: 16))
+        positions.append(Position(x: 9, y: 14))
+        positions.append(Position(x: 15, y: 9))
+        positions.append(Position(x: 14, y: 20))
+        positions.append(Position(x: 20, y: 15))
+
+        return positions
+    }()
+    
+    lazy var skipBlocks: [Position] = {
         var arr = [Position]()
         for grid in createGrid() {
             for gate in grid.gates {

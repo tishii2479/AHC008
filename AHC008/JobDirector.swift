@@ -49,25 +49,6 @@ class SquareGridJobDirector: JobDirector {
         }
         return count
     }()
-    private let dogBlocks = [
-        Position(x: 7, y: 15),
-        Position(x: 15, y: 22),
-        Position(x: 22, y: 14),
-        Position(x: 14, y: 7),
-    ]
-    private let dogPositions = [
-        Position(x: 6, y: 15),
-        Position(x: 15, y: 23),
-        Position(x: 23, y: 14),
-        Position(x: 14, y: 6),
-    ]
-    private var capturePosition: [Int]
-    private var corners: [Position] = [
-        Position(x: 4, y: 25),
-        Position(x: 25, y: 25),
-        Position(x: 25, y: 4),
-        Position(x: 4, y: 4),
-    ]
     
     init(
         field: Field,
@@ -79,8 +60,6 @@ class SquareGridJobDirector: JobDirector {
         self.humans = humans
         self.pets = pets
         self.gridManager = gridManager
-        
-        self.capturePosition = [Int](repeating: 0, count: humans.count)
     }
     
     func directJobs(turn: Int) {
@@ -105,54 +84,26 @@ class SquareGridJobDirector: JobDirector {
 // MARK: SquareGridJobDirector.Helper
 
 extension SquareGridJobDirector {
+    private var capturedDogCount: Int {
+        var count: Int = 0
+        for pos in gridManager.dogCaptureZone {
+            count += field.getPetCount(x: pos.x, y: pos.y, kind: .dog)
+        }
+        return count
+    }
+
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
         if turn >= 299 { return true } 
-        if getCapturedDogCount() < dogCount { return false }
+        if capturedDogCount < dogCount { return false }
         for human in humans {
-            if !dogPositions.contains(human.pos) { return false }
+            if !gridManager.dogCapturePositions.contains(human.pos) { return false }
             if human.jobCost > 0 { return false }
         }
-        for block in dogBlocks {
+        for block in gridManager.dogCaptureBlocks {
             if !field.isValidBlock(target: block) { return false }
         }
         return true
-    }
-    
-    private func getCapturedDogCount() -> Int {
-        var captureDogCount: Int = 0
-        for x in 8 ... 14 {
-            captureDogCount += getDogCountAt(x: x, y: 15)
-        }
-        for x in 15 ... 21 {
-            captureDogCount += getDogCountAt(x: x, y: 14)
-        }
-        for y in 8 ... 14 {
-            captureDogCount += getDogCountAt(x: 14, y: y)
-        }
-        for y in 15 ... 21 {
-            captureDogCount += getDogCountAt(x: 15, y: y)
-        }
-        captureDogCount += getDogCountAt(x: 15, y: 13)
-        captureDogCount += getDogCountAt(x: 13, y: 14)
-        captureDogCount += getDogCountAt(x: 16, y: 15)
-        captureDogCount += getDogCountAt(x: 14, y: 16)
-        captureDogCount += getDogCountAt(x: 9, y: 14)
-        captureDogCount += getDogCountAt(x: 15, y: 9)
-        captureDogCount += getDogCountAt(x: 14, y: 20)
-        captureDogCount += getDogCountAt(x: 20, y: 15)
-        return captureDogCount
-    }
-    
-    private func getDogCountAt(x: Int, y: Int) -> Int {
-        var dogCount = 0
-        for player in field.getPlayers(x: x, y: y) {
-            if let pet = player as? Pet,
-               pet.kind == .dog {
-                dogCount += 1
-            }
-        }
-        return dogCount
     }
 }
 
@@ -170,7 +121,7 @@ extension SquareGridJobDirector {
         // Gather to center grid for capture wolves
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .move, pos: dogPositions[i % 4])
+                .init(kind: .move, pos: gridManager.dogCapturePositions[i % 4])
             ]))
         }
     }
@@ -178,12 +129,18 @@ extension SquareGridJobDirector {
     private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: dogBlocks[i % 4]),
+                .init(kind: .block, pos: gridManager.dogCaptureBlocks[i % 4]),
             ]))
         }
     }
     
     private func assignCloseGateJob() {
+        var corners: [Position] = [
+            Position(x: 4, y: 25),
+            Position(x: 25, y: 25),
+            Position(x: 25, y: 4),
+            Position(x: 4, y: 4),
+        ]
         // Start working around and close gates
         for (i, human) in humans.enumerated() {
             human.brain = HumanBrainWithGridKnowledge(grids: grids)
@@ -244,4 +201,3 @@ extension SquareGridJobDirector {
         }
     }
 }
-

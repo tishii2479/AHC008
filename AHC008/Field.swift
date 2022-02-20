@@ -86,11 +86,19 @@ extension Field {
         getPlayerCount(x: position.x, y: position.y)
     }
     
-    func getPetCount(x: Int, y: Int) -> Int {
-        pets[y][x]
+    func getPetCount(x: Int, y: Int, kind: Pet.Kind? = nil) -> Int {
+        guard let kind = kind else { return pets[y][x] }
+        var count: Int = 0
+        for player in getPlayers(x: x, y: y) {
+            if let pet = player as? Pet,
+               pet.kind == kind {
+                count += 1
+            }
+        }
+        return count
     }
     
-    func getPetCount(at position: Position) -> Int {
+    func getPetCount(at position: Position, kind: Pet.Kind? = nil) -> Int {
         getPetCount(x: position.x, y: position.y)
     }
     
@@ -156,13 +164,6 @@ extension Field {
                 petCount += getPetCount(at: pos)
                 humanCount += getHumanCount(at: pos)
 
-//                for player in getPlayers(at: pos) {
-//                    if let pet = player as? Pet,
-//                       pet.kind == .dog {
-//                        IO.log("Dog is not captured!", type: .warn)
-//                    }
-//                }
-                
                 for dir in Position.directions {
                     let nxt = pos + dir
                     guard nxt.isValid,
