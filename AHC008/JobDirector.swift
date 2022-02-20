@@ -91,7 +91,6 @@ class SquareGridJobDirector: JobDirector {
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
                 IO.log("Captured dog at turn: \(turn)")
-                field.dump()
                 didCaputureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
