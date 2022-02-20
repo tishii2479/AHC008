@@ -235,8 +235,7 @@ class SquareGridManager: GridManager {
             grids.append(Grid(top: 6, left: 16, width: width, height: height, gates: [Position(x: 24, y: 7)]))
             grids.append(Grid(top: 10, left: 16, width: width, height: height, gates: [Position(x: 24, y: 11)]))
         }
-        
-        dumpGrids(grids: grids)
+
         return grids
     }
 }
