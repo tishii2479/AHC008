@@ -39,6 +39,7 @@ class SquareGridJobDirector: JobDirector {
     private var gridManager: GridManager
 
     private var grids = [Grid]()
+    private var catGrids = [Grid]()
     private var didCaputureDog: Bool = false
     private lazy var dogCount: Int = {
         return PetUtil.getPetCount(pets: pets, for: .dog)
@@ -106,13 +107,14 @@ extension SquareGridJobDirector {
 extension SquareGridJobDirector {
     private func assignGridJob() {
         grids = gridManager.createGrid()
+        catGrids = gridManager.createCatGrids()
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: humans)
     }
     
     // TODO: Assign better positions
     private func assignPrepareForCaptureDogJob() {
-        // Gather to center grid for capture wolves
+        // Gather to center grid for capture dogs
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
                 .init(kind: .move, pos: gridManager.dogCapturePositions[i % 4])

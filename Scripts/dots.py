@@ -1,4 +1,4 @@
-with open('v8.dt3') as f:
+with open('v16.dt3') as f:
     data: str = f.readline()
     size, dots, palette, _ = data.split(':')
     dots = dots.split(',')
