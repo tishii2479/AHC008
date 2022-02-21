@@ -8,7 +8,7 @@ struct BasicHumanBrain: HumanBrain {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
         case .move:
-            let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
+            let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field)
             if cand.count == 0 { return [.none] }
             return cand.shuffled() + Command.moves.shuffled()
         case .block, .close:
@@ -25,7 +25,7 @@ struct BasicHumanBrain: HumanBrain {
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
+                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field)
                 if cand.count == 0 { return [.none] }
                 return cand.shuffled()
             }
@@ -50,7 +50,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     }
                 }
             }
-            return CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field).shuffled()
+            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field).shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
@@ -68,7 +68,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.getCandidateMove(from: pos, to: jobUnit.pos, field: field)
+                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field)
                 if cand.count == 0 { return [.none] }
                 return cand.shuffled()
             }

@@ -70,12 +70,20 @@ class Field {
 // MARK: Field.Utilties
 
 extension Field {
-    func getPlayers(x: Int, y: Int) -> [Player] {
+    private func getPlayers(x: Int, y: Int) -> [Player] {
         players[y][x]
     }
     
-    func getPlayers(at position: Position) -> [Player] {
+    private func getPlayers(at position: Position) -> [Player] {
         getPlayers(x: position.x, y: position.y)
+    }
+    
+    private func addBlock(position: Position) {
+        blocks[position.y][position.x] = true
+    }
+    
+    private func addBlocks(positions: [Position]) {
+        for pos in positions { addBlock(position: pos) }
     }
     
     func getPlayerCount(x: Int, y: Int) -> Int {
@@ -137,14 +145,6 @@ extension Field {
         if command.isBlock {
             addBlock(position: player.pos + command.delta)
         }
-    }
-    
-    func addBlock(position: Position) {
-        blocks[position.y][position.x] = true
-    }
-    
-    func addBlocks(positions: [Position]) {
-        for pos in positions { addBlock(position: pos) }
     }
     
     func calcScore(humans: [Human]) -> Double {

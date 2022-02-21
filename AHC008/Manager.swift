@@ -81,7 +81,7 @@ class Manager {
     private func calcBestCommandForFinalTurn() -> [Command] {
         // Clear all jobs
         for human in humans {
-            human.clearJobs()
+            human.clearAllJobs()
         }
         
         return BestJobFinder(field: field, humans: humans, pets: pets).find2()

@@ -82,7 +82,7 @@ class CommandUtil {
     }
     
     // BFS to find move, but slow?
-    static func getCandidateMove(from: Position, to: Position, field: Field) -> [Command] {
+    static func calcShortestMove(from: Position, to: Position, field: Field) -> [Command] {
         let queue = Queue<Position>()
         var dist = [[Int]](repeating: [Int](repeating: 123456, count: fieldSize), count: fieldSize)
         queue.push(to)
@@ -117,6 +117,18 @@ class CommandUtil {
         if delta.y < 0 { return .blockUp }
         if delta.y > 0 { return .blockDown }
         return nil
+    }
+}
+
+class PetUtil {
+    static func getPetCount(pets: [Pet], for kind: Pet.Kind) -> Int {
+        var count: Int = 0
+        pets.forEach {
+            if $0.kind == kind {
+                count += 1
+            }
+        }
+        return count
     }
 }
 

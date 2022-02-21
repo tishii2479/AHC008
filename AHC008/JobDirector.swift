@@ -41,13 +41,7 @@ class SquareGridJobDirector: JobDirector {
     private var grids = [Grid]()
     private var didCaputureDog: Bool = false
     private lazy var dogCount: Int = {
-        var count: Int = 0
-        pets.forEach {
-            if $0.kind == .dog {
-                count += 1
-            }
-        }
-        return count
+        return PetUtil.getPetCount(pets: pets, for: .dog)
     }()
     
     init(
@@ -164,8 +158,6 @@ extension SquareGridJobDirector {
     
     private func findGridAndAssignBlockJob(turn: Int) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
-            if testHuman.isBusy && !currentAssignee.isBusy { return currentAssignee }
-            if !testHuman.isBusy && currentAssignee.isBusy { return testHuman }
             if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
                 return testHuman
             }

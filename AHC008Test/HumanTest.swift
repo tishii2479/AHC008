@@ -86,7 +86,7 @@ class HumanTest: XCTestCase {
                 .init(kind: .move, pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)))
             ]))
         }
-        human.clearJobs()
+        human.clearAllJobs()
         XCTAssertNil(human.currentJobUnit)
         XCTAssertEqual(human.jobCost, 0)
     }
