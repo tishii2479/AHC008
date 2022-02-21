@@ -73,11 +73,23 @@ class SquareGridManagerWithCatCapture: GridManager {
             Position(x: 18, y: 10),
             Position(x: 24, y: 10),
             Position(x: 3, y: 11),
+            Position(x: 5, y: 11),
+            Position(x: 24, y: 11),
             Position(x: 26, y: 11),
+            Position(x: 5, y: 13),
+            Position(x: 24, y: 13),
+            Position(x: 5, y: 15),
+            Position(x: 24, y: 15),
+            Position(x: 5, y: 17),
+            Position(x: 24, y: 17),
             Position(x: 3, y: 18),
             Position(x: 26, y: 18),
+            Position(x: 5, y: 19),
+            Position(x: 24, y: 19),
+            Position(x: 5, y: 20),
             Position(x: 11, y: 20),
             Position(x: 18, y: 20),
+            Position(x: 24, y: 20),
             Position(x: 5, y: 24),
             Position(x: 11, y: 24),
             Position(x: 18, y: 24),
@@ -89,7 +101,7 @@ class SquareGridManagerWithCatCapture: GridManager {
             Position(x: 18, y: 26),
             Position(x: 24, y: 26),
         ]
-        return arr
+        return arr + intersections
     }()
     
     func createGrid() -> [Grid] {
@@ -147,7 +159,6 @@ class SquareGridManagerWithCatCapture: GridManager {
                 )
             }
         }
-        dumpGrids(grids: grids)
         return grids
     }
     
@@ -167,7 +178,6 @@ class SquareGridManagerWithCatCapture: GridManager {
                 )
             )
         }
-        dumpGrids(grids: grids)
         return grids
     }
     
@@ -179,9 +189,9 @@ class SquareGridManagerWithCatCapture: GridManager {
         let ys = [4, 11, 18, 25]
         for i in 0 ..< ys.count {
             leftSideJob +=
-                JobUtil.createLineBlockJob(from: Position(x: 0, y: ys[i]), to: Position(x: 2, y: ys[i]))
+                JobUtil.createLineBlockJob(from: Position(x: 0, y: ys[i]), to: Position(x: 2, y: ys[i]), skipBlocks: skipBlocks)
             rightSideJob +=
-                JobUtil.createLineBlockJob(from: Position(x: 29, y: ys[i]), to: Position(x: 27, y: ys[i]))
+                JobUtil.createLineBlockJob(from: Position(x: 29, y: ys[i]), to: Position(x: 27, y: ys[i]), skipBlocks: skipBlocks)
             if i + 1 < ys.count {
                 leftSideJob += JobUtil.createBlockJobWithMove(
                     from: Position(x: 4, y: max(ys[i], 5)),
@@ -209,9 +219,9 @@ class SquareGridManagerWithCatCapture: GridManager {
         let xs = [5, 11, 18, 24]
         for i in 0 ..< xs.count {
             topJob +=
-                JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 0), to: Position(x: xs[i], y: 2))
+                JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 0), to: Position(x: xs[i], y: 2), skipBlocks: skipBlocks)
             bottomJob +=
-                JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 29), to: Position(x: xs[i], y: 27))
+                JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 29), to: Position(x: xs[i], y: 27), skipBlocks: skipBlocks)
             if i + 1 < xs.count {
                 topJob += JobUtil.createBlockJobWithMove(
                     from: Position(x: max(xs[i], 5), y: 4),
@@ -516,7 +526,6 @@ class SquareGridManager: GridManager {
     }
     
     func createCatGrids() -> [Grid] {
-        var grids = [Grid]()
-        return grids
+        return []
     }
 }
