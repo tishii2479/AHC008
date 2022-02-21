@@ -5,6 +5,7 @@ TODO:
 Priority with pet count in grids.
 Improve grid jobs.
 Calculate job cost properly.
+Grid refactor -> to Positions
 
 TEST:
 Polish final best turn.

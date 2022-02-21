@@ -76,7 +76,7 @@ class SquareGridJobDirector: JobDirector {
     }
 }
 
-// MARK: SquareGridJobDirector.Helper
+// MARK: SquareGridJobDirector.DogCapture
 
 extension SquareGridJobDirector {
     private var capturedDogCount: Int {
@@ -106,7 +106,7 @@ extension SquareGridJobDirector {
 
 extension SquareGridJobDirector {
     private func assignGridJob() {
-        grids = gridManager.createGrid()
+        grids = gridManager.createGrid() + gridManager.createCatGrids()
         catGrids = gridManager.createCatGrids()
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: humans)
