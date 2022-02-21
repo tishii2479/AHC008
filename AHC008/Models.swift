@@ -242,25 +242,39 @@ enum Command: Character {
 }
 
 struct Grid {
-    var topLeft: Position
-    var bottomRight: Position
+    var zone: [Position]
     var gates: [Position]
     var assignee: Human? = nil
     
     init(top: Int, left: Int, width: Int, height: Int, gates: [Position]) {
-        self.topLeft = Position(x: left, y: top)
-        self.bottomRight = Position(x: left + width - 1, y: top + height - 1)
+        self.zone = []
+        for x in left ..< left + width {
+            for y in top ..< top + height {
+                zone.append(Position(x: x, y: y))
+            }
+        }
         self.gates = gates
     }
     
     func petCountInGrid(field: Field) -> Int {
         var petCount = 0
-        for x in topLeft.x ... bottomRight.x {
-           for y in topLeft.y ... bottomRight.y {
-               petCount += field.getPetCount(x: x, y: y)
-           }
+        for pos in zone {
+           petCount += field.getPetCount(at: pos)
         }
         return petCount
+    }
+    
+    func isPrepared(field: Field) -> Bool {
+        let unrequired = zone + gates
+        for pos in zone {
+            for dir in Position.directions {
+                let target = pos + dir
+                if target.isValid && !unrequired.contains(target) && !field.checkBlock(at: target) {
+                    return false
+                }
+            }
+        }
+        return true
     }
     
     func isClosed(field: Field) -> Bool {

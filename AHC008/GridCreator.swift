@@ -13,10 +13,8 @@ extension GridManager {
     func dumpGrids(grids: [Grid]) {
         var f = [[String]](repeating: [String](repeating: ".", count: fieldSize), count: fieldSize)
         for grid in grids {
-            for x in grid.topLeft.x ... grid.bottomRight.x {
-                for y in grid.topLeft.y ... grid.bottomRight.y {
-                    f[y][x] = "Q"
-                }
+            for pos in grid.zone {
+                f[pos.y][pos.x] = "Q"
             }
             for gate in grid.gates {
                 f[gate.y][gate.x] = "!"
@@ -265,7 +263,7 @@ class SquareGridManagerWithCatCapture: GridManager {
                 jobs.append(
                     JobUtil.createLineBlockJob(
                         from: Position(x: x, y: y),
-                        to: Position(x: x, y: y + height - 1),
+                        to: Position(x: x, y: y + height),
                         skipBlocks: skipBlocks
                     )
                 )

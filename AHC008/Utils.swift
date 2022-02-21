@@ -82,11 +82,20 @@ class CommandUtil {
     }
     
     // BFS to find move, but slow?
-    static func calcShortestMove(from: Position, to: Position, field: Field) -> [Command] {
+    static func calcShortestMove(
+        from: Position,
+        to: Position,
+        field: Field,
+        treatAsBlocks: [Position] = []
+    ) -> [Command] {
         let queue = Queue<Position>()
         var dist = [[Int]](repeating: [Int](repeating: 123456, count: fieldSize), count: fieldSize)
         queue.push(to)
         dist[to.y][to.x] = 0
+        let testField = Field(players: [], blocks: field.blocks)
+        for block in treatAsBlocks {
+            testField.addBlock(position: block)
+        }
         while !queue.isEmpty {
             guard let cur = queue.pop() else { break }
             // Prune unrequired search
@@ -95,7 +104,7 @@ class CommandUtil {
             for dir in Position.directions {
                 let nxt = cur + dir
                 guard nxt.isValid,
-                      !field.checkBlock(at: nxt),
+                      !testField.checkBlock(at: nxt),
                       dist[nxt.y][nxt.x] > dist[cur.y][cur.x] + 1 else { continue }
                 dist[nxt.y][nxt.x] = dist[cur.y][cur.x] + 1
                 queue.push(nxt)

@@ -61,6 +61,9 @@ class SquareGridJobDirector: JobDirector {
         if turn == 0 {
             assignGridJob()
             assignPrepareForCaptureDogJob()
+            for human in humans {
+                human.brain = HumanBrainWithGridKnowledge(grids: grids)
+            }
         }
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
@@ -76,7 +79,7 @@ class SquareGridJobDirector: JobDirector {
     }
 }
 
-// MARK: SquareGridJobDirector.DogCapture
+// MARK: SquareGridJobDirector.Helper
 
 extension SquareGridJobDirector {
     private var capturedDogCount: Int {
@@ -106,7 +109,7 @@ extension SquareGridJobDirector {
 
 extension SquareGridJobDirector {
     private func assignGridJob() {
-        grids = gridManager.createGrid() + gridManager.createCatGrids()
+        grids = gridManager.createGrid()
         catGrids = gridManager.createCatGrids()
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: humans)
@@ -117,7 +120,7 @@ extension SquareGridJobDirector {
         // Gather to center grid for capture dogs
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .move, pos: gridManager.dogCapturePositions[i % 4])
+                .init(kind: .move, pos: gridManager.dogCapturePositions[i % 2])
             ]))
         }
     }
@@ -125,7 +128,7 @@ extension SquareGridJobDirector {
     private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: gridManager.dogCaptureBlocks[i % 4]),
+                .init(kind: .block, pos: gridManager.dogCaptureBlocks[i % 2]),
             ]))
         }
     }
@@ -139,7 +142,6 @@ extension SquareGridJobDirector {
         ]
         // Start working around and close gates
         for (i, human) in humans.enumerated() {
-            human.brain = HumanBrainWithGridKnowledge(grids: grids)
             for _ in 0 ..< 10 {
                 human.assign(
                     job: Schedule.Job(
@@ -152,8 +154,31 @@ extension SquareGridJobDirector {
                     )
                 )
             }
-            if i % 4 == 3 {
+            if i % 4 == 2 {
                 corners.reverse()
+            }
+        }
+    }
+    
+    private func assignCloseForMultiGateGrid(grid: Grid) {
+        guard !grid.isClosed(field: field) else { return }
+        for gate in grid.gates {
+            if field.checkBlock(at: gate) { continue }
+            for human in humans {
+                if human.pos.dist(to: gate) > 2 { return }
+            }
+        }
+        
+        for gate in grid.gates {
+            if field.checkBlock(at: gate) { continue }
+            for human in humans {
+                let job = Schedule.Job(units: [
+                    .init(kind: .close, pos: gate)
+                ])
+                if human.pos.dist(to: gate) <= 2 {
+                    human.assign(job: job, isMajor: true)
+                    break
+                }
             }
         }
     }
@@ -165,7 +190,7 @@ extension SquareGridJobDirector {
             }
             return currentAssignee
         }
-
+        
         for i in 0 ..< grids.count {
             if grids[i].isClosed(field: field) { continue }
             let petCount: Int = grids[i].petCountInGrid(field: field)
