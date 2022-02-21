@@ -74,6 +74,9 @@ class SquareGridJobDirector: JobDirector {
             }
             else if didCaputureDog {
                 findGridAndAssignBlockJob(turn: turn)
+                for grid in catGrids {
+                    findMultiGateGridAndAssignBlockJob(grid: grid)
+                }
             }
         }
     }
@@ -84,7 +87,7 @@ class SquareGridJobDirector: JobDirector {
 extension SquareGridJobDirector {
     private var capturedDogCount: Int {
         var count: Int = 0
-        for pos in gridManager.dogCaptureZone {
+        for pos in gridManager.dogCaptureGrid.zone {
             count += field.getPetCount(x: pos.x, y: pos.y, kind: .dog)
         }
         return count
@@ -94,9 +97,12 @@ extension SquareGridJobDirector {
         guard !didCaputureDog else { return false }
         if turn >= 299 { return true } 
         if capturedDogCount < dogCount { return false }
-        for human in humans {
-            if !gridManager.dogCapturePositions.contains(human.pos) { return false }
-            if human.jobCost > 0 { return false }
+        for pos in gridManager.dogCapturePositions {
+            var assigneeFound = false
+            for human in humans {
+                if human.pos == pos { assigneeFound = true }
+            }
+            if !assigneeFound { return false }
         }
         for block in gridManager.dogCaptureBlocks {
             if !field.isValidBlock(target: block) { return false }
@@ -120,7 +126,7 @@ extension SquareGridJobDirector {
         // Gather to center grid for capture dogs
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .move, pos: gridManager.dogCapturePositions[i % 2])
+                .init(kind: .move, pos: gridManager.dogCapturePositions[i % gridManager.dogCapturePositions.count])
             ]))
         }
     }
@@ -128,7 +134,7 @@ extension SquareGridJobDirector {
     private func assignCaptureDogJob() {
         for (i, human) in humans.enumerated() {
             human.assign(job: .init(units: [
-                .init(kind: .block, pos: gridManager.dogCaptureBlocks[i % 2]),
+                .init(kind: .block, pos: gridManager.dogCaptureBlocks[i % gridManager.dogCapturePositions.count]),
             ]))
         }
     }
@@ -160,7 +166,7 @@ extension SquareGridJobDirector {
         }
     }
     
-    private func assignCloseForMultiGateGrid(grid: Grid) {
+    private func findMultiGateGridAndAssignBlockJob(grid: Grid) {
         guard !grid.isClosed(field: field) else { return }
         for gate in grid.gates {
             if field.checkBlock(at: gate) { continue }

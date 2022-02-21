@@ -246,6 +246,11 @@ struct Grid {
     var gates: [Position]
     var assignee: Human? = nil
     
+    init(zone: [Position], gates: [Position]) {
+        self.zone = zone
+        self.gates = gates
+    }
+    
     init(top: Int, left: Int, width: Int, height: Int, gates: [Position]) {
         self.zone = []
         for x in left ..< left + width {

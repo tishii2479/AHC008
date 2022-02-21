@@ -1,7 +1,7 @@
 protocol GridManager {
     var dogCaptureBlocks: [Position] { get }
     var dogCapturePositions: [Position] { get }
-    var dogCaptureZone: [Position] { get }
+    var dogCaptureGrid: Grid { get }
     var skipBlocks: [Position] { get }
     func createGrid() -> [Grid]
     func createCatGrids() -> [Grid]
@@ -40,12 +40,16 @@ class SquareGridManagerWithCatCapture: GridManager {
         Position(x: 5, y: 15),
         Position(x: 24, y: 15),
     ]
-    let dogCaptureZone: [Position] = {
+    let dogCaptureGrid: Grid = {
         var positions = [Position]()
         for x in 7 ... 22 {
             positions.append(Position(x: x, y: 15))
         }
-        return positions
+        let gates: [Position] = [
+            Position(x: 6, y: 15),
+            Position(x: 23, y: 15),
+        ]
+        return Grid(zone: positions, gates: gates)
     }()
     
     lazy var skipBlocks: [Position] = {
@@ -287,7 +291,7 @@ class SquareGridManager: GridManager {
         Position(x: 23, y: 14),
         Position(x: 14, y: 6),
     ]
-    let dogCaptureZone: [Position] = {
+    let dogCaptureGrid: Grid = {
         var positions = [Position]()
         for x in 8 ... 14 {
             positions.append(Position(x: x, y: 15))
@@ -309,8 +313,14 @@ class SquareGridManager: GridManager {
         positions.append(Position(x: 15, y: 9))
         positions.append(Position(x: 14, y: 20))
         positions.append(Position(x: 20, y: 15))
-
-        return positions
+        
+        let gates: [Position] = [
+            Position(x: 7, y: 15),
+            Position(x: 22, y: 14),
+            Position(x: 14, y: 7),
+            Position(x: 15, y: 22),
+        ]
+        return Grid(zone: positions, gates: gates)
     }()
     
     lazy var skipBlocks: [Position] = {
@@ -470,16 +480,55 @@ class SquareGridManager: GridManager {
         return jobs
     }
     
+    private func createSquare(
+        top: Int,
+        left: Int,
+        width: Int,
+        height: Int,
+        exclude: [Position]
+    ) -> [Position] {
+        var positions = [Position]()
+        for y in top ..< top + height {
+            for x in left ..< left + width {
+                let pos = Position(x: x, y: y)
+                if pos.isValid && !exclude.contains(pos) {
+                    positions.append(pos)
+                }
+            }
+        }
+        return positions
+    }
+    
     func createGrid() -> [Grid] {
         var grids = [Grid]()
         // Corners
         do {
             let width = 5
             let height = 4
-            grids.append(Grid(top: 0, left: 0, width: width, height: height, gates: [Position(x: 3, y: 4)]))
-            grids.append(Grid(top: 0, left: 25, width: width, height: height, gates: [Position(x: 26, y: 4)]))
-            grids.append(Grid(top: 26, left: 0, width: width, height: height, gates: [Position(x: 3, y: 25)]))
-            grids.append(Grid(top: 26, left: 25, width: width, height: height, gates: [Position(x: 26, y: 25)]))
+            grids.append(
+                Grid(
+                    zone: createSquare(top: 0, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 3)]),
+                    gates: [Position(x: 3, y: 4)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: createSquare(top: 0, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 3)]),
+                    gates: [Position(x: 26, y: 4)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: createSquare(top: 26, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 26)]),
+                    gates: [Position(x: 3, y: 25)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: createSquare(top: 26, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 26)]),
+                    gates: [Position(x: 26, y: 25)]
+                )
+            )
         }
         
         // Sides
