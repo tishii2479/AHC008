@@ -129,6 +129,27 @@ class CommandUtil {
     }
 }
 
+class Util {
+    static func createSquare(
+        top: Int,
+        left: Int,
+        width: Int,
+        height: Int,
+        exclude: [Position]
+    ) -> [Position] {
+        var positions = [Position]()
+        for y in top ..< top + height {
+            for x in left ..< left + width {
+                let pos = Position(x: x, y: y)
+                if pos.isValid && !exclude.contains(pos) {
+                    positions.append(pos)
+                }
+            }
+        }
+        return positions
+    }
+}
+
 class PetUtil {
     static func getPetCount(pets: [Pet], for kind: Pet.Kind) -> Int {
         var count: Int = 0

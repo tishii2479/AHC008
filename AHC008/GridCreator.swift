@@ -112,10 +112,30 @@ class SquareGridManagerWithCatCapture: GridManager {
         do {
             let width = 5
             let height = 4
-            grids.append(Grid(top: 0, left: 0, width: width, height: height, gates: [Position(x: 3, y: 4)]))
-            grids.append(Grid(top: 0, left: 25, width: width, height: height, gates: [Position(x: 26, y: 4)]))
-            grids.append(Grid(top: 26, left: 0, width: width, height: height, gates: [Position(x: 3, y: 25)]))
-            grids.append(Grid(top: 26, left: 25, width: width, height: height, gates: [Position(x: 26, y: 25)]))
+            grids.append(
+                Grid(
+                    zone: Util.createSquare(top: 0, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 3)]),
+                    gates: [Position(x: 3, y: 4)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: Util.createSquare(top: 0, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 3)]),
+                    gates: [Position(x: 26, y: 4)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: Util.createSquare(top: 26, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 26)]),
+                    gates: [Position(x: 3, y: 25)]
+                )
+            )
+            grids.append(
+                Grid(
+                    zone: Util.createSquare(top: 26, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 26)]),
+                    gates: [Position(x: 26, y: 25)]
+                )
+            )
         }
         
         // Sides
@@ -480,25 +500,6 @@ class SquareGridManager: GridManager {
         return jobs
     }
     
-    private func createSquare(
-        top: Int,
-        left: Int,
-        width: Int,
-        height: Int,
-        exclude: [Position]
-    ) -> [Position] {
-        var positions = [Position]()
-        for y in top ..< top + height {
-            for x in left ..< left + width {
-                let pos = Position(x: x, y: y)
-                if pos.isValid && !exclude.contains(pos) {
-                    positions.append(pos)
-                }
-            }
-        }
-        return positions
-    }
-    
     func createGrid() -> [Grid] {
         var grids = [Grid]()
         // Corners
@@ -507,25 +508,25 @@ class SquareGridManager: GridManager {
             let height = 4
             grids.append(
                 Grid(
-                    zone: createSquare(top: 0, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 3)]),
+                    zone: Util.createSquare(top: 0, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 3)]),
                     gates: [Position(x: 3, y: 4)]
                 )
             )
             grids.append(
                 Grid(
-                    zone: createSquare(top: 0, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 3)]),
+                    zone: Util.createSquare(top: 0, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 3)]),
                     gates: [Position(x: 26, y: 4)]
                 )
             )
             grids.append(
                 Grid(
-                    zone: createSquare(top: 26, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 26)]),
+                    zone: Util.createSquare(top: 26, left: 0, width: width, height: height, exclude: [Position(x: 4, y: 26)]),
                     gates: [Position(x: 3, y: 25)]
                 )
             )
             grids.append(
                 Grid(
-                    zone: createSquare(top: 26, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 26)]),
+                    zone: Util.createSquare(top: 26, left: 25, width: width, height: height, exclude: [Position(x: 25, y: 26)]),
                     gates: [Position(x: 26, y: 25)]
                 )
             )

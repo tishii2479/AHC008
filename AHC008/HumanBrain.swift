@@ -34,6 +34,7 @@ struct BasicHumanBrain: HumanBrain {
 }
 
 struct HumanBrainWithGridKnowledge: HumanBrain {
+    var petCaptureLimit: Int = 1
     let grids: [Grid]
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
@@ -44,7 +45,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                 for gate in grid.gates {
                     guard !field.checkBlock(at: gate),
                           gate.dist(to: pos) == 1,
-                          grid.petCountInGrid(field: field) > 0,
+                          grid.petCountInGrid(field: field) >= petCaptureLimit,
                           grid.isPrepared(field: field) else { continue }
                     if let block = CommandUtil.deltaToBlockCommand(delta: gate - pos) {
                         return [block, .none]

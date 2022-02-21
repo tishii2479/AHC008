@@ -62,7 +62,12 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureDogJob()
             for human in humans {
-                human.brain = HumanBrainWithGridKnowledge(grids: grids)
+                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
+            }
+        }
+        if turn == 100 {
+            for human in humans {
+                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
             }
         }
         if 100 <= turn && turn <= 299 {
@@ -85,18 +90,34 @@ class SquareGridJobDirector: JobDirector {
 // MARK: SquareGridJobDirector.Helper
 
 extension SquareGridJobDirector {
-    private var capturedDogCount: Int {
+    private var captureDogCount: Int {
         var count: Int = 0
         for pos in gridManager.dogCaptureGrid.zone {
             count += field.getPetCount(x: pos.x, y: pos.y, kind: .dog)
         }
         return count
     }
+    
+    private var needToCaptureDogCount: Int {
+        var count: Int = 0
+        for grid in grids {
+            if !grid.isClosed(field: field) { continue }
+            for pos in grid.zone {
+                count += field.getPetCount(x: pos.x, y: pos.y, kind: .dog)
+            }
+        }
+        return dogCount - count
+    }
 
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
-        if turn >= 299 { return true } 
-        if capturedDogCount < dogCount { return false }
+        if turn >= 299 { return true }
+        for pos in gridManager.dogCaptureGrid.zone {
+            if field.getHumanCount(at: pos) > 0 { return false }
+        }
+        for human in humans {
+            if human.schedule.jobs.count > 1 { return false }
+        }
         for pos in gridManager.dogCapturePositions {
             var assigneeFound = false
             for human in humans {
@@ -107,6 +128,8 @@ extension SquareGridJobDirector {
         for block in gridManager.dogCaptureBlocks {
             if !field.isValidBlock(target: block) { return false }
         }
+        IO.log(captureDogCount, needToCaptureDogCount)
+        if captureDogCount < needToCaptureDogCount { return false }
         return true
     }
 }
@@ -175,6 +198,7 @@ extension SquareGridJobDirector {
             }
         }
         
+        IO.log(grid)
         for gate in grid.gates {
             if field.checkBlock(at: gate) { continue }
             for human in humans {
@@ -216,7 +240,6 @@ extension SquareGridJobDirector {
                 let job = Schedule.Job(units: units)
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
                     grids[i].assignee = assignee
-                    IO.log(units, assignee.pos)
                     assignee.assign(job: job, isMajor: true)
                 }
                 else {
