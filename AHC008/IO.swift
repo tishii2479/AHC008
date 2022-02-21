@@ -67,13 +67,13 @@ extension IO {
         terminator: String = "\n",
         type: LogType = .none
     ) {
-        if type == .error || type == .warn || type == .info {
+//        if type == .error || type == .warn || type == .info {
             let output =
                 "[LOG]" + type.rawValue + " "
                 + items.map { "\($0)" }.joined(separator: separator)
                 + terminator
             fputs(output, stderr)
-        }
+//        }
     }
 
     static func flush() {

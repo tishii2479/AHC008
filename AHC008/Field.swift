@@ -70,19 +70,19 @@ class Field {
 // MARK: Field.Utilties
 
 extension Field {
-    private func getPlayers(x: Int, y: Int) -> [Player] {
+    func getPlayers(x: Int, y: Int) -> [Player] {
         players[y][x]
     }
     
-    private func getPlayers(at position: Position) -> [Player] {
+    func getPlayers(at position: Position) -> [Player] {
         getPlayers(x: position.x, y: position.y)
     }
     
-    private func addBlock(position: Position) {
+    func addBlock(position: Position) {
         blocks[position.y][position.x] = true
     }
     
-    private func addBlocks(positions: [Position]) {
+    func addBlocks(positions: [Position]) {
         for pos in positions { addBlock(position: pos) }
     }
     

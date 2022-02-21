@@ -108,7 +108,7 @@ class UtilsTest: XCTestCase {
         // ...
         let start = Position(x: 0, y: 0)
         let to = Position(x: 2, y: 1)
-        let moves = CommandUtil.getCandidateMove(from: start, to: to, field: field)
+        let moves = CommandUtil.calcShortestMove(from: start, to: to, field: field)
         XCTAssertTrue(moves.count == 2 && moves.contains(.moveDown) && moves.contains(.moveRight))
         // s#.
         // .#t
@@ -117,7 +117,7 @@ class UtilsTest: XCTestCase {
             Position(x: 1, y: 0),
             Position(x: 1, y: 1),
         ])
-        let moves2 = CommandUtil.getCandidateMove(from: start, to: to, field: field)
+        let moves2 = CommandUtil.calcShortestMove(from: start, to: to, field: field)
         XCTAssertEqual(moves2, [.moveDown])
         
         // t#.
@@ -125,7 +125,7 @@ class UtilsTest: XCTestCase {
         // ...
         let start3 = Position(x: 2, y: 1)
         let to3 = Position(x: 0, y: 0)
-        let moves3 = CommandUtil.getCandidateMove(from: start3, to: to3, field: field)
+        let moves3 = CommandUtil.calcShortestMove(from: start3, to: to3, field: field)
         XCTAssertEqual(moves3, [.moveDown])
     }
 
@@ -135,7 +135,7 @@ class UtilsTest: XCTestCase {
         let to = Position(x: fieldSize - 1, y: fieldSize - 1)
         self.measure {
             for _ in 0 ..< 10 {
-                let _ = CommandUtil.getCandidateMove(from: from, to: to, field: field)
+                let _ = CommandUtil.calcShortestMove(from: from, to: to, field: field)
             }
         }
     }

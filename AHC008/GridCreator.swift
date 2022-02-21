@@ -244,16 +244,16 @@ class SquareGridManager: GridManager {
         for y in [5, 12, 19] {
             let width = 3
             let height = 6
-            grids.append(Grid(top: y, left: 0, width: width, height: height, gates: [Position(x: 3, y: y + 2), Position(x: 3, y: y + 3)]))
-            grids.append(Grid(top: y, left: 27, width: width, height: height, gates: [Position(x: 26, y: y + 2), Position(x: 26, y: y + 3)]))
+            grids.append(Grid(top: y, left: 0, width: width, height: height, gates: [Position(x: 3, y: y + 2)]))
+            grids.append(Grid(top: y, left: 27, width: width, height: height, gates: [Position(x: 26, y: y + 2)]))
         }
         
         // Top and bottom
         for x in [6, 12, 19] {
             let width = x == 12 ? 6 : 5
             let height = 3
-            grids.append(Grid(top: 0, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 3), Position(x: x + 3, y: 3)]))
-            grids.append(Grid(top: 27, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 26), Position(x: x + 3, y: 26)]))
+            grids.append(Grid(top: 0, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 3)]))
+            grids.append(Grid(top: 27, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 26)]))
         }
         
         // Center vertical

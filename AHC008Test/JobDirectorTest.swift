@@ -52,7 +52,7 @@ class JobDirectorTest: XCTestCase {
                 }
             }
             
-            if count == expected {
+            if count >= expected {
                 XCTAssertTrue(true)
                 field.dump()
                 IO.log("Finished in turn: \(turn)")
