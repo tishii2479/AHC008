@@ -39,7 +39,6 @@ class SquareGridJobDirector: JobDirector {
     private var gridManager: GridManager
 
     private var grids = [Grid]()
-    private var catGrids = [Grid]()
     private var didCaputureDog: Bool = false
     private lazy var dogCount: Int = {
         return PetUtil.getPetCount(pets: pets, for: .dog)
@@ -79,9 +78,6 @@ class SquareGridJobDirector: JobDirector {
             }
             else if didCaputureDog {
                 findGridAndAssignBlockJob(turn: turn)
-                for grid in catGrids {
-                    findMultiGateGridAndAssignBlockJob(grid: grid)
-                }
             }
         }
     }
@@ -111,7 +107,7 @@ extension SquareGridJobDirector {
 
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
-        if turn >= 299 { return true }
+        if turn >= 250 { return true }
         for pos in gridManager.dogCaptureGrid.zone {
             if field.getHumanCount(at: pos) > 0 { return false }
         }
@@ -139,7 +135,6 @@ extension SquareGridJobDirector {
 extension SquareGridJobDirector {
     private func assignGridJob() {
         grids = gridManager.createGrid()
-        catGrids = gridManager.createCatGrids()
         let jobs = gridManager.createGridJobs()
         assignJobs(jobs: jobs, humans: humans)
     }
@@ -188,31 +183,7 @@ extension SquareGridJobDirector {
             }
         }
     }
-    
-    private func findMultiGateGridAndAssignBlockJob(grid: Grid) {
-        guard !grid.isClosed(field: field) else { return }
-        for gate in grid.gates {
-            if field.checkBlock(at: gate) { continue }
-            for human in humans {
-                if human.pos.dist(to: gate) > 2 { return }
-            }
-        }
-        
-        IO.log(grid)
-        for gate in grid.gates {
-            if field.checkBlock(at: gate) { continue }
-            for human in humans {
-                let job = Schedule.Job(units: [
-                    .init(kind: .close, pos: gate)
-                ])
-                if human.pos.dist(to: gate) <= 2 {
-                    human.assign(job: job, isMajor: true)
-                    break
-                }
-            }
-        }
-    }
-    
+
     private func findGridAndAssignBlockJob(turn: Int) {
         let compare: Compare = { (testHuman, currentAssignee, job) in
             if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
