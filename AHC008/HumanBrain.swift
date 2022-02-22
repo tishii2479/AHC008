@@ -46,7 +46,8 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     guard !field.checkBlock(at: gate),
                           gate.dist(to: pos) == 1,
                           grid.petCountInGrid(field: field) >= petCaptureLimit,
-                          grid.isPrepared(field: field) else { continue }
+                          grid.isPrepared(field: field),
+                          !grid.zone.contains(pos) else { continue }
                     if let block = CommandUtil.deltaToBlockCommand(delta: gate - pos) {
                         return [block, .none]
                     }

@@ -84,45 +84,61 @@ class SquareGridManager: GridManager {
         }
         // Where horizontal block and vertical block intersects
         let intersections = [
-            Position(x: 5, y: 5),
-            Position(x: 5, y: 24),
-            Position(x: 24, y: 5),
-            Position(x: 24, y: 24),
             Position(x: 5, y: 3),
-            Position(x: 11, y: 3),
-            Position(x: 18, y: 3),
+            Position(x: 10, y: 3),
+            Position(x: 15, y: 3),
+            Position(x: 20, y: 3),
             Position(x: 24, y: 3),
+            Position(x: 3, y: 4),
+            Position(x: 26, y: 4),
+            Position(x: 5, y: 5),
             Position(x: 9, y: 5),
             Position(x: 13, y: 5),
             Position(x: 15, y: 5),
-            Position(x: 15, y: 9),
+            Position(x: 18, y: 5),
+            Position(x: 24, y: 5),
+            Position(x: 3, y: 9),
+            Position(x: 18, y: 9),
             Position(x: 24, y: 9),
-            Position(x: 3, y: 11),
-            Position(x: 26, y: 11),
+            Position(x: 26, y: 9),
+            Position(x: 5, y: 11),
+            Position(x: 9, y: 11),
+            Position(x: 13, y: 11),
             Position(x: 15, y: 13),
+            Position(x: 18, y: 13),
             Position(x: 24, y: 13),
+            Position(x: 3, y: 14),
             Position(x: 5, y: 14),
-            Position(x: 9, y: 14),
             Position(x: 13, y: 14),
+            Position(x: 26, y: 14),
             Position(x: 16, y: 15),
-            Position(x: 20, y: 15),
             Position(x: 24, y: 15),
             Position(x: 5, y: 16),
+            Position(x: 11, y: 16),
             Position(x: 14, y: 16),
-            Position(x: 3, y: 18),
-            Position(x: 26, y: 18),
+            Position(x: 16, y: 18),
+            Position(x: 20, y: 18),
+            Position(x: 24, y: 18),
+            Position(x: 3, y: 19),
+            Position(x: 26, y: 19),
             Position(x: 5, y: 20),
-            Position(x: 14, y: 20),
+            Position(x: 11, y: 20),
+            Position(x: 5, y: 24),
+            Position(x: 11, y: 24),
             Position(x: 14, y: 24),
             Position(x: 16, y: 24),
             Position(x: 20, y: 24),
+            Position(x: 24, y: 24),
+            Position(x: 3, y: 25),
+            Position(x: 26, y: 25),
             Position(x: 5, y: 26),
-            Position(x: 11, y: 26),
-            Position(x: 18, y: 26),
+            Position(x: 10, y: 26),
+            Position(x: 15, y: 26),
+            Position(x: 20, y: 26),
             Position(x: 24, y: 26),
             Position(x: 5, y: 15),
-            Position(x: 14, y: 5),
             Position(x: 24, y: 14),
+            Position(x: 14, y: 5),
             Position(x: 15, y: 24),
         ]
         return arr + intersections
@@ -133,7 +149,7 @@ class SquareGridManager: GridManager {
         
         var leftSideJob = Schedule.Job(units: [])
         var rightSideJob = Schedule.Job(units: [])
-        let ys = [4, 11, 18, 25]
+        let ys = [4, 9, 14, 19, 25]
         for i in 0 ..< ys.count {
             leftSideJob +=
                 JobUtil.createLineBlockJob(from: Position(x: 0, y: ys[i]), to: Position(x: 2, y: ys[i]))
@@ -163,7 +179,7 @@ class SquareGridManager: GridManager {
         var bottomJob = Schedule.Job(units: [
             .init(kind: .block, pos: Position(x: 4, y: 26))
         ])
-        let xs = [5, 11, 18, 24]
+        let xs = [5, 10, 15, 20, 24]
         for i in 0 ..< xs.count {
             topJob +=
                 JobUtil.createLineBlockJob(from: Position(x: xs[i], y: 0), to: Position(x: xs[i], y: 2))
@@ -193,39 +209,49 @@ class SquareGridManager: GridManager {
         jobs.append(topJob)
         jobs.append(bottomJob)
         
+        // Horizontal
+        jobs.append(
+            JobUtil.createBlockJobWithMove(from: Position(x: 13, y: 15), to: Position(x: 6, y: 15), checkDirections: [.up, .down], skipBlocks: skipBlocks)
+        )
+        jobs.append(
+            JobUtil.createBlockJobWithMove(from: Position(x: 16, y: 14), to: Position(x: 23, y: 14), checkDirections: [.up, .down], skipBlocks: skipBlocks)
+        )
+        // Vertical
+        jobs.append(
+            JobUtil.createBlockJobWithMove(from: Position(x: 14, y: 6), to: Position(x: 14, y: 13), checkDirections: [.left, .right], skipBlocks: skipBlocks)
+        )
+        jobs.append(
+            JobUtil.createBlockJobWithMove(from: Position(x: 15, y: 16), to: Position(x: 15, y: 23), checkDirections: [.left, .right], skipBlocks: skipBlocks)
+        )
+        
         // Center
         do {
             // Horizontal
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 13, y: 20), skipBlocks: skipBlocks, addMove: false)
+                JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 10, y: 20), skipBlocks: skipBlocks)
             )
-            
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 16, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks, addMove: false)
+                JobUtil.createLineBlockJob(from: Position(x: 19, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks)
+            )
+            jobs.append(
+                JobUtil.createLineBlockJob(from: Position(x: 6, y: 11), to: Position(x: 12, y: 11), skipBlocks: skipBlocks)
+            )
+            jobs.append(
+                JobUtil.createLineBlockJob(from: Position(x: 17, y: 18), to: Position(x: 23, y: 18), skipBlocks: skipBlocks)
             )
 
             // Vertical
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 13), skipBlocks: skipBlocks, addMove: false)
+                JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 10), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 20, y: 16), to: Position(x: 20, y: 23), skipBlocks: skipBlocks, addMove: false)
-            )
-            
-            // These should be the last job!
-            // Horizontal
-            jobs.append(
-                JobUtil.createBlockJobWithMove(from: Position(x: 13, y: 15), to: Position(x: 6, y: 15), checkDirections: [.up, .down], skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 20, y: 19), to: Position(x: 20, y: 23), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createBlockJobWithMove(from: Position(x: 16, y: 14), to: Position(x: 23, y: 14), checkDirections: [.up, .down], skipBlocks: skipBlocks)
-            )
-            // Vertical
-            jobs.append(
-                JobUtil.createBlockJobWithMove(from: Position(x: 14, y: 6), to: Position(x: 14, y: 13), checkDirections: [.left, .right], skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 11, y: 23), to: Position(x: 11, y: 17), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createBlockJobWithMove(from: Position(x: 15, y: 16), to: Position(x: 15, y: 23), checkDirections: [.left, .right], skipBlocks: skipBlocks)
+                JobUtil.createLineBlockJob(from: Position(x: 18, y: 12), to: Position(x: 18, y: 6), skipBlocks: skipBlocks)
             )
         }
         
@@ -265,41 +291,65 @@ class SquareGridManager: GridManager {
         }
         
         // Sides
-        for y in [5, 12, 19] {
+        for y in [5, 10, 15, 20] {
             let width = 3
-            let height = 6
+            let height = y == 20 ? 5 : 4
             grids.append(Grid(top: y, left: 0, width: width, height: height, gates: [Position(x: 3, y: y + 2)]))
             grids.append(Grid(top: y, left: 27, width: width, height: height, gates: [Position(x: 26, y: y + 2)]))
         }
         
         // Top and bottom
-        for x in [6, 12, 19] {
-            let width = x == 12 ? 6 : 5
+        for x in [6, 11, 16, 21] {
+            let width = x == 21 ? 3 : 4
             let height = 3
-            grids.append(Grid(top: 0, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 3)]))
-            grids.append(Grid(top: 27, left: x, width: width, height: height, gates: [Position(x: x + 2, y: 26)]))
+            grids.append(Grid(top: 0, left: x, width: width, height: height, gates: [Position(x: x + 1, y: 3)]))
+            grids.append(Grid(top: 27, left: x, width: width, height: height, gates: [Position(x: x + 1, y: 26)]))
         }
         
         // Center vertical
         do {
             let width = 3
-            let height = 8
+            let height = 5
             grids.append(Grid(top: 6, left: 6, width: width, height: height, gates: [Position(x: 7, y: 5)]))
             grids.append(Grid(top: 6, left: 10, width: width, height: height, gates: [Position(x: 11, y: 5)]))
             
-            grids.append(Grid(top: 16, left: 17, width: width, height: height, gates: [Position(x: 18, y: 24)]))
-            grids.append(Grid(top: 16, left: 21, width: width, height: height, gates: [Position(x: 22, y: 24)]))
+            grids.append(Grid(top: 19, left: 17, width: width, height: height, gates: [Position(x: 18, y: 24)]))
+            grids.append(Grid(top: 19, left: 21, width: width, height: height, gates: [Position(x: 22, y: 24)]))
+        }
+        
+        // Center thin vertical
+        do {
+            let width = 2
+            let height = 7
+            grids.append(
+                Grid(zone: Util.createSquare(top: 6, left: 16, width: width, height: height) + [Position(x: 18, y: 9)], gates: [Position(x: 17, y: 5)])
+            )
+            grids.append(
+                Grid(zone: Util.createSquare(top: 17, left: 12, width: width, height: height) + [Position(x: 11, y: 20)], gates: [Position(x: 12, y: 24)])
+            )
         }
         
         // Center horizontal
         do {
-            let width = 8
+            let width = 5
             let height = 3
             grids.append(Grid(top: 17, left: 6, width: width, height: height, gates: [Position(x: 5, y: 18)]))
             grids.append(Grid(top: 21, left: 6, width: width, height: height, gates: [Position(x: 5, y: 22)]))
             
-            grids.append(Grid(top: 6, left: 16, width: width, height: height, gates: [Position(x: 24, y: 7)]))
-            grids.append(Grid(top: 10, left: 16, width: width, height: height, gates: [Position(x: 24, y: 11)]))
+            grids.append(Grid(top: 6, left: 19, width: width, height: height, gates: [Position(x: 24, y: 7)]))
+            grids.append(Grid(top: 10, left: 19, width: width, height: height, gates: [Position(x: 24, y: 11)]))
+        }
+        
+        // Center thin horizontal
+        do {
+            let width = 7
+            let height = 2
+            grids.append(
+                Grid(zone: Util.createSquare(top: 12, left: 6, width: width, height: height) + [Position(x: 9, y: 11)], gates: [Position(x: 5, y: 12)])
+            )
+            grids.append(
+                Grid(zone: Util.createSquare(top: 16, left: 17, width: width, height: height) + [Position(x: 20, y: 18)], gates: [Position(x: 24, y: 17)])
+            )
         }
 
         return grids

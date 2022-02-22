@@ -107,7 +107,6 @@ extension SquareGridJobDirector {
 
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
         guard !didCaputureDog else { return false }
-        if turn >= 250 { return true }
         for pos in gridManager.dogCaptureGrid.zone {
             if field.getHumanCount(at: pos) > 0 { return false }
         }
@@ -202,6 +201,12 @@ extension SquareGridJobDirector {
             if grids[i].assignee != nil { continue }
 
             if petCount > 0 {
+                var noHuman = true
+                for pos in grids[i].zone {
+                    if field.getHumanCount(at: pos) > 0 { noHuman = false }
+                }
+                if !noHuman { continue }
+
                 var units = [Schedule.Job.Unit]()
                 for gate in grids[i].gates {
                     if !field.checkBlock(at: gate) {

@@ -135,7 +135,7 @@ class Util {
         left: Int,
         width: Int,
         height: Int,
-        exclude: [Position]
+        exclude: [Position] = []
     ) -> [Position] {
         var positions = [Position]()
         for y in top ..< top + height {
