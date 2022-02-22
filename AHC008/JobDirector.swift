@@ -80,7 +80,7 @@ class SquareGridJobDirector: JobDirector {
         }
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
-                IO.log("Captured dog at turn: \(turn)")
+                IO.log("Captured dog at turn: \(turn)", type: .info)
                 didCaputureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
@@ -89,13 +89,14 @@ class SquareGridJobDirector: JobDirector {
                 }
             }
             else if didCaputureDog {
+                // TODO: Refactor
                 let compare: Compare = { (testHuman, currentAssignee, job) in
-                    guard let brain = testHuman.brain as? HumanBrainWithGridKnowledge,
-                          brain.target == nil else {
+                    guard let brain1 = testHuman.brain as? HumanBrainWithGridKnowledge,
+                          brain1.target == nil else {
                         return currentAssignee
                     }
-                    guard let brain = currentAssignee.brain as? HumanBrainWithGridKnowledge,
-                          brain.target == nil else {
+                    guard let brain2 = currentAssignee.brain as? HumanBrainWithGridKnowledge,
+                          brain2.target == nil else {
                         return testHuman
                     }
                     if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
@@ -109,7 +110,7 @@ class SquareGridJobDirector: JobDirector {
                         if grid.isClosed(field: field) && grid.zone.contains(pet.pos) {
                             for human in humans {
                                 if human.brain.target?.id == pet.id {
-                                    IO.log(turn,"Remove target:", pet.pos, human.pos, pet.id, human.id)
+                                    IO.log(turn,"Remove target:", pet.pos, human.pos, pet.id, human.id, type: .info)
                                     human.brain.target = nil
                                 }
                             }
@@ -124,7 +125,7 @@ class SquareGridJobDirector: JobDirector {
                     if pet.assignee == nil {
                         if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
                            assignee.brain.target == nil {
-                            IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id)
+                            IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id, type: .info)
                             assignee.brain.target = pet
                             pet.assignee = assignee
                         }

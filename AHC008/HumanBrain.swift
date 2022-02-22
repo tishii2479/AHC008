@@ -57,7 +57,6 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     }
                 }
             }
-//            IO.log(pos, target?.pos, CommandUtil.calcShortestMove(from: pos, to: target?.pos ?? jobUnit.pos, field: field, treatAsBlocks: treatAsBlocks).shuffled())
             return CommandUtil.calcShortestMove(from: pos, to: target?.pos ?? jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions).shuffled()
         case .close:
             for grid in grids {

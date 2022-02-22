@@ -203,7 +203,7 @@ class BestJobFinder {
                 for i in 0 ..< humans.count {
                     commands[i] = cands[i][ptr[i]]
                 }
-                IO.log(bestScore, score, commands)
+                IO.log(bestScore, score, commands, type: .info)
                 bestCommands = commands
                 bestScore = score
             }
@@ -235,7 +235,7 @@ class BestJobFinder {
 
             let score: Double = testField.calcScore(humans: humans)
             if score > bestScore {
-                IO.log(bestScore, score)
+                IO.log(bestScore, score, type: .info)
                 bestCommands = commands
                 bestScore = score
             }
