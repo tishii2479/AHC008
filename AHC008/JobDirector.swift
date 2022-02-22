@@ -43,6 +43,15 @@ class SquareGridJobDirector: JobDirector {
     private lazy var dogCount: Int = {
         return PetUtil.getPetCount(pets: pets, for: .dog)
     }()
+    private lazy var notAllowedPositions: [Position] = {
+        var positions = [Position]()
+        for grid in grids {
+            for gate in grid.gates {
+                positions.append(gate)
+            }
+        }
+        return positions
+    }()
     
     init(
         field: Field,
@@ -75,8 +84,52 @@ class SquareGridJobDirector: JobDirector {
                 didCaputureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
+                for human in humans {
+                    human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, notAllowedPositions: notAllowedPositions, grids: grids)
+                }
             }
             else if didCaputureDog {
+                let compare: Compare = { (testHuman, currentAssignee, job) in
+                    guard let brain = testHuman.brain as? HumanBrainWithGridKnowledge,
+                          brain.target == nil else {
+                        return currentAssignee
+                    }
+                    guard let brain = currentAssignee.brain as? HumanBrainWithGridKnowledge,
+                          brain.target == nil else {
+                        return testHuman
+                    }
+                    if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
+                        return testHuman
+                    }
+                    return currentAssignee
+                }
+                for pet in pets {
+                    if pet.isCaptured { continue }
+                    for grid in grids + [gridManager.dogCaptureGrid] {
+                        if grid.isClosed(field: field) && grid.zone.contains(pet.pos) {
+                            for human in humans {
+                                if human.brain.target?.id == pet.id {
+                                    IO.log(turn,"Remove target:", pet.pos, human.pos, pet.id, human.id)
+                                    human.brain.target = nil
+                                }
+                            }
+                            pet.isCaptured = true
+                            break
+                        }
+                    }
+                    if pet.isCaptured { continue }
+                    let tmpJob = Schedule.Job(units: [
+                        .init(kind: .move, pos: pet.pos)
+                    ])
+                    if pet.assignee == nil {
+                        if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
+                           assignee.brain.target == nil {
+                            IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id)
+                            assignee.brain.target = pet
+                            pet.assignee = assignee
+                        }
+                    }
+                }
                 findGridAndAssignBlockJob(turn: turn)
             }
         }
@@ -123,7 +176,6 @@ extension SquareGridJobDirector {
         for block in gridManager.dogCaptureBlocks {
             if !field.isValidBlock(target: block) { return false }
         }
-        IO.log(captureDogCount, needToCaptureDogCount)
         if captureDogCount < needToCaptureDogCount { return false }
         return true
     }

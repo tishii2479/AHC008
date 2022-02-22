@@ -112,6 +112,8 @@ class Pet: Player {
     }
     
     private(set) var kind: Kind
+    var isCaptured: Bool = false
+    var assignee: Human? = nil
     
     func applyCommand(command: Command, field: Field) {
         applyMoveCommand(command: command)

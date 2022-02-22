@@ -86,16 +86,12 @@ class CommandUtil {
         from: Position,
         to: Position,
         field: Field,
-        treatAsBlocks: [Position] = []
+        notAllowedPositions: [Position] = []
     ) -> [Command] {
         let queue = Queue<Position>()
         var dist = [[Int]](repeating: [Int](repeating: 123456, count: fieldSize), count: fieldSize)
         queue.push(to)
         dist[to.y][to.x] = 0
-        let testField = Field(players: [], blocks: field.blocks)
-        for block in treatAsBlocks {
-            testField.addBlock(position: block)
-        }
         while !queue.isEmpty {
             guard let cur = queue.pop() else { break }
             // Prune unrequired search
@@ -104,16 +100,19 @@ class CommandUtil {
             for dir in Position.directions {
                 let nxt = cur + dir
                 guard nxt.isValid,
-                      !testField.checkBlock(at: nxt),
+                      !field.checkBlock(at: nxt),
                       dist[nxt.y][nxt.x] > dist[cur.y][cur.x] + 1 else { continue }
                 dist[nxt.y][nxt.x] = dist[cur.y][cur.x] + 1
                 queue.push(nxt)
             }
         }
         var cand = [Command]()
+        if dist[from.y][from.x] == 123456 {
+            IO.log("No path found from \(from) to \(to)", type: .warn)
+        }
         for dir in Position.directions {
             let nxt = from + dir
-            if nxt.isValid && dist[from.y][from.x] == dist[nxt.y][nxt.x] + 1 {
+            if nxt.isValid && dist[from.y][from.x] == dist[nxt.y][nxt.x] + 1 && !notAllowedPositions.contains(nxt) {
                 cand.append(deltaToMoveCommand(delta: dir)[0])
             }
         }
