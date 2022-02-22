@@ -1,18 +1,9 @@
-PROBLEM:
-Pet are not getting into the grid. -> Size of the gate?
-
-TODO: 
-Priority with pet count in grids.
+TODO:
 Improve grid jobs.
-Calculate job cost properly.
-Grid refactor -> to Positions
-
-TEST:
 Polish final best turn.
+Calculate job cost properly.
 
 IDEA:
 Change gate size?
 Change grid structure depending on human count?
-
-Write tests:
-JobUtil cost calculation.
+Chase cats with high priority

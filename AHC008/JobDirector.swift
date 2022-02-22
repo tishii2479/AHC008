@@ -73,11 +73,6 @@ class SquareGridJobDirector: JobDirector {
                 human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
             }
         }
-        if turn == 100 {
-            for human in humans {
-                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
-            }
-        }
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
                 IO.log("Captured dog at turn: \(turn)", type: .info)
