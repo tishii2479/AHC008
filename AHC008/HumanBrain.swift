@@ -9,7 +9,7 @@ struct BasicHumanBrain: HumanBrain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
-        case .move:
+        case .move, .forceMove:
             let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field)
             if cand.count == 0 { return [.none] }
             return cand.shuffled() + Command.moves.shuffled()
@@ -44,6 +44,8 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
+        case .forceMove:
+            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field).shuffled()
         case .move:
             for grid in grids {
                 for gate in grid.gates {
