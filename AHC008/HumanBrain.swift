@@ -39,6 +39,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     var target: Pet? = nil
     var petCaptureLimit: Int = 1
     var notAllowedPositions: [Position] = []
+    var treatAsGrid: [Position] = []
     let grids: [Grid]
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
@@ -101,7 +102,8 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     private func isInGrid(pos: Position) -> Bool {
         for grid in grids {
             if grid.zone.contains(pos)
-            || grid.gates.contains(pos) { return true }
+                || grid.gates.contains(pos)
+                || treatAsGrid.contains(pos) { return true }
         }
         return false
     }

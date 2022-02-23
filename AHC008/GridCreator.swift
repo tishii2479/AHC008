@@ -4,6 +4,8 @@ protocol GridManager {
     var dogCaptureGrid: Grid { get }
     var skipBlocks: [Position] { get }
     var corners: [[Position]] { get }
+    var intersections: [Position] { get }
+    var allowedPositions: [[Position]] { get }
     func createGrid() -> [Grid]
     func createGridJobs() -> [Schedule.Job]
 }
@@ -32,35 +34,53 @@ extension GridManager {
 }
 
 class ColumnGridManagerV2: GridManager {
-    private let intersections: [Position] = [
-            Position(x: 2, y: 12),
-            Position(x: 5, y: 12),
-            Position(x: 8, y: 12),
-            Position(x: 11, y: 12),
-            Position(x: 15, y: 12),
-            Position(x: 18, y: 12),
-            Position(x: 21, y: 12),
-            Position(x: 24, y: 12),
-            Position(x: 27, y: 12),
-            Position(x: 2, y: 14),
-            Position(x: 5, y: 14),
-            Position(x: 8, y: 14),
-            Position(x: 11, y: 14),
-            Position(x: 15, y: 14),
-            Position(x: 18, y: 14),
-            Position(x: 21, y: 14),
-            Position(x: 24, y: 14),
-            Position(x: 27, y: 14),
-            Position(x: 2, y: 28),
-            Position(x: 5, y: 28),
-            Position(x: 8, y: 28),
-            Position(x: 11, y: 28),
-            Position(x: 15, y: 28),
-            Position(x: 18, y: 28),
-            Position(x: 21, y: 28),
-            Position(x: 24, y: 28),
-            Position(x: 27, y: 28),
-        ]
+    let intersections: [Position] = [
+        Position(x: 2, y: 7),
+        Position(x: 5, y: 7),
+        Position(x: 8, y: 7),
+        Position(x: 11, y: 7),
+        Position(x: 15, y: 7),
+        Position(x: 18, y: 7),
+        Position(x: 21, y: 7),
+        Position(x: 24, y: 7),
+        Position(x: 27, y: 7),
+        Position(x: 2, y: 9),
+        Position(x: 5, y: 9),
+        Position(x: 8, y: 9),
+        Position(x: 11, y: 9),
+        Position(x: 15, y: 9),
+        Position(x: 18, y: 9),
+        Position(x: 21, y: 9),
+        Position(x: 24, y: 9),
+        Position(x: 27, y: 9),
+        Position(x: 2, y: 17),
+        Position(x: 5, y: 17),
+        Position(x: 8, y: 17),
+        Position(x: 11, y: 17),
+        Position(x: 15, y: 17),
+        Position(x: 18, y: 17),
+        Position(x: 21, y: 17),
+        Position(x: 24, y: 17),
+        Position(x: 27, y: 17),
+        Position(x: 2, y: 19),
+        Position(x: 5, y: 19),
+        Position(x: 8, y: 19),
+        Position(x: 11, y: 19),
+        Position(x: 15, y: 19),
+        Position(x: 18, y: 19),
+        Position(x: 21, y: 19),
+        Position(x: 24, y: 19),
+        Position(x: 27, y: 19),
+        Position(x: 2, y: 28),
+        Position(x: 5, y: 28),
+        Position(x: 8, y: 28),
+        Position(x: 11, y: 28),
+        Position(x: 15, y: 28),
+        Position(x: 18, y: 28),
+        Position(x: 21, y: 28),
+        Position(x: 24, y: 28),
+        Position(x: 27, y: 28),
+    ]
     let dogCaptureBlocks: [Position] = [
         Position(x: 0, y: 29),
         Position(x: 29, y: 29),
@@ -84,7 +104,18 @@ class ColumnGridManagerV2: GridManager {
         return Grid(zone: positions, gates: gates)
     }()
     let corners: [[Position]] = [
-        [Position(x: 0, y: 13), Position(x: 29, y: 13)]
+        [Position(x: 0, y: 8), Position(x: 29, y: 8)],
+        [Position(x: 0, y: 18), Position(x: 29, y: 18)],
+        [Position(x: 0, y: 18), Position(x: 29, y: 18)],
+        [Position(x: 0, y: 8), Position(x: 29, y: 8)],
+    ]
+    let allowedPositions: [[Position]] = [
+        [Position(x: 0, y: 9), Position(x: 0, y: 17), Position(x: 0, y: 19),
+         Position(x: 29, y: 9), Position(x: 29, y: 17), Position(x: 29, y: 19),],
+        [],
+        [],
+        [Position(x: 0, y: 9), Position(x: 0, y: 17), Position(x: 0, y: 19),
+         Position(x: 29, y: 9), Position(x: 29, y: 17), Position(x: 29, y: 19),],
     ]
     
     lazy var skipBlocks: [Position] = {
@@ -105,19 +136,32 @@ class ColumnGridManagerV2: GridManager {
             job +=
                 JobUtil.createLineBlockJob(
                     from: Position(x: x[1], y: 27),
-                    to: Position(x: x[1], y: 15),
+                    to: Position(x: x[1], y: 20),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[1] - 1, y: 13),
-                    to: Position(x: x[1] + 1, y: 13),
+                    from: Position(x: x[1] - 1, y: 18),
+                    to: Position(x: x[1] + 1, y: 18),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 11),
+                    from: Position(x: x[1], y: 16),
+                    to: Position(x: x[1], y: 10),
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createBlockJobWithMove(
+                    from: Position(x: x[1] - 1, y: 8),
+                    to: Position(x: x[1] + 1, y: 8),
+                    checkDirections: [.up, .down],
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[1], y: 6),
                     to: Position(x: x[1], y: 1),
                     skipBlocks: skipBlocks
                 )
@@ -129,19 +173,32 @@ class ColumnGridManagerV2: GridManager {
             job +=
                 JobUtil.createLineBlockJob(
                     from: Position(x: x[0], y: 0),
-                    to: Position(x: x[0], y: 11),
+                    to: Position(x: x[0], y: 6),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[0] - 1, y: 13),
-                    to: Position(x: x[0] + 1, y: 13),
+                    from: Position(x: x[0] - 1, y: 8),
+                    to: Position(x: x[0] + 1, y: 8),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 15),
+                    from: Position(x: x[0], y: 10),
+                    to: Position(x: x[0], y: 16),
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createBlockJobWithMove(
+                    from: Position(x: x[0] - 1, y: 18),
+                    to: Position(x: x[0] + 1, y: 18),
+                    checkDirections: [.up, .down],
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[0], y: 20),
                     to: Position(x: x[0], y: 27),
                     skipBlocks: skipBlocks
                 )
@@ -152,19 +209,32 @@ class ColumnGridManagerV2: GridManager {
         centerJob +=
             JobUtil.createLineBlockJob(
                 from: Position(x: 15, y: 0),
-                to: Position(x: 15, y: 11),
+                to: Position(x: 15, y: 6),
                 skipBlocks: skipBlocks
             )
         centerJob +=
             JobUtil.createBlockJobWithMove(
-                from: Position(x: 15 - 1, y: 13),
-                to: Position(x: 15 + 1, y: 13),
+                from: Position(x: 15 - 1, y: 8),
+                to: Position(x: 15 + 1, y: 8),
                 checkDirections: [.up, .down],
                 skipBlocks: skipBlocks
             )
         centerJob +=
             JobUtil.createLineBlockJob(
-                from: Position(x: 15, y: 15),
+                from: Position(x: 15, y: 10),
+                to: Position(x: 15, y: 16),
+                skipBlocks: skipBlocks
+            )
+        centerJob +=
+            JobUtil.createBlockJobWithMove(
+                from: Position(x: 15 - 1, y: 18),
+                to: Position(x: 15 + 1, y: 18),
+                checkDirections: [.up, .down],
+                skipBlocks: skipBlocks
+            )
+        centerJob +=
+            JobUtil.createLineBlockJob(
+                from: Position(x: 15, y: 20),
                 to: Position(x: 15, y: 27),
                 skipBlocks: skipBlocks
             )
@@ -183,23 +253,30 @@ class ColumnGridManagerV2: GridManager {
         var grids = [Grid]()
         let xs = [0, 3, 6, 9, 12, 16, 19, 22, 25, 28]
         for x in xs {
-            for y in [0, 15] {
+            for y in [0, 10, 20] {
                 var zone: [Position] = Util.createSquare(
                     top: y,
                     left: x,
                     width: x == 12 ? 3 : 2,
-                    height: y == 0 ? 12 : 13
+                    height: y == 20 ? 8 : 7
                 )
-                if x == 0 && y == 15 {
+                if x == 0 && y == 20 {
                     zone.append(Position(x: 0, y: 28))
                 }
-                else if x == 28 && y == 15 {
+                else if x == 28 && y == 20 {
                     zone.append(Position(x: 29, y: 28))
                 }
+                let gateY: [Int] = {
+                    if y == 0 { return [7] }
+                    if y == 10 { return [9, 17] }
+                    return [19]
+                }()
                 grids.append(
                     Grid(
                         zone: zone,
-                        gates: [Position(x: x + (x == 0 ? 0 : 1), y: y == 0 ? 12 : 14)]
+                        gates: gateY.map {
+                            Position(x: x + (x == 0 ? 0 : 1), y: $0)
+                        }
                     )
                 )
             }
@@ -210,35 +287,35 @@ class ColumnGridManagerV2: GridManager {
 
 
 class ColumnGridManager: GridManager {
-    private let intersections: [Position] = [
-            Position(x: 2, y: 12),
-            Position(x: 5, y: 12),
-            Position(x: 8, y: 12),
-            Position(x: 11, y: 12),
-            Position(x: 15, y: 12),
-            Position(x: 18, y: 12),
-            Position(x: 21, y: 12),
-            Position(x: 24, y: 12),
-            Position(x: 27, y: 12),
-            Position(x: 2, y: 14),
-            Position(x: 5, y: 14),
-            Position(x: 8, y: 14),
-            Position(x: 11, y: 14),
-            Position(x: 15, y: 14),
-            Position(x: 18, y: 14),
-            Position(x: 21, y: 14),
-            Position(x: 24, y: 14),
-            Position(x: 27, y: 14),
-            Position(x: 2, y: 28),
-            Position(x: 5, y: 28),
-            Position(x: 8, y: 28),
-            Position(x: 11, y: 28),
-            Position(x: 15, y: 28),
-            Position(x: 18, y: 28),
-            Position(x: 21, y: 28),
-            Position(x: 24, y: 28),
-            Position(x: 27, y: 28),
-        ]
+    let intersections: [Position] = [
+        Position(x: 2, y: 12),
+        Position(x: 5, y: 12),
+        Position(x: 8, y: 12),
+        Position(x: 11, y: 12),
+        Position(x: 15, y: 12),
+        Position(x: 18, y: 12),
+        Position(x: 21, y: 12),
+        Position(x: 24, y: 12),
+        Position(x: 27, y: 12),
+        Position(x: 2, y: 14),
+        Position(x: 5, y: 14),
+        Position(x: 8, y: 14),
+        Position(x: 11, y: 14),
+        Position(x: 15, y: 14),
+        Position(x: 18, y: 14),
+        Position(x: 21, y: 14),
+        Position(x: 24, y: 14),
+        Position(x: 27, y: 14),
+        Position(x: 2, y: 28),
+        Position(x: 5, y: 28),
+        Position(x: 8, y: 28),
+        Position(x: 11, y: 28),
+        Position(x: 15, y: 28),
+        Position(x: 18, y: 28),
+        Position(x: 21, y: 28),
+        Position(x: 24, y: 28),
+        Position(x: 27, y: 28),
+    ]
     let dogCaptureBlocks: [Position] = [
         Position(x: 0, y: 29),
         Position(x: 29, y: 29),
@@ -264,6 +341,7 @@ class ColumnGridManager: GridManager {
     let corners: [[Position]] = [
         [Position(x: 0, y: 13), Position(x: 29, y: 13)]
     ]
+    let allowedPositions: [[Position]] = []
     
     lazy var skipBlocks: [Position] = {
         var arr = [Position]()
@@ -437,6 +515,66 @@ class SquareGridManager: GridManager {
         ]
         return Grid(zone: positions, gates: gates)
     }()
+    let allowedPositions: [[Position]] = []
+    // Where horizontal block and vertical block intersects
+    let intersections = [
+        Position(x: 5, y: 3),
+        Position(x: 10, y: 3),
+        Position(x: 15, y: 3),
+        Position(x: 20, y: 3),
+        Position(x: 24, y: 3),
+        Position(x: 3, y: 4),
+        Position(x: 26, y: 4),
+        Position(x: 5, y: 5),
+        Position(x: 9, y: 5),
+        Position(x: 13, y: 5),
+        Position(x: 15, y: 5),
+        Position(x: 18, y: 5),
+        Position(x: 24, y: 5),
+        Position(x: 3, y: 9),
+        Position(x: 18, y: 9),
+        Position(x: 24, y: 9),
+        Position(x: 26, y: 9),
+        Position(x: 5, y: 11),
+        Position(x: 9, y: 11),
+        Position(x: 13, y: 11),
+        Position(x: 15, y: 13),
+        Position(x: 18, y: 13),
+        Position(x: 24, y: 13),
+        Position(x: 3, y: 14),
+        Position(x: 5, y: 14),
+        Position(x: 13, y: 14),
+        Position(x: 26, y: 14),
+        Position(x: 16, y: 15),
+        Position(x: 24, y: 15),
+        Position(x: 5, y: 16),
+        Position(x: 11, y: 16),
+        Position(x: 14, y: 16),
+        Position(x: 16, y: 18),
+        Position(x: 20, y: 18),
+        Position(x: 24, y: 18),
+        Position(x: 3, y: 19),
+        Position(x: 26, y: 19),
+        Position(x: 5, y: 20),
+        Position(x: 11, y: 20),
+        Position(x: 5, y: 24),
+        Position(x: 11, y: 24),
+        Position(x: 14, y: 24),
+        Position(x: 16, y: 24),
+        Position(x: 20, y: 24),
+        Position(x: 24, y: 24),
+        Position(x: 3, y: 25),
+        Position(x: 26, y: 25),
+        Position(x: 5, y: 26),
+        Position(x: 10, y: 26),
+        Position(x: 15, y: 26),
+        Position(x: 20, y: 26),
+        Position(x: 24, y: 26),
+        Position(x: 5, y: 15),
+        Position(x: 24, y: 14),
+        Position(x: 14, y: 5),
+        Position(x: 15, y: 24),
+    ]
     lazy var skipBlocks: [Position] = {
         var arr = [Position]()
         for grid in createGrid() {
@@ -444,65 +582,6 @@ class SquareGridManager: GridManager {
                 arr.append(gate)
             }
         }
-        // Where horizontal block and vertical block intersects
-        let intersections = [
-            Position(x: 5, y: 3),
-            Position(x: 10, y: 3),
-            Position(x: 15, y: 3),
-            Position(x: 20, y: 3),
-            Position(x: 24, y: 3),
-            Position(x: 3, y: 4),
-            Position(x: 26, y: 4),
-            Position(x: 5, y: 5),
-            Position(x: 9, y: 5),
-            Position(x: 13, y: 5),
-            Position(x: 15, y: 5),
-            Position(x: 18, y: 5),
-            Position(x: 24, y: 5),
-            Position(x: 3, y: 9),
-            Position(x: 18, y: 9),
-            Position(x: 24, y: 9),
-            Position(x: 26, y: 9),
-            Position(x: 5, y: 11),
-            Position(x: 9, y: 11),
-            Position(x: 13, y: 11),
-            Position(x: 15, y: 13),
-            Position(x: 18, y: 13),
-            Position(x: 24, y: 13),
-            Position(x: 3, y: 14),
-            Position(x: 5, y: 14),
-            Position(x: 13, y: 14),
-            Position(x: 26, y: 14),
-            Position(x: 16, y: 15),
-            Position(x: 24, y: 15),
-            Position(x: 5, y: 16),
-            Position(x: 11, y: 16),
-            Position(x: 14, y: 16),
-            Position(x: 16, y: 18),
-            Position(x: 20, y: 18),
-            Position(x: 24, y: 18),
-            Position(x: 3, y: 19),
-            Position(x: 26, y: 19),
-            Position(x: 5, y: 20),
-            Position(x: 11, y: 20),
-            Position(x: 5, y: 24),
-            Position(x: 11, y: 24),
-            Position(x: 14, y: 24),
-            Position(x: 16, y: 24),
-            Position(x: 20, y: 24),
-            Position(x: 24, y: 24),
-            Position(x: 3, y: 25),
-            Position(x: 26, y: 25),
-            Position(x: 5, y: 26),
-            Position(x: 10, y: 26),
-            Position(x: 15, y: 26),
-            Position(x: 20, y: 26),
-            Position(x: 24, y: 26),
-            Position(x: 5, y: 15),
-            Position(x: 24, y: 14),
-            Position(x: 14, y: 5),
-            Position(x: 15, y: 24),
-        ]
         return arr + intersections
     }()
 
