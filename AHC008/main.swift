@@ -31,12 +31,12 @@ func main() {
     let field = Field()
     field.addPlayers(players: humans + pets)
     let gridManager: GridManager = {
-//        if (Double(N) / Double(M)) > 2.0
-//            || PetUtil.getPetCount(pets: pets, for: .dog) >= 5
-//            || PetUtil.getPetCount(pets: pets, for: .cat) >= 5 {
-//            return ColumnGridManager()
+//        let haveManyCatOrDog = (PetUtil.getPetCount(pets: pets, for: .dog) >= 7 || PetUtil.getPetCount(pets: pets, for: .cat) >= 5)
+//        if (Double(N) / Double(M)) >= 2.7 ||
+//            (haveManyCatOrDog && N <= 6) {
+            return ColumnGridManager()
 //        }
-        return SquareGridManager()
+//        return SquareGridManager()
     }()
     let director = SquareGridJobDirector(
         field: field,

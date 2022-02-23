@@ -31,6 +31,185 @@ extension GridManager {
     }
 }
 
+class ColumnGridManagerV2: GridManager {
+    private let intersections: [Position] = [
+            Position(x: 2, y: 12),
+            Position(x: 5, y: 12),
+            Position(x: 8, y: 12),
+            Position(x: 11, y: 12),
+            Position(x: 15, y: 12),
+            Position(x: 18, y: 12),
+            Position(x: 21, y: 12),
+            Position(x: 24, y: 12),
+            Position(x: 27, y: 12),
+            Position(x: 2, y: 14),
+            Position(x: 5, y: 14),
+            Position(x: 8, y: 14),
+            Position(x: 11, y: 14),
+            Position(x: 15, y: 14),
+            Position(x: 18, y: 14),
+            Position(x: 21, y: 14),
+            Position(x: 24, y: 14),
+            Position(x: 27, y: 14),
+            Position(x: 2, y: 28),
+            Position(x: 5, y: 28),
+            Position(x: 8, y: 28),
+            Position(x: 11, y: 28),
+            Position(x: 15, y: 28),
+            Position(x: 18, y: 28),
+            Position(x: 21, y: 28),
+            Position(x: 24, y: 28),
+            Position(x: 27, y: 28),
+        ]
+    let dogCaptureBlocks: [Position] = [
+        Position(x: 0, y: 29),
+        Position(x: 29, y: 29),
+    ]
+    let dogCapturePositions: [Position] = [
+        Position(x: 0, y: 28),
+        Position(x: 29, y: 28),
+    ]
+    lazy var dogCaptureGrid: Grid = {
+        var positions = [Position]()
+        for x in 1 ..< fieldSize - 1 {
+            if intersections.contains(Position(x: x, y: 28)) {
+                positions.append(Position(x: x, y: 28))
+            }
+            positions.append(Position(x: x, y: 29))
+        }
+        let gates: [Position] = [
+            Position(x: 0, y: 29),
+            Position(x: 29, y: 29),
+        ]
+        return Grid(zone: positions, gates: gates)
+    }()
+    let corners: [Position] = [
+        Position(x: 0, y: 13),
+        Position(x: 29, y: 13)
+    ]
+    
+    lazy var skipBlocks: [Position] = {
+        var arr = [Position]()
+        for grid in createGrid() {
+            for gate in grid.gates {
+                arr.append(gate)
+            }
+        }
+        return arr + intersections
+    }()
+
+    func createGridJobs() -> [Schedule.Job] {
+        var jobs = [Schedule.Job]()
+        let xs = [[2, 5], [8, 11], [18, 21], [24, 27]]
+        for x in xs {
+            var job = Schedule.Job(units: [])
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[1], y: 27),
+                    to: Position(x: x[1], y: 15),
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createBlockJobWithMove(
+                    from: Position(x: x[1] - 1, y: 13),
+                    to: Position(x: x[1] + 1, y: 13),
+                    checkDirections: [.up, .down],
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[1], y: 11),
+                    to: Position(x: x[1], y: 1),
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                Schedule.Job(units: [
+                    .init(kind: .move, pos: Position(x: x[1] - 1, y: 0)),
+                    .init(kind: .block, pos: Position(x: x[1], y: 0)),
+                ])
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[0], y: 0),
+                    to: Position(x: x[0], y: 11),
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createBlockJobWithMove(
+                    from: Position(x: x[0] - 1, y: 13),
+                    to: Position(x: x[0] + 1, y: 13),
+                    checkDirections: [.up, .down],
+                    skipBlocks: skipBlocks
+                )
+            job +=
+                JobUtil.createLineBlockJob(
+                    from: Position(x: x[0], y: 15),
+                    to: Position(x: x[0], y: 27),
+                    skipBlocks: skipBlocks
+                )
+            jobs.append(job)
+        }
+        
+        var centerJob = Schedule.Job(units: [])
+        centerJob +=
+            JobUtil.createLineBlockJob(
+                from: Position(x: 15, y: 0),
+                to: Position(x: 15, y: 11),
+                skipBlocks: skipBlocks
+            )
+        centerJob +=
+            JobUtil.createBlockJobWithMove(
+                from: Position(x: 15 - 1, y: 13),
+                to: Position(x: 15 + 1, y: 13),
+                checkDirections: [.up, .down],
+                skipBlocks: skipBlocks
+            )
+        centerJob +=
+            JobUtil.createLineBlockJob(
+                from: Position(x: 15, y: 15),
+                to: Position(x: 15, y: 27),
+                skipBlocks: skipBlocks
+            )
+        centerJob +=
+            JobUtil.createLineBlockJob(
+                from: Position(x: 1, y: 28),
+                to: Position(x: 28, y: 28),
+                skipBlocks: skipBlocks
+            )
+        
+        jobs.append(centerJob)
+        return jobs
+    }
+    
+    func createGrid() -> [Grid] {
+        var grids = [Grid]()
+        let xs = [0, 3, 6, 9, 12, 16, 19, 22, 25, 28]
+        for x in xs {
+            for y in [0, 15] {
+                var zone: [Position] = Util.createSquare(
+                    top: y,
+                    left: x,
+                    width: x == 12 ? 3 : 2,
+                    height: y == 0 ? 12 : 13
+                )
+                if x == 0 && y == 15 {
+                    zone.append(Position(x: 0, y: 28))
+                }
+                else if x == 28 && y == 15 {
+                    zone.append(Position(x: 29, y: 28))
+                }
+                grids.append(
+                    Grid(
+                        zone: zone,
+                        gates: [Position(x: x + (x == 0 ? 0 : 1), y: y == 0 ? 12 : 14)]
+                    )
+                )
+            }
+        }
+        return grids
+    }
+}
+
+
 class ColumnGridManager: GridManager {
     private let intersections: [Position] = [
             Position(x: 2, y: 12),
