@@ -30,11 +30,19 @@ func main() {
     
     let field = Field()
     field.addPlayers(players: humans + pets)
+    let gridManager: GridManager = {
+//        if (Double(N) / Double(M)) > 2.0
+//            || PetUtil.getPetCount(pets: pets, for: .dog) >= 5
+//            || PetUtil.getPetCount(pets: pets, for: .cat) >= 5 {
+//            return ColumnGridManager()
+//        }
+        return SquareGridManager()
+    }()
     let director = SquareGridJobDirector(
         field: field,
         humans: humans,
         pets: pets,
-        gridManager: ColumnGridManager()
+        gridManager: gridManager
     )
     let manager = Manager(
         field: field,
