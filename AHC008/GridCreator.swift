@@ -5,7 +5,6 @@ protocol GridManager {
     var skipBlocks: [Position] { get }
     var corners: [[Position]] { get }
     var intersections: [Position] { get }
-    var allowedPositions: [[Position]] { get }
     func createGrid() -> [Grid]
     func createGridJobs() -> [Schedule.Job]
 }
@@ -108,14 +107,6 @@ class ColumnGridManagerV2: GridManager {
         [Position(x: 0, y: 18), Position(x: 29, y: 18)],
         [Position(x: 0, y: 18), Position(x: 29, y: 18)],
         [Position(x: 0, y: 8), Position(x: 29, y: 8)],
-    ]
-    let allowedPositions: [[Position]] = [
-        [Position(x: 0, y: 9), Position(x: 0, y: 17), Position(x: 0, y: 19),
-         Position(x: 29, y: 9), Position(x: 29, y: 17), Position(x: 29, y: 19),],
-        [],
-        [],
-        [Position(x: 0, y: 9), Position(x: 0, y: 17), Position(x: 0, y: 19),
-         Position(x: 29, y: 9), Position(x: 29, y: 17), Position(x: 29, y: 19),],
     ]
     
     lazy var skipBlocks: [Position] = {
@@ -341,7 +332,6 @@ class ColumnGridManager: GridManager {
     let corners: [[Position]] = [
         [Position(x: 0, y: 13), Position(x: 29, y: 13)]
     ]
-    let allowedPositions: [[Position]] = []
     
     lazy var skipBlocks: [Position] = {
         var arr = [Position]()
@@ -515,7 +505,6 @@ class SquareGridManager: GridManager {
         ]
         return Grid(zone: positions, gates: gates)
     }()
-    let allowedPositions: [[Position]] = []
     // Where horizontal block and vertical block intersects
     let intersections = [
         Position(x: 5, y: 3),

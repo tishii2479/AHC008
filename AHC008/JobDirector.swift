@@ -46,17 +46,12 @@ class SquareGridJobDirector: JobDirector {
     private lazy var corners: [[Position]] = {
         gridManager.corners
     }()
-    private lazy var allowedPositions: [[Position]] = {
-        gridManager.allowedPositions
-    }()
     
-    private func getNonAllowedPositions(idx: Int) -> [Position] {
+    private var nonAllowedPositions: [Position] {
         var positions = [Position]()
         for grid in grids {
             for gate in grid.gates {
-                if !allowedPositions[idx % allowedPositions.count].contains(gate) {
-                    positions.append(gate)
-                }
+                positions.append(gate)
             }
         }
         positions += gridManager.intersections
@@ -80,7 +75,7 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureDogJob()
             for human in humans {
-                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 5, grids: grids)
+                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
             }
         }
         if 100 <= turn && turn <= 299 {
@@ -89,12 +84,11 @@ class SquareGridJobDirector: JobDirector {
                 didCaptureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
-                for (i, human) in humans.enumerated() {
+                for human in humans {
                     human.brain =
                         HumanBrainWithGridKnowledge(
                             petCaptureLimit: 1,
-                            notAllowedPositions: getNonAllowedPositions(idx: i),
-                            treatAsGrid: corners[(i + 1) % corners.count],
+                            notAllowedPositions: nonAllowedPositions,
                             grids: grids
                         )
                 }
