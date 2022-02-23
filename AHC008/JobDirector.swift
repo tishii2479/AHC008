@@ -46,6 +46,9 @@ class SquareGridJobDirector: JobDirector {
     private lazy var corners: [[Position]] = {
         gridManager.corners
     }()
+    private lazy var corners: [[Position]] = {
+        gridManager.corners
+    }()
     private lazy var notAllowedPositions: [Position] = {
         var positions = [Position]()
         for grid in grids {
