@@ -8,18 +8,19 @@
 import XCTest
 
 class JobDirectorTest: XCTestCase {
-    private var director: JobDirector!
+    private var director: SquareGridJobDirector!
     private var manager: Manager!
     private var field: Field!
     private var humans: [Human]!
     private var pets: [Pet]!
+    private let gridManager: GridManager = SquareGridManager()
     
     override func setUp() {
         field = Field()
         humans = [Human]()
         for i in 0 ..< 5 {
             humans.append(
-                Human(pos: Position(x: Int.random(in: 0 ..< fieldSize), y: Int.random(in: 0 ..< fieldSize)),
+                Human(pos: Position(x: 15, y: 15),
                       id: i, brain: BasicHumanBrain()))
         }
         pets = []
@@ -27,7 +28,7 @@ class JobDirectorTest: XCTestCase {
             field: field,
             humans: humans,
             pets: pets,
-            gridManager: SquareGridManager()
+            gridManager: gridManager
         )
         manager = Manager(
             field: field,
@@ -42,8 +43,13 @@ class JobDirectorTest: XCTestCase {
     func testBlockJobPerformance() throws {
         let expected: Int = 252
         for turn in 0 ..< 300 {
-            director.directJobs(turn: turn)
             manager.processTurn(turn: turn)
+            
+            if turn == 0 {
+                for human in humans {
+                    IO.log(human.jobCost)
+                }
+            }
             
             var count: Int = 0
             for y in 0 ..< fieldSize {
@@ -52,7 +58,7 @@ class JobDirectorTest: XCTestCase {
                 }
             }
             
-            if count >= expected {
+            if director.didCaptureDog && count >= expected {
                 XCTAssertTrue(true)
                 field.dump()
                 IO.log("Finished in turn: \(turn)")

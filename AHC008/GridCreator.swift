@@ -61,10 +61,10 @@ class SquareGridManager: GridManager {
         positions.append(Position(x: 13, y: 14))
         positions.append(Position(x: 16, y: 15))
         positions.append(Position(x: 14, y: 16))
-        positions.append(Position(x: 9, y: 14))
-        positions.append(Position(x: 15, y: 9))
-        positions.append(Position(x: 14, y: 20))
-        positions.append(Position(x: 20, y: 15))
+        positions.append(Position(x: 11, y: 16))
+        positions.append(Position(x: 18, y: 13))
+        positions.append(Position(x: 13, y: 11))
+        positions.append(Position(x: 16, y: 18))
         
         let gates: [Position] = [
             Position(x: 7, y: 15),

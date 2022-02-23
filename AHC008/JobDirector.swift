@@ -39,7 +39,7 @@ class SquareGridJobDirector: JobDirector {
     private var gridManager: GridManager
 
     private var grids = [Grid]()
-    private var didCaputureDog: Bool = false
+    private(set) var didCaptureDog: Bool = false
     private lazy var dogCount: Int = {
         return PetUtil.getPetCount(pets: pets, for: .dog)
     }()
@@ -76,57 +76,16 @@ class SquareGridJobDirector: JobDirector {
         if 100 <= turn && turn <= 299 {
             if isPreparedToCaptureDog(turn: turn) {
                 IO.log("Captured dog at turn: \(turn)", type: .info)
-                didCaputureDog = true
+                didCaptureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
                 for human in humans {
                     human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, notAllowedPositions: notAllowedPositions, grids: grids)
                 }
             }
-            else if didCaputureDog {
-                // TODO: Refactor
-                let compare: Compare = { (testHuman, currentAssignee, job) in
-                    guard let brain1 = testHuman.brain as? HumanBrainWithGridKnowledge,
-                          brain1.target == nil else {
-                        return currentAssignee
-                    }
-                    guard let brain2 = currentAssignee.brain as? HumanBrainWithGridKnowledge,
-                          brain2.target == nil else {
-                        return testHuman
-                    }
-                    if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
-                        return testHuman
-                    }
-                    return currentAssignee
-                }
-                for pet in pets {
-                    if pet.isCaptured { continue }
-                    for grid in grids + [gridManager.dogCaptureGrid] {
-                        if grid.isClosed(field: field) && grid.zone.contains(pet.pos) {
-                            for human in humans {
-                                if human.brain.target?.id == pet.id {
-                                    IO.log(turn,"Remove target:", pet.pos, human.pos, pet.id, human.id, type: .info)
-                                    human.brain.target = nil
-                                }
-                            }
-                            pet.isCaptured = true
-                            break
-                        }
-                    }
-                    if pet.isCaptured { continue }
-                    let tmpJob = Schedule.Job(units: [
-                        .init(kind: .move, pos: pet.pos)
-                    ])
-                    if pet.assignee == nil {
-                        if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
-                           assignee.brain.target == nil {
-                            IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id, type: .info)
-                            assignee.brain.target = pet
-                            pet.assignee = assignee
-                        }
-                    }
-                }
-                findGridAndAssignBlockJob(turn: turn)
+            else if didCaptureDog {
+                findPetAndAssign(turn: turn)
+//                findGridAndAssignBlockJob(turn: turn)
             }
         }
     }
@@ -155,7 +114,7 @@ extension SquareGridJobDirector {
     }
 
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
-        guard !didCaputureDog else { return false }
+        guard !didCaptureDog else { return false }
         for pos in gridManager.dogCaptureGrid.zone {
             if field.getHumanCount(at: pos) > 0 { return false }
         }
@@ -227,6 +186,49 @@ extension SquareGridJobDirector {
             }
             if i % 4 == 2 {
                 corners.reverse()
+            }
+        }
+    }
+    
+    private func findPetAndAssign(turn: Int) {
+        // TODO: Refactor
+        let compare: Compare = { (testHuman, currentAssignee, job) in
+            guard testHuman.brain.target == nil else {
+                return currentAssignee
+            }
+            guard currentAssignee.brain.target == nil else {
+                return testHuman
+            }
+            if testHuman.pos.dist(to: job.nextUnit?.pos) < currentAssignee.pos.dist(to: job.nextUnit?.pos) {
+                return testHuman
+            }
+            return currentAssignee
+        }
+        for pet in pets {
+            if pet.isCaptured { continue }
+            for grid in grids + [gridManager.dogCaptureGrid] {
+                if grid.isClosed(field: field) && grid.zone.contains(pet.pos) {
+                    for human in humans {
+                        if human.brain.target?.id == pet.id {
+                            IO.log(turn,"Remove target:", pet.pos, human.pos, pet.id, human.id, type: .info)
+                            human.brain.target = nil
+                        }
+                    }
+                    pet.isCaptured = true
+                    break
+                }
+            }
+            if pet.isCaptured { continue }
+            let tmpJob = Schedule.Job(units: [
+                .init(kind: .move, pos: pet.pos)
+            ])
+            if pet.assignee == nil {
+                if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
+                   assignee.brain.target == nil {
+                    IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id, type: .info)
+                    assignee.brain.target = pet
+                    pet.assignee = assignee
+                }
             }
         }
     }
