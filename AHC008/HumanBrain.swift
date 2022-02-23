@@ -42,6 +42,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
     let grids: [Grid]
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
+        let notAllowedPositionsOutsideGrid = isInGrid(pos: pos) ? [] : notAllowedPositions
         guard let jobUnit = jobUnit else { return [.none] }
         switch jobUnit.kind {
         case .move:
@@ -57,7 +58,8 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     }
                 }
             }
-            return CommandUtil.calcShortestMove(from: pos, to: target?.pos ?? jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions).shuffled()
+            let to = isInGrid(pos: pos) ? jobUnit.pos : (target?.pos ?? jobUnit.pos)
+            return CommandUtil.calcShortestMove(from: pos, to: to, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid).shuffled()
         case .close:
             for grid in grids {
                 for gate in grid.gates {
@@ -71,7 +73,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     }
                 }
             }
-            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions).shuffled()
+            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid).shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
@@ -89,10 +91,18 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions)
+                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid)
                 if cand.count == 0 { return [.none] }
                 return cand.shuffled()
             }
         }
+    }
+    
+    private func isInGrid(pos: Position) -> Bool {
+        for grid in grids {
+            if grid.zone.contains(pos)
+            || grid.gates.contains(pos) { return true }
+        }
+        return false
     }
 }
