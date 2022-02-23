@@ -3,6 +3,7 @@ protocol GridManager {
     var dogCapturePositions: [Position] { get }
     var dogCaptureGrid: Grid { get }
     var skipBlocks: [Position] { get }
+    var corners: [[Position]] { get }
     func createGrid() -> [Grid]
     func createGridJobs() -> [Schedule.Job]
 }
@@ -42,6 +43,12 @@ class SquareGridManager: GridManager {
         Position(x: 15, y: 23),
         Position(x: 23, y: 14),
         Position(x: 14, y: 6),
+    ]
+    let corners: [[Position]] = [
+        [Position(x: 4, y: 25), Position(x: 25, y: 25), Position(x: 25, y: 4), Position(x: 4, y: 4),],
+        [Position(x: 25, y: 25), Position(x: 25, y: 4), Position(x: 4, y: 4), Position(x: 4, y: 25),],
+        [Position(x: 25, y: 4), Position(x: 4, y: 4), Position(x: 4, y: 25), Position(x: 25, y: 25),],
+        [Position(x: 4, y: 4), Position(x: 4, y: 25), Position(x: 25, y: 25), Position(x: 25, y: 4),],
     ]
     let dogCaptureGrid: Grid = {
         var positions = [Position]()
