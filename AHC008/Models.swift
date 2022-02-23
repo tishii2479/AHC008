@@ -113,6 +113,7 @@ struct Schedule {
                 case move
                 case block
                 case close
+                case forceMove
             }
             var kind: Kind
             var pos: Position

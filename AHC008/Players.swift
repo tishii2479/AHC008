@@ -83,7 +83,7 @@ class Human: Player {
         // Check job completion
         guard let nextUnit = currentJobUnit else { return }
         switch nextUnit.kind {
-        case .move:
+        case .move, .forceMove:
             if pos == nextUnit.pos || field.checkBlock(at: nextUnit.pos) {
                 clearCurrentJob()
             }
