@@ -270,6 +270,7 @@ extension SquareGridJobDirector {
                 }
                 let job = Schedule.Job(units: units)
                 if let assignee = findAssignee(job: job, humans: humans, compare: compare) {
+                    IO.log(turn, "Job assigned for grid: \(grids[i].gates), assignee: \(assignee.pos)", type: .info)
                     grids[i].assignee = assignee
                     assignee.assign(job: job, isMajor: true)
                 }
