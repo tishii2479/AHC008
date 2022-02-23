@@ -34,79 +34,63 @@ extension GridManager {
 
 class ColumnGridManagerV2: GridManager {
     let intersections: [Position] = [
-        Position(x: 2, y: 7),
-        Position(x: 5, y: 7),
-        Position(x: 8, y: 7),
-        Position(x: 11, y: 7),
-        Position(x: 15, y: 7),
-        Position(x: 18, y: 7),
-        Position(x: 21, y: 7),
-        Position(x: 24, y: 7),
-        Position(x: 27, y: 7),
-        Position(x: 2, y: 9),
-        Position(x: 5, y: 9),
-        Position(x: 8, y: 9),
-        Position(x: 11, y: 9),
-        Position(x: 15, y: 9),
-        Position(x: 18, y: 9),
-        Position(x: 21, y: 9),
-        Position(x: 24, y: 9),
-        Position(x: 27, y: 9),
-        Position(x: 2, y: 17),
-        Position(x: 5, y: 17),
-        Position(x: 8, y: 17),
-        Position(x: 11, y: 17),
-        Position(x: 15, y: 17),
-        Position(x: 18, y: 17),
-        Position(x: 21, y: 17),
-        Position(x: 24, y: 17),
-        Position(x: 27, y: 17),
+        Position(x: 2, y: 8),
+        Position(x: 5, y: 8),
+        Position(x: 8, y: 8),
+        Position(x: 11, y: 8),
+        Position(x: 15, y: 8),
+        Position(x: 19, y: 8),
+        Position(x: 22, y: 8),
+        Position(x: 25, y: 8),
+        Position(x: 2, y: 10),
+        Position(x: 5, y: 10),
+        Position(x: 8, y: 10),
+        Position(x: 11, y: 10),
+        Position(x: 15, y: 10),
+        Position(x: 19, y: 10),
+        Position(x: 22, y: 10),
+        Position(x: 25, y: 10),
         Position(x: 2, y: 19),
         Position(x: 5, y: 19),
         Position(x: 8, y: 19),
         Position(x: 11, y: 19),
         Position(x: 15, y: 19),
-        Position(x: 18, y: 19),
-        Position(x: 21, y: 19),
-        Position(x: 24, y: 19),
-        Position(x: 27, y: 19),
-        Position(x: 2, y: 28),
-        Position(x: 5, y: 28),
-        Position(x: 8, y: 28),
-        Position(x: 11, y: 28),
-        Position(x: 15, y: 28),
-        Position(x: 18, y: 28),
-        Position(x: 21, y: 28),
-        Position(x: 24, y: 28),
-        Position(x: 27, y: 28),
+        Position(x: 19, y: 19),
+        Position(x: 22, y: 19),
+        Position(x: 25, y: 19),
+        Position(x: 2, y: 21),
+        Position(x: 5, y: 21),
+        Position(x: 8, y: 21),
+        Position(x: 11, y: 21),
+        Position(x: 15, y: 21),
+        Position(x: 19, y: 21),
+        Position(x: 22, y: 21),
+        Position(x: 25, y: 21),
     ]
     let dogCaptureBlocks: [Position] = [
-        Position(x: 0, y: 29),
+        Position(x: 29, y: 0),
         Position(x: 29, y: 29),
     ]
     let dogCapturePositions: [Position] = [
-        Position(x: 0, y: 28),
+        Position(x: 29, y: 1),
         Position(x: 29, y: 28),
     ]
     lazy var dogCaptureGrid: Grid = {
         var positions = [Position]()
-        for x in 1 ..< fieldSize - 1 {
-            if intersections.contains(Position(x: x, y: 28)) {
-                positions.append(Position(x: x, y: 28))
-            }
-            positions.append(Position(x: x, y: 29))
+        for y in 1 ..< fieldSize - 1 {
+            positions.append(Position(x: 29, y: y))
         }
         let gates: [Position] = [
-            Position(x: 0, y: 29),
-            Position(x: 29, y: 29),
+            Position(x: 29, y: 1),
+            Position(x: 29, y: 28),
         ]
         return Grid(zone: positions, gates: gates)
     }()
     let corners: [[Position]] = [
-        [Position(x: 0, y: 8), Position(x: 29, y: 8)],
-        [Position(x: 0, y: 18), Position(x: 29, y: 18)],
-        [Position(x: 0, y: 18), Position(x: 29, y: 18)],
-        [Position(x: 0, y: 8), Position(x: 29, y: 8)],
+        [Position(x: 0, y: 9), Position(x: 27, y: 9)],
+        [Position(x: 0, y: 20), Position(x: 27, y: 20)],
+        [Position(x: 0, y: 20), Position(x: 27, y: 20)],
+        [Position(x: 0, y: 9), Position(x: 27, y: 9)],
     ]
     
     lazy var skipBlocks: [Position] = {
@@ -121,76 +105,76 @@ class ColumnGridManagerV2: GridManager {
 
     func createGridJobs() -> [Schedule.Job] {
         var jobs = [Schedule.Job]()
-        let xs = [[2, 5], [8, 11], [18, 21], [24, 27]]
+        let xs = [[2, 5], [8, 11], [15, 19], [22, 25]]
         for x in xs {
             var job = Schedule.Job(units: [])
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 27),
-                    to: Position(x: x[1], y: 20),
+                    from: Position(x: x[0], y: 29),
+                    to: Position(x: x[0], y: 22),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[1] - 1, y: 18),
-                    to: Position(x: x[1] + 1, y: 18),
+                    from: Position(x: x[0] - 1, y: 20),
+                    to: Position(x: x[0] + 1, y: 20),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 16),
-                    to: Position(x: x[1], y: 10),
+                    from: Position(x: x[0], y: 18),
+                    to: Position(x: x[0], y: 11),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[1] - 1, y: 8),
-                    to: Position(x: x[1] + 1, y: 8),
+                    from: Position(x: x[0] - 1, y: 9),
+                    to: Position(x: x[0] + 1, y: 9),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 6),
-                    to: Position(x: x[1], y: 1),
+                    from: Position(x: x[0], y: 7),
+                    to: Position(x: x[0], y: 1),
                     skipBlocks: skipBlocks
                 )
             job +=
                 Schedule.Job(units: [
-                    .init(kind: .move, pos: Position(x: x[1] - 1, y: 0)),
-                    .init(kind: .block, pos: Position(x: x[1], y: 0)),
+                    .init(kind: .move, pos: Position(x: x[0] + 1, y: 0)),
+                    .init(kind: .block, pos: Position(x: x[0], y: 0)),
                 ])
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 0),
-                    to: Position(x: x[0], y: 6),
+                    from: Position(x: x[1], y: 0),
+                    to: Position(x: x[1], y: 7),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[0] - 1, y: 8),
-                    to: Position(x: x[0] + 1, y: 8),
+                    from: Position(x: x[1] - 1, y: 9),
+                    to: Position(x: x[1] + 1, y: 9),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 10),
-                    to: Position(x: x[0], y: 16),
+                    from: Position(x: x[1], y: 11),
+                    to: Position(x: x[1], y: 18),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[0] - 1, y: 18),
-                    to: Position(x: x[0] + 1, y: 18),
+                    from: Position(x: x[1] - 1, y: 20),
+                    to: Position(x: x[1] + 1, y: 20),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 20),
-                    to: Position(x: x[0], y: 27),
+                    from: Position(x: x[1], y: 22),
+                    to: Position(x: x[1], y: 29),
                     skipBlocks: skipBlocks
                 )
             jobs.append(job)
@@ -199,39 +183,7 @@ class ColumnGridManagerV2: GridManager {
         var centerJob = Schedule.Job(units: [])
         centerJob +=
             JobUtil.createLineBlockJob(
-                from: Position(x: 15, y: 0),
-                to: Position(x: 15, y: 6),
-                skipBlocks: skipBlocks
-            )
-        centerJob +=
-            JobUtil.createBlockJobWithMove(
-                from: Position(x: 15 - 1, y: 8),
-                to: Position(x: 15 + 1, y: 8),
-                checkDirections: [.up, .down],
-                skipBlocks: skipBlocks
-            )
-        centerJob +=
-            JobUtil.createLineBlockJob(
-                from: Position(x: 15, y: 10),
-                to: Position(x: 15, y: 16),
-                skipBlocks: skipBlocks
-            )
-        centerJob +=
-            JobUtil.createBlockJobWithMove(
-                from: Position(x: 15 - 1, y: 18),
-                to: Position(x: 15 + 1, y: 18),
-                checkDirections: [.up, .down],
-                skipBlocks: skipBlocks
-            )
-        centerJob +=
-            JobUtil.createLineBlockJob(
-                from: Position(x: 15, y: 20),
-                to: Position(x: 15, y: 27),
-                skipBlocks: skipBlocks
-            )
-        centerJob +=
-            JobUtil.createLineBlockJob(
-                from: Position(x: 1, y: 28),
+                from: Position(x: 28, y: 1),
                 to: Position(x: 28, y: 28),
                 skipBlocks: skipBlocks
             )
@@ -242,25 +194,27 @@ class ColumnGridManagerV2: GridManager {
     
     func createGrid() -> [Grid] {
         var grids = [Grid]()
-        let xs = [0, 3, 6, 9, 12, 16, 19, 22, 25, 28]
+        let xs = [0, 3, 6, 9, 12, 16, 20, 23, 26]
         for x in xs {
-            for y in [0, 10, 20] {
+            for y in [0, 11, 22] {
                 var zone: [Position] = Util.createSquare(
                     top: y,
                     left: x,
-                    width: x == 12 ? 3 : 2,
-                    height: y == 20 ? 8 : 7
+                    width: (x == 12 || x == 16) ? 3 : 2,
+                    height: 8
                 )
-                if x == 0 && y == 20 {
-                    zone.append(Position(x: 0, y: 28))
+                if x == 26 && y == 0 {
+                    zone.append(Position(x: 28, y: 0))
+                    zone.append(Position(x: 29, y: 0))
                 }
-                else if x == 28 && y == 20 {
-                    zone.append(Position(x: 29, y: 28))
+                else if x == 26 && y == 22 {
+                    zone.append(Position(x: 28, y: 29))
+                    zone.append(Position(x: 29, y: 29))
                 }
                 let gateY: [Int] = {
-                    if y == 0 { return [7] }
-                    if y == 10 { return [9, 17] }
-                    return [19]
+                    if y == 0 { return [8] }
+                    if y == 11 { return [10, 19] }
+                    return [21]
                 }()
                 grids.append(
                     Grid(
@@ -272,6 +226,7 @@ class ColumnGridManagerV2: GridManager {
                 )
             }
         }
+        dumpGrids(grids: grids + [dogCaptureGrid])
         return grids
     }
 }
@@ -374,21 +329,21 @@ class ColumnGridManager: GridManager {
                 ])
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 0),
-                    to: Position(x: x[0], y: 11),
+                    from: Position(x: x[1], y: 0),
+                    to: Position(x: x[1], y: 11),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[0] - 1, y: 13),
-                    to: Position(x: x[0] + 1, y: 13),
+                    from: Position(x: x[1] - 1, y: 13),
+                    to: Position(x: x[1] + 1, y: 13),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[0], y: 15),
-                    to: Position(x: x[0], y: 27),
+                    from: Position(x: x[1], y: 15),
+                    to: Position(x: x[1], y: 27),
                     skipBlocks: skipBlocks
                 )
             jobs.append(job)

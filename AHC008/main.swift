@@ -34,9 +34,9 @@ func main() {
 //        let haveManyCatOrDog = (PetUtil.getPetCount(pets: pets, for: .dog) >= 7 || PetUtil.getPetCount(pets: pets, for: .cat) >= 5)
 //        if (Double(N) / Double(M)) >= 2.7 ||
 //            (haveManyCatOrDog && N <= 6) {
-            return ColumnGridManagerV2()
+//            return ColumnGridManagerV2()
 //        }
-//        return SquareGridManager()
+        return SquareGridManager()
     }()
     let director = SquareGridJobDirector(
         field: field,
