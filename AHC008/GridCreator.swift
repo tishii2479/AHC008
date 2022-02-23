@@ -68,8 +68,8 @@ class ColumnGridManagerV2: GridManager {
         Position(x: 25, y: 21),
     ]
     let dogCaptureBlocks: [Position] = [
-        Position(x: 29, y: 0),
-        Position(x: 29, y: 29),
+        Position(x: 29, y: 2),
+        Position(x: 29, y: 27),
     ]
     let dogCapturePositions: [Position] = [
         Position(x: 29, y: 1),
@@ -77,7 +77,7 @@ class ColumnGridManagerV2: GridManager {
     ]
     lazy var dogCaptureGrid: Grid = {
         var positions = [Position]()
-        for y in 1 ..< fieldSize - 1 {
+        for y in 2 ..< fieldSize - 2 {
             positions.append(Position(x: 29, y: y))
         }
         let gates: [Position] = [
@@ -226,7 +226,6 @@ class ColumnGridManagerV2: GridManager {
                 )
             }
         }
-        dumpGrids(grids: grids + [dogCaptureGrid])
         return grids
     }
 }
@@ -329,21 +328,21 @@ class ColumnGridManager: GridManager {
                 ])
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 0),
-                    to: Position(x: x[1], y: 11),
+                    from: Position(x: x[0], y: 0),
+                    to: Position(x: x[0], y: 11),
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createBlockJobWithMove(
-                    from: Position(x: x[1] - 1, y: 13),
-                    to: Position(x: x[1] + 1, y: 13),
+                    from: Position(x: x[0] - 1, y: 13),
+                    to: Position(x: x[0] + 1, y: 13),
                     checkDirections: [.up, .down],
                     skipBlocks: skipBlocks
                 )
             job +=
                 JobUtil.createLineBlockJob(
-                    from: Position(x: x[1], y: 15),
-                    to: Position(x: x[1], y: 27),
+                    from: Position(x: x[0], y: 15),
+                    to: Position(x: x[0], y: 27),
                     skipBlocks: skipBlocks
                 )
             jobs.append(job)

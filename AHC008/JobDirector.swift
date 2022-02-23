@@ -54,7 +54,6 @@ class SquareGridJobDirector: JobDirector {
                 positions.append(gate)
             }
         }
-        positions += gridManager.intersections
         return positions
     }
     
@@ -75,7 +74,7 @@ class SquareGridJobDirector: JobDirector {
             assignGridJob()
             assignPrepareForCaptureDogJob()
             for human in humans {
-                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: 1, grids: grids)
+                human.brain = HumanBrainWithGridKnowledge(petCaptureLimit: (gridManager is ColumnGridManager) ? 2 : 1, grids: grids)
             }
         }
         if 100 <= turn && turn <= 299 {
@@ -84,18 +83,20 @@ class SquareGridJobDirector: JobDirector {
                 didCaptureDog = true
                 assignCaptureDogJob()
                 assignCloseGateJob()
-                for human in humans {
-                    human.brain =
-                        HumanBrainWithGridKnowledge(
-                            petCaptureLimit: 1,
-                            notAllowedPositions: nonAllowedPositions,
-                            grids: grids
-                        )
-                }
             }
             else if didCaptureDog {
                 findPetAndAssign(turn: turn)
                 findGridAndAssignBlockJob(turn: turn)
+            }
+        }
+        if turn == 250 {
+            for human in humans {
+                human.brain =
+                    HumanBrainWithGridKnowledge(
+                        petCaptureLimit: 1,
+                        notAllowedPositions: nonAllowedPositions,
+                        grids: grids
+                    )
             }
         }
     }
