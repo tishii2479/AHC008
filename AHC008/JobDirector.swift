@@ -43,7 +43,7 @@ class SquareGridJobDirector: JobDirector {
     private lazy var dogCount: Int = {
         PetUtil.getPetCount(pets: pets, for: .dog)
     }()
-    private lazy var corners: [Position] = {
+    private lazy var corners: [[Position]] = {
         gridManager.corners
     }()
     private lazy var notAllowedPositions: [Position] = {
@@ -168,21 +168,14 @@ extension SquareGridJobDirector {
     
     private func assignCloseGateJob() {
         // Start working around and close gates
-        var units: [Schedule.Job.Unit] =
-            corners.map { .init(kind: .move, pos: $0) }
         for (i, human) in humans.enumerated() {
+            var units: [Schedule.Job.Unit] =
+                corners[i % corners.count].map { .init(kind: .move, pos: $0) }
+            if i >= corners.count { units.reverse() }
             for _ in 0 ..< 10 {
                 human.assign(
                     job: Schedule.Job(units: units)
                 )
-            }
-            let first = units[0]
-            for i in 0 ..< units.count - 1 {
-                units[i] = units[i + 1]
-            }
-            units[units.count - 1] = first
-            if i % 4 == 2 {
-                units.reverse()
             }
         }
     }

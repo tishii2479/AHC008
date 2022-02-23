@@ -3,7 +3,7 @@ protocol GridManager {
     var dogCapturePositions: [Position] { get }
     var dogCaptureGrid: Grid { get }
     var skipBlocks: [Position] { get }
-    var corners: [Position] { get }
+    var corners: [[Position]] { get }
     func createGrid() -> [Grid]
     func createGridJobs() -> [Schedule.Job]
 }
@@ -83,9 +83,8 @@ class ColumnGridManagerV2: GridManager {
         ]
         return Grid(zone: positions, gates: gates)
     }()
-    let corners: [Position] = [
-        Position(x: 0, y: 13),
-        Position(x: 29, y: 13)
+    let corners: [[Position]] = [
+        [Position(x: 0, y: 13), Position(x: 29, y: 13)]
     ]
     
     lazy var skipBlocks: [Position] = {
@@ -262,9 +261,8 @@ class ColumnGridManager: GridManager {
         ]
         return Grid(zone: positions, gates: gates)
     }()
-    let corners: [Position] = [
-        Position(x: 0, y: 13),
-        Position(x: 29, y: 13)
+    let corners: [[Position]] = [
+        [Position(x: 0, y: 13), Position(x: 29, y: 13)]
     ]
     
     lazy var skipBlocks: [Position] = {
@@ -402,6 +400,12 @@ class SquareGridManager: GridManager {
         Position(x: 23, y: 14),
         Position(x: 14, y: 6),
     ]
+    let corners: [[Position]] = [
+        [Position(x: 4, y: 25), Position(x: 25, y: 25), Position(x: 25, y: 4), Position(x: 4, y: 4),],
+        [Position(x: 25, y: 25), Position(x: 25, y: 4), Position(x: 4, y: 4), Position(x: 4, y: 25),],
+        [Position(x: 25, y: 4), Position(x: 4, y: 4), Position(x: 4, y: 25), Position(x: 25, y: 25),],
+        [Position(x: 4, y: 4), Position(x: 4, y: 25), Position(x: 25, y: 25), Position(x: 25, y: 4),],
+    ]
     let dogCaptureGrid: Grid = {
         var positions = [Position]()
         for x in 8 ... 14 {
@@ -433,12 +437,6 @@ class SquareGridManager: GridManager {
         ]
         return Grid(zone: positions, gates: gates)
     }()
-    let corners: [Position] = [
-        Position(x: 4, y: 25),
-        Position(x: 25, y: 25),
-        Position(x: 25, y: 4),
-        Position(x: 4, y: 4),
-    ]
     lazy var skipBlocks: [Position] = {
         var arr = [Position]()
         for grid in createGrid() {
