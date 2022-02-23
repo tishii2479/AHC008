@@ -47,6 +47,13 @@ class JobUtil {
         let direction = CommandUtil.deltaToMoveCommand(delta: to - from).first?.delta ?? .zero
         if direction == .zero {
             IO.log("Direction is zero from \(from) to \(to)", type: .warn)
+            units.append(.init(kind: .move, pos: from))
+            for direction in checkDirections {
+                let target = from + direction
+                if skipBlocks.contains(target) { continue }
+                units.append(.init(kind: .block, pos: target))
+            }
+            return Schedule.Job(units: units)
         }
         var current = from
         units.append(.init(kind: .move, pos: from))

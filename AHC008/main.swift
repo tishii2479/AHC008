@@ -34,7 +34,7 @@ func main() {
         field: field,
         humans: humans,
         pets: pets,
-        gridManager: SquareGridManager()
+        gridManager: PetUtil.getPetCount(pets: pets, for: .cat) >= 5 ? SquareGridManagerV2() : SquareGridManager()
     )
     let manager = Manager(
         field: field,
