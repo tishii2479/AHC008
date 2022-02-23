@@ -33,16 +33,16 @@ extension GridManager {
 
 class SquareGridManager: GridManager {
     let dogCaptureBlocks = [
-        Position(x: 7, y: 15),
-        Position(x: 15, y: 22),
-        Position(x: 22, y: 14),
-        Position(x: 14, y: 7),
-    ]
-    let dogCapturePositions = [
         Position(x: 6, y: 15),
         Position(x: 15, y: 23),
         Position(x: 23, y: 14),
         Position(x: 14, y: 6),
+    ]
+    let dogCapturePositions = [
+        Position(x: 5, y: 15),
+        Position(x: 15, y: 24),
+        Position(x: 24, y: 14),
+        Position(x: 14, y: 5),
     ]
     let corners: [[Position]] = [
         [Position(x: 4, y: 25), Position(x: 25, y: 25), Position(x: 25, y: 4), Position(x: 4, y: 4),],
@@ -52,16 +52,16 @@ class SquareGridManager: GridManager {
     ]
     let dogCaptureGrid: Grid = {
         var positions = [Position]()
-        for x in 8 ... 14 {
+        for x in 7 ... 14 {
             positions.append(Position(x: x, y: 15))
         }
-        for x in 15 ... 21 {
+        for x in 15 ... 22 {
             positions.append(Position(x: x, y: 14))
         }
-        for y in 8 ... 14 {
+        for y in 7 ... 14 {
             positions.append(Position(x: 14, y: y))
         }
-        for y in 15 ... 21 {
+        for y in 15 ... 22 {
             positions.append(Position(x: 15, y: y))
         }
         positions.append(Position(x: 15, y: 13))
@@ -73,11 +73,12 @@ class SquareGridManager: GridManager {
         positions.append(Position(x: 13, y: 11))
         positions.append(Position(x: 16, y: 18))
         
+        // Same as dogCaptureBlocks
         let gates: [Position] = [
-            Position(x: 7, y: 15),
-            Position(x: 22, y: 14),
-            Position(x: 14, y: 7),
-            Position(x: 15, y: 22),
+            Position(x: 6, y: 15),
+            Position(x: 15, y: 23),
+            Position(x: 23, y: 14),
+            Position(x: 14, y: 6),
         ]
         return Grid(zone: positions, gates: gates)
     }()
@@ -233,7 +234,6 @@ class SquareGridManager: GridManager {
         
         // Center
         do {
-            // Horizontal
             jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 6, y: 20), to: Position(x: 10, y: 20), skipBlocks: skipBlocks)
             )
@@ -241,18 +241,16 @@ class SquareGridManager: GridManager {
                 JobUtil.createLineBlockJob(from: Position(x: 19, y: 9), to: Position(x: 23, y: 9), skipBlocks: skipBlocks)
             )
             jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 6, y: 11), to: Position(x: 12, y: 11), skipBlocks: skipBlocks)
-            )
-            jobs.append(
-                JobUtil.createLineBlockJob(from: Position(x: 17, y: 18), to: Position(x: 23, y: 18), skipBlocks: skipBlocks)
-            )
-
-            // Vertical
-            jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 9, y: 6), to: Position(x: 9, y: 10), skipBlocks: skipBlocks)
             )
             jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 20, y: 19), to: Position(x: 20, y: 23), skipBlocks: skipBlocks)
+            )
+            jobs.append(
+                JobUtil.createLineBlockJob(from: Position(x: 6, y: 11), to: Position(x: 12, y: 11), skipBlocks: skipBlocks)
+            )
+            jobs.append(
+                JobUtil.createLineBlockJob(from: Position(x: 17, y: 18), to: Position(x: 23, y: 18), skipBlocks: skipBlocks)
             )
             jobs.append(
                 JobUtil.createLineBlockJob(from: Position(x: 11, y: 23), to: Position(x: 11, y: 17), skipBlocks: skipBlocks)

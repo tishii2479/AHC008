@@ -43,6 +43,9 @@ class SquareGridJobDirector: JobDirector {
     private lazy var dogCount: Int = {
         return PetUtil.getPetCount(pets: pets, for: .dog)
     }()
+    private lazy var catCount: Int = {
+        return PetUtil.getPetCount(pets: pets, for: .cat)
+    }()
     private lazy var corners: [[Position]] = {
         gridManager.corners
     }()
@@ -105,6 +108,14 @@ extension SquareGridJobDirector {
         return count
     }
     
+    private var captureCatCount: Int {
+        var count: Int = 0
+        for pos in gridManager.dogCaptureGrid.zone {
+            count += field.getPetCount(x: pos.x, y: pos.y, kind: .cat)
+        }
+        return count
+    }
+    
     private var needToCaptureDogCount: Int {
         var count: Int = 0
         for grid in grids {
@@ -114,6 +125,17 @@ extension SquareGridJobDirector {
             }
         }
         return dogCount - count
+    }
+
+    private var needToCaptureCatCount: Int {
+        var count: Int = 0
+        for grid in grids {
+            if !grid.isClosed(field: field) { continue }
+            for pos in grid.zone {
+                count += field.getPetCount(x: pos.x, y: pos.y, kind: .cat)
+            }
+        }
+        return catCount - count
     }
 
     private func isPreparedToCaptureDog(turn: Int) -> Bool {
@@ -135,6 +157,7 @@ extension SquareGridJobDirector {
             if !field.isValidBlock(target: block) { return false }
         }
         if captureDogCount < needToCaptureDogCount { return false }
+        if turn <= 230 && captureCatCount < needToCaptureCatCount / 3 { return false }
         return true
     }
 }
@@ -212,14 +235,14 @@ extension SquareGridJobDirector {
             let tmpJob = Schedule.Job(units: [
                 .init(kind: .move, pos: pet.pos)
             ])
-            if pet.assignee == nil {
-                if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
-                   assignee.brain.target == nil {
-                    IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id, type: .info)
-                    assignee.brain.target = pet
-                    pet.assignee = assignee
-                }
+//            if pet.assignee == nil {
+            if let assignee = findAssignee(job: tmpJob, humans: humans, compare: compare),
+               assignee.brain.target == nil {
+                IO.log(turn,"Set target:", pet.pos, assignee.pos, pet.id, assignee.id, type: .info)
+                assignee.brain.target = pet
+                pet.assignee = assignee
             }
+//            }
         }
     }
 
