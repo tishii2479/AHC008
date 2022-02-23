@@ -64,10 +64,7 @@ class Human: Player {
     
     // The jobCost of this human if the job is assigned
     func assignedCost(job: Schedule.Job) -> Int {
-        guard let lastJobPosition = schedule.jobs.tail?.units.tail?.pos else {
-            return jobCost + job.cost
-        }
-        return jobCost + job.cost + lastJobPosition.dist(to: job.nextUnit?.pos)
+        jobCost + job.cost + lastPosition.dist(to: job.nextUnit?.pos)
     }
     
     func clearCurrentJob() {

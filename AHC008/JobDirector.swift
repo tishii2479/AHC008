@@ -13,8 +13,8 @@ extension JobDirector {
             }
             return currentAssignee
         }
-
-        for job in jobs {
+        
+        for job in jobs.sorted(by: { a, b in a.cost > b.cost }) {
             findAssignee(job: job, humans: humans, compare: compare)?.assign(job: job)
         }
     }
@@ -252,10 +252,15 @@ extension SquareGridJobDirector {
 
             if petCount > 0 {
                 var noHuman = true
+                var unassignedPetExist = false
                 for pos in grids[i].zone {
                     if field.getHumanCount(at: pos) > 0 { noHuman = false }
+                    for player in field.getPlayers(at: pos) {
+                        if let pet = player as? Pet,
+                           pet.assignee == nil { unassignedPetExist = true }
+                    }
                 }
-                if !noHuman { continue }
+                if !noHuman || !unassignedPetExist { continue }
 
                 var units = [Schedule.Job.Unit]()
                 for gate in grids[i].gates {

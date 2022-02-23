@@ -77,7 +77,6 @@ struct Schedule {
         // End job unit, so reduce cost
         cost -= unit.pos.dist(to: nextUnit?.pos)
         if unit.kind == .block { cost -= 1 }
-        
         return unit
     }
     
