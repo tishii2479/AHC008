@@ -85,7 +85,7 @@ class SquareGridJobDirector: JobDirector {
             }
             else if didCaptureDog {
                 findPetAndAssign(turn: turn)
-//                findGridAndAssignBlockJob(turn: turn)
+                findGridAndAssignBlockJob(turn: turn)
             }
         }
     }
