@@ -5,7 +5,7 @@ protocol GridManager {
     var skipBlocks: [Position] { get }
     var corners: [[Position]] { get }
     func createGrid() -> [Grid]
-    func createGridJobs() -> [Schedule.Job]
+    func createGridJobs(humanCount: Int) -> [Schedule.Job]
 }
 
 extension GridManager {
@@ -151,7 +151,7 @@ class SquareGridManager: GridManager {
         return arr + intersections
     }()
 
-    func createGridJobs() -> [Schedule.Job] {
+    func createGridJobs(humanCount: Int) -> [Schedule.Job] {
         var jobs = [Schedule.Job]()
         
         var leftSideJob = Schedule.Job(units: [])

@@ -269,6 +269,14 @@ struct Grid {
         return petCount
     }
     
+    func humanCountInGrid(field: Field) -> Int {
+        var humanCount = 0
+        for pos in zone {
+            humanCount += field.getHumanCount(at: pos)
+        }
+        return humanCount
+    }
+    
     func isPrepared(field: Field) -> Bool {
         let unrequired = zone + gates
         for pos in zone {

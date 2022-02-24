@@ -144,7 +144,7 @@ extension SquareGridJobDirector {
 extension SquareGridJobDirector {
     private func assignGridJob() {
         grids = gridManager.createGrid()
-        let jobs = gridManager.createGridJobs()
+        let jobs = gridManager.createGridJobs(humanCount: humans.count)
         assignJobs(jobs: jobs, humans: humans)
     }
     

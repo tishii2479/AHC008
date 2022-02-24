@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49055D9D27C74DE900302FEE /* ColumnGridManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49055D9C27C74DE900302FEE /* ColumnGridManager.swift */; };
 		49258AB727BA8308006C8BEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AB627BA8308006C8BEA /* main.swift */; };
 		49258AC727BA8B59006C8BEA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC427BA8B59006C8BEA /* Models.swift */; };
 		49258AC827BA8B59006C8BEA /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49258AC527BA8B59006C8BEA /* Manager.swift */; };
@@ -55,6 +56,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		49055D9C27C74DE900302FEE /* ColumnGridManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnGridManager.swift; sourceTree = "<group>"; };
 		49258AB327BA8308006C8BEA /* AHC008 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AHC008; sourceTree = BUILT_PRODUCTS_DIR; };
 		49258AB627BA8308006C8BEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		49258AC427BA8B59006C8BEA /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				49FE061227BBE03A00E3A5FE /* Players.swift */,
 				49FE061527BBE2CA00E3A5FE /* HumanBrain.swift */,
 				49F5CA1A27BE93D700AA4C2B /* GridCreator.swift */,
+				49055D9C27C74DE900302FEE /* ColumnGridManager.swift */,
 				49E8532527C0971D00EF03FB /* DataStructures.swift */,
 			);
 			path = AHC008;
@@ -246,6 +249,7 @@
 				49E8532627C0971D00EF03FB /* DataStructures.swift in Sources */,
 				49258AC727BA8B59006C8BEA /* Models.swift in Sources */,
 				49FE05F127BB57B900E3A5FE /* Utils.swift in Sources */,
+				49055D9D27C74DE900302FEE /* ColumnGridManager.swift in Sources */,
 				49FE061627BBE2CA00E3A5FE /* HumanBrain.swift in Sources */,
 				49258AC827BA8B59006C8BEA /* Manager.swift in Sources */,
 				49258AB727BA8308006C8BEA /* main.swift in Sources */,
