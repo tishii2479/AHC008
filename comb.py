@@ -9,6 +9,7 @@ files = [
     "Models.swift",
     "JobDirector.swift",
     "GridCreator.swift",
+    "SquareGridManagerV2.swift",
     "HumanBrain.swift",
     "Field.swift",
     "Utils.swift",
