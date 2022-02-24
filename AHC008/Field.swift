@@ -107,7 +107,7 @@ extension Field {
     }
     
     func getPetCount(at position: Position, kind: Pet.Kind? = nil) -> Int {
-        getPetCount(x: position.x, y: position.y)
+        getPetCount(x: position.x, y: position.y, kind: kind)
     }
     
     func getHumanCount(x: Int, y: Int) -> Int {

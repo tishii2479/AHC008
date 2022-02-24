@@ -65,6 +65,10 @@ class SquareGridJobDirector: JobDirector {
         self.field = field
         self.humans = humans
         self.pets = pets
+        self.pets.sort(by: {a, b in
+            if b.kind == .cat { return false }
+            return true
+        })
         self.gridManager = gridManager
     }
     
@@ -90,6 +94,9 @@ class SquareGridJobDirector: JobDirector {
                 findPetAndAssign(turn: turn)
                 findGridAndAssignBlockJob(turn: turn)
             }
+        }
+        if turn >= 298 {
+            humans.forEach { $0.brain.target = nil }
         }
     }
 }

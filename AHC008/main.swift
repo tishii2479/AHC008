@@ -34,7 +34,7 @@ func main() {
         field: field,
         humans: humans,
         pets: pets,
-        gridManager: (M >= 9) ? SquareGridManagerV2() : SquareGridManager()
+        gridManager: SquareGridManager()
     )
     let manager = Manager(
         field: field,
