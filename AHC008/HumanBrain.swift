@@ -43,6 +43,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
 
     func command(field: Field, pos: Position, jobUnit: Schedule.Job.Unit?) -> [Command] {
         guard let jobUnit = jobUnit else { return [.none] }
+        let notAllowedPositionsOutsideGrid = isInGrid(pos: pos) ? [] : notAllowedPositions
         switch jobUnit.kind {
         case .forceMove:
             return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field).shuffled()
@@ -53,13 +54,14 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                           gate.dist(to: pos) == 1,
                           grid.petCountInGrid(field: field) >= petCaptureLimit,
                           grid.isPrepared(field: field),
+                          grid.humanCountInGrid(field: field) == 0,
                           !grid.zone.contains(pos) else { continue }
                     if let block = CommandUtil.deltaToBlockCommand(delta: gate - pos) {
                         return [block, .none]
                     }
                 }
             }
-            return CommandUtil.calcShortestMove(from: pos, to: target?.pos ?? jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions).shuffled()
+            return CommandUtil.calcShortestMove(from: pos, to: target?.pos ?? jobUnit.pos, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid).shuffled()
         case .close:
             for grid in grids {
                 for gate in grid.gates {
@@ -73,7 +75,7 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
                     }
                 }
             }
-            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions).shuffled()
+            return CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid).shuffled()
         case .block:
             let dist: Int = pos.dist(to: jobUnit.pos)
             if dist == 0 {
@@ -91,10 +93,18 @@ struct HumanBrainWithGridKnowledge: HumanBrain {
             }
             else {
                 // cant place block, so move towards the block
-                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositions)
+                let cand = CommandUtil.calcShortestMove(from: pos, to: jobUnit.pos, field: field, notAllowedPositions: notAllowedPositionsOutsideGrid)
                 if cand.count == 0 { return [.none] }
                 return cand.shuffled()
             }
         }
+    }
+
+    private func isInGrid(pos: Position) -> Bool {
+        for grid in grids {
+            if grid.zone.contains(pos)
+            || grid.gates.contains(pos) { return true }
+        }
+        return false
     }
 }
