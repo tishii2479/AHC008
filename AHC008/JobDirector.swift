@@ -14,7 +14,7 @@ extension JobDirector {
             return currentAssignee
         }
         
-        for job in jobs.sorted(by: { a, b in a.cost > b.cost }) {
+        for job in jobs {
             findAssignee(job: job, humans: humans, compare: compare)?.assign(job: job)
         }
     }
